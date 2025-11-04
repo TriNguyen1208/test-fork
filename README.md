@@ -1,11 +1,10 @@
 # 🚀  Aution Web (Next.js + Express + Prisma + PostgreSQL)
 
 A modern **fullstack monorepo** boilerplate built with:
-- **Next.js (TypeScript)** for the frontend
+- **TypeScript** as the language
+- **Next.js** for the frontend
 - **Node.js + Express + Prisma** for the backend
 - **PostgreSQL** as the database
-- **Shared workspace** for common types and utilities
-
 ---
 
 ## 📁 Folder Structure
@@ -90,9 +89,11 @@ This installs dependencies for `client`, `server`, and `shared` automatically (t
 ---
 
 ## 🧩 Environment Variables
+sau này viêt
 ---
 
 ## 🧱 Database Setup
+sau nay luôn
 ---
 
 ## 🚀 Development
