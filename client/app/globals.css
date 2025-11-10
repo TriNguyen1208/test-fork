@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "tailwind-scrollbar"
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -124,7 +126,6 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
   --color-primary-light: #60a5fa;
   --color-primary-dark: #1d4ed8;
 
@@ -196,3 +197,7 @@ h6 {
 .input-focus {
   @apply border-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 transition-all;
 }
+
+/*.primary-scrollbar {
+  @apply scrollbar scrollbar-thumb-blue-500 scrollbar-track-gray-200 scrollbar-thin scrollbar-thumb-rounded
+}*/

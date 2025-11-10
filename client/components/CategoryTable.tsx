@@ -21,7 +21,7 @@ export default function CategoryTable({ productCategories }: { productCategories
   }
 
   return (
-    <div className="w-60 h-120 bg-white border-2 border-gray-200 rounded-xl p-4">
+    <div className="w-60 h-120 overflow-y-scroll default-scrollbar bg-white border-2 border-gray-200 rounded-xl p-4">
       <p className="text-xl font-medium">Danh mục</p>
       {productCategories.map((item) => {
         const isExpanded = expandedCategories.has(item.id) && item.children && item.children.length > 0;
@@ -39,7 +39,7 @@ export default function CategoryTable({ productCategories }: { productCategories
               >
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
               </svg>
-              <Link href={`/${item.slug}`} className="hover:text-blue-500 transition:all duration-200 select-none">{item.name}</Link>
+              <Link href={`/category/${item.slug}`} className="hover:text-blue-500 transition:all duration-200 select-none">{item.name}</Link>
             </div>
             {isExpanded && (
               <div className="relative pl-6">
@@ -74,7 +74,7 @@ export default function CategoryTable({ productCategories }: { productCategories
                           transform: "translateY(-50%)"
                         }}
                       ></span>
-                      <Link href={`/${child.slug}`} className="ml-4 select-none hover:text-blue-500 transition:all duration-200">{child.name}</Link>
+                      <Link href={`/category/${child.slug}`} className="ml-4 select-none hover:text-blue-500 transition:all duration-200">{child.name}</Link>
                     </li>
                   ))}
                 </ul>
