@@ -96,8 +96,8 @@ export default function CategoryTable({ productCategories }: { productCategories
                     ></div>
                   </div>
                   <ul className="">
-                    {item.children?.map((child, idx) => (
-                      <li key={child.id} className="relative flex items-center min-h-[28px]">
+                    {item.children?.map((child) => (
+                      <li key={child.id} className="relative flex items-center min-h-7">
                         {/* Đường ngang từ dọc sang chữ */}
                         <span
                           className="absolute -left-5 bg-gray-300"
