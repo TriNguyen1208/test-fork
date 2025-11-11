@@ -5,7 +5,7 @@ import { ProductCategoryTree } from "@/types";
 import CategoryTable from "@/components/CategoryTable"
 
 // Mock Data
-const productCategories: ProductCategoryTree[] = [{
+export const productCategories: ProductCategoryTree[] = [{
   id: 1,
   slug: "điện-tử",
   name: "Điện tử",
