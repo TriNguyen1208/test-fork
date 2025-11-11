@@ -10,7 +10,9 @@ export type Product = {
   name: string;
   initial_price: number;
   buy_now_price: number;
+  current_price: number;
   top_bidder: Pick<User, 'id' | 'name' | 'profile_img'> | null;
+  bid_count: number;
   end_time: Date;
   description: string;
   auto_extend: boolean;
