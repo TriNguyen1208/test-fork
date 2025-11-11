@@ -1,7 +1,9 @@
 import React from "react"
+import { LoveIcon } from "./icons"
+import FavouriteButton from "./FavouriteButton"
 
 export default function ProductCard() {
-  return <div className="w-50 h-118 rounded-lg border-2 border-gray-200 bg-white shadow-md hover:shadow-2xl hover:border-blue-500 transition-all duration-200">
+  return <div className="group relative w-50 h-123 rounded-lg border-2 border-gray-200 bg-white shadow-md hover:shadow-2xl hover:border-blue-500 transition-all duration-200 select-none">
     <img src="https://cdn2.fptshop.com.vn/unsafe/828x0/filters:format(webp):quality(75)/iphone_17_pro_slide_1_c27e78032a.jpg" alt="iPhone 17" className="w-full aspect-5/4 rounded-t-md" />
     <div className="px-3">
       <section className="mt-2">
@@ -30,8 +32,9 @@ export default function ProductCard() {
           <p className="font-medium">Huỳ*********u</p>
         </div>
       </section>
-      <hr className="border-t border-solid border-gray-300 my-2.5" />
-      <section className="flex flex-row justify-between">
+      <hr className="border-t border-solid border-gray-300 mt-3 mb-1.5" />
+      <section className="flex flex-col gap-1.5">
+        <p className="text-sm text-gray-500">Ngày bắt đầu: 30-4-2025</p>
         <div className="flex flex-row gap-2 items-center">
           <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -42,6 +45,8 @@ export default function ProductCard() {
     </div>
 
     {/* Favourite Button */}
-    
+    <div className="absolute top-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <FavouriteButton isFavourite={false}/>
+    </div>
   </div>
 }
