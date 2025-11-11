@@ -18,7 +18,7 @@ const mockProduct : Product = {
   extra_images: [],
   name: "iPhone 17 Pro Max Limited",
   initial_price: 20000,
-  buy_now_price: 25000,
+  buy_now_price: 250000,
   current_price: 52000,
   top_bidder: {
     id: 2,

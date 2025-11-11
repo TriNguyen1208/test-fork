@@ -2,11 +2,13 @@ import React from "react"
 import { LoveIcon } from "./icons"
 import FavouriteButton from "./FavouriteButton"
 import { Product } from "../../shared/src/types"
+import { getTimeDifference } from "@/app/utils"
+import Link from "next/link"
 
 export default function ProductCard({ product } : { product: Product }) {
   return <div className="group relative w-50 h-123 rounded-lg border-2 border-gray-200 bg-white shadow-md hover:shadow-2xl hover:border-blue-500 transition-all duration-200 select-none">
     <img src={product.main_image} alt={product.name} className="w-full aspect-5/4 rounded-t-md" />
-    <div className="px-3">
+    <Link href={`/product/${product.slug}`} className="block px-3">
       <section className="mt-2">
         <p className="font-medium">{product.name}</p>
         <div className="mt-1 flex flex-row gap-1">
@@ -19,17 +21,17 @@ export default function ProductCard({ product } : { product: Product }) {
         <div className="mt-3">
           <p className="text-sm">Giá hiện tại</p>
           <p>
-            <span className="text-2xl font-medium text-red-500">{product.current_price}</span>
+            <span className="text-2xl font-medium text-red-500">{product.current_price.toLocaleString("en-US")}</span>
           </p>
         </div>
         <div className="mt-1">
           <p className="text-sm">Giá mua ngay</p>
           <p>
-            <span className="text-xl font-medium text-blue-600">{product.buy_now_price}</span>
+            <span className="text-xl font-medium text-blue-600">{product.buy_now_price.toLocaleString("en-US")}</span>
           </p>
         </div>
         <div className="mt-3">
-          <p className="text-sm">Người trả giá cao nhất:</p>
+          <p className="text-sm">Người trả giá cao nhất</p>
           <p className="font-medium">{product.top_bidder?.name}</p>
         </div>
       </section>
@@ -40,10 +42,10 @@ export default function ProductCard({ product } : { product: Product }) {
           <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
-          <span>20 giờ 20 phút</span>
+          <span>{getTimeDifference(product.created_at, product.end_time)}</span>
         </div>
       </section>
-    </div>
+    </Link>
 
     {/* Favourite Button */}
     <div className="absolute top-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
