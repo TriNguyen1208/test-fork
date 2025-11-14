@@ -55,7 +55,7 @@ export const SearchBar: FC<SearchBarProps> = ({
       {/* Input + nút Search */}
       <div className="flex relative ">
         <button>
-          <SearchIcon className="absolute top-[11px] l-1 w-5 h-5 left-[10px]" />
+          <SearchIcon className="absolute top-[11px] l-1 w-5 h-5 left-2.5" />
         </button>
         <input
           type="text"

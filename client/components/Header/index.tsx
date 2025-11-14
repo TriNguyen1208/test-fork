@@ -11,11 +11,11 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-sm z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex-shrink-0">
+          <Link href="/" className="shrink-0">
             <div className="text-2xl font-bold text-blue-600">
-              AE Tao<span className="text-amber-400">Lỏ VC</span>
+              4<span className="text-amber-400"> thằng lỏ</span>
             </div>
           </Link>
 
@@ -26,14 +26,14 @@ const Header = () => {
 
           <div className="hidden md:flex items-center gap-6">
             <Link
-              href="/watchlist"
+              href="/user/favorite_products"
               className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors font-medium"
             >
               <ShoppingCart size={20} />
               <span className="text-sm">Watch List</span>
             </Link>
             <Link
-              href="/profile"
+              href="/user/info"
               className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors font-medium"
             >
               <User size={20} />
@@ -56,10 +56,10 @@ const Header = () => {
             {/* <div className="py-4">
               <SearchDropdown />
             </div> */}
-            <Link href="/watchlist" className="block py-2 text-sm text-gray-600 hover:text-blue-600 font-medium">
+            <Link href="/user/favorite_products" className="block py-2 text-sm text-gray-600 hover:text-blue-600 font-medium">
               Watch List
             </Link>
-            <Link href="/profile" className="block py-2 text-sm text-gray-600 hover:text-blue-600 font-medium">
+            <Link href="/user/info" className="block py-2 text-sm text-gray-600 hover:text-blue-600 font-medium">
               Profile
             </Link>
           </div>

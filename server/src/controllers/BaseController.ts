@@ -7,8 +7,8 @@ export class BaseController {
     this.service = service; // Dependency Injection
   }
 
-  sendSuccess(res: Response, data: any) {
-    res.json({ success: true, data });
+  sendSuccess(res: Response, success: any, status = 200) {
+    res.status(status).json({ success: true, message: success.message || "Success" });
   }
 
   sendError(res: Response, error: any, status = 500) {
@@ -19,6 +19,10 @@ export class BaseController {
 
   // Template Method: controller con override
   handleRequest(...args: any[]) {
+
+    /*
+    -- COPY 
+    */
     throw new Error("handleRequest must be implemented");
   }
 }

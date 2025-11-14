@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 const images = [
   "https://flowbite.s3.amazonaws.com/docs/gallery/featured/image.jpg",
@@ -45,7 +46,7 @@ export const ImageCarousel = () => {
           className="flex rounded-lg bg-gray-200 justify-center overflow-hidden aspect-square hover:cursor-pointer "
           onClick={() => openModal(images[currentImage])}
         >
-          <img
+          <Image
             src={images[currentImage]}
             className="w-full h-full "
             alt="..."
@@ -118,7 +119,7 @@ export const ImageCarousel = () => {
               }`}
               onClick={() => hanldeSwitchImage(index)}
             >
-              <img src={link} className=" " alt="..." />
+              <Image src={link} className=" " alt="..." />
             </div>
           );
         })}
@@ -133,7 +134,7 @@ export const ImageCarousel = () => {
               className="max-w-4xl max-h-4/5 p-4 rounded-lg bg-white relative "
               onClick={(e) => e.stopPropagation()}
             >
-              <img
+              <Image
                 src={selectedImage}
                 alt="Selected View"
                 className="max-w-full max-h-[80vh] h-auto object-contain "

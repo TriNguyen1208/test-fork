@@ -1,13 +1,13 @@
 import React from "react"
-import { LoveIcon } from "./icons"
-import FavouriteButton from "./FavouriteButton"
-import { Product } from "../../shared/src/types"
+import FavoriteButton from "../FavoriteButton"
+import { Product } from "../../../shared/src/types"
 import { getTimeDifference } from "@/app/utils"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function ProductCard({ product } : { product: Product }) {
   return <div className="group relative w-50 h-123 rounded-lg border-2 border-gray-200 bg-white shadow-md hover:shadow-2xl hover:border-blue-500 transition-all duration-200 select-none">
-    <img src={product.main_image} alt={product.name} className="w-full aspect-5/4 rounded-t-md" />
+    <Image src={product.main_image} alt={product.name} className="w-full aspect-5/4 rounded-t-md" />
     <Link href={`/product/${product.slug}`} className="block px-3">
       <section className="mt-2">
         <p className="font-medium">{product.name}</p>
@@ -49,7 +49,7 @@ export default function ProductCard({ product } : { product: Product }) {
 
     {/* Favourite Button */}
     <div className="absolute top-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-      <FavouriteButton isFavourite={false}/>
+      <FavoriteButton isFavorite={false}/>
     </div>
   </div>
 }

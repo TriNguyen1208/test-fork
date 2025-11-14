@@ -67,7 +67,7 @@ export const footerColumns: FooterColumn[] = [
 ];
 export const Footer = () => {
   return (
-    <div className="w-full  mx-auto p-4 md:py-8 bg-[var(--color-primary)]  text-white">
+    <div className="w-full  mx-auto p-4 md:py-8 bg-(--color-primary)  text-white">
       <div className="md:flex md:justify-center">
         <div className="grid grid-cols-1 gap-8 sm:gap-16 md:gap-32 sm:grid-cols-3">
           {footerColumns.map((column, indexCol) => (

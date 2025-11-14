@@ -1,6 +1,4 @@
 "use client";
-import { PrimaryButton, SecondaryButton } from "@/components/Button";
-import { LoveIcon } from "@/components/icons";
 import { SearchBar } from "@/components/SearchBar";
 import { SearchItem } from "@/components/SearchBar";
 const sampleData: SearchItem[] = [
@@ -15,11 +13,13 @@ const sampleData: SearchItem[] = [
 function Page() {
   return (
     <>
+    <div className="w-full">
       <SearchBar
         data={sampleData}
         handleClick={(item) => console.log("Clicked item:", item)}
         handleEnter={(query) => console.log("Enter search:", query)}
-      />
+        />
+        </div>
     </>
   );
 }

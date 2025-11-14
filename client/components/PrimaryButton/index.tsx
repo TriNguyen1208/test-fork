@@ -11,14 +11,14 @@ interface Button {
   onClick?: () => void;
 }
 
-export const PrimaryButton: FC<Button> = ({
+export default function PrimaryButton({
   text,
   onClick,
   icon: Icon,
   textColor,
   backgroundColor,
   hoverBackgroundColor,
-}) => {
+} : Button) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <>
@@ -35,34 +35,6 @@ export const PrimaryButton: FC<Button> = ({
         {Icon && <Icon />} {text}
       </button>
     </>
-  );
-};
-
-export const SecondaryButton: FC<Button> = ({
-  text,
-  onClick,
-  icon: Icon,
-  textColor,
-  backgroundColor,
-  hoverBackgroundColor,
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        color: textColor || "#000000",
-        backgroundColor: isHovered
-          ? hoverBackgroundColor || "#9CA3AF"
-          : backgroundColor || "#FFFFFF",
-      }}
-      className={`w-full flex items-center gap-2 justify-center border border-gray-400  py-2 font-medium rounded-lg `}
-    >
-      {Icon && <Icon />} {text}
-    </button>
   );
 };
 

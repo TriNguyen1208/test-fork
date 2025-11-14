@@ -1,9 +1,9 @@
 "use client"
 
-import { ProductCategoryTree } from "../../shared/src/types/index";
+import { ProductCategoryTree } from "../../../shared/src/types/index";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import  { useState } from "react";
 import "flowbite"
 
 function SortDropdown() {
@@ -31,7 +31,7 @@ function SortDropdown() {
   </div>
 }
 
-export default function CategoryTable({ productCategories }: { productCategories: ProductCategoryTree[] }) {
+export default function ProductCategoryTable({ productCategories }: { productCategories: ProductCategoryTree[] }) {
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
   const sort = useSearchParams().get('sort');
   const isInCategoryPage: boolean = usePathname().startsWith("/category/");
