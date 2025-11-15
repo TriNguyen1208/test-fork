@@ -142,7 +142,7 @@ export default function RootLayout({
                 <ProductCategoryTable productCategories={productCategories} />
               )}
             </aside>
-            <main >
+            <main className="w-full">
               {children}
             </main>
           </div>
