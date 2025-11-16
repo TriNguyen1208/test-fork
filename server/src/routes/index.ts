@@ -3,12 +3,13 @@ import { ResourceFactory } from "../factories/ResourceFactory";
 
 const router = Router();
 
-const resources = ["user"];
+// NOTE: dung dấu backtick (``) khi dinh nghia chuoi trong routerKeyFactory
+const routerFactoryKey = [`users`];
 
-resources.forEach((name) => {
-  const resource = ResourceFactory.createResource(name);
+routerFactoryKey.forEach((name) => {
+  const routerClass = ResourceFactory.createResource(name);
   //  UserRoute 
-  router.use(`/${name}s`, resource.router); 
+  router.use(`/${name}`, routerClass.router); 
 });
 
 export default router;
