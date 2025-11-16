@@ -20,7 +20,11 @@ const CreateProductPage = () => {
   const [previewExtras, setPreviewExtras] = useState<string[] | null>(null);
 
   const [content, setContent] = useState("");
-
+  const now = new Date();
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const minDateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+    now.getDate()
+  )}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
   const handleChangeMainImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
       setMainImage(null);
@@ -76,6 +80,8 @@ const CreateProductPage = () => {
     const buyNowPrice = (
       form.elements.namedItem("buyNowPrice") as HTMLInputElement
     ).value;
+    const endTime = (form.elements.namedItem("endTime") as HTMLInputElement)
+      .value;
     const isExtend = (form.elements.namedItem("isExtend") as HTMLInputElement)
       .checked;
     if (buyNowPrice <= initPrice) {
@@ -84,11 +90,13 @@ const CreateProductPage = () => {
     }
 
     console.log(
+      minDateTime,
       name,
       category,
       initPrice,
       increPrice,
       buyNowPrice,
+      endTime,
       isExtend,
       content
     );
@@ -236,14 +244,13 @@ const CreateProductPage = () => {
           </div>
         </div>
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-gray-900">Giá</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Giá khởi điểm (VND) *
               </label>
               <input
-                placeholder={"0"}
+                placeholder={"Gía khởi điểm"}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
                 type="number"
@@ -256,7 +263,7 @@ const CreateProductPage = () => {
                 Bước giá (VND) *
               </label>
               <input
-                placeholder={""}
+                placeholder={"Bước giá"}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
                 type="number"
@@ -269,7 +276,7 @@ const CreateProductPage = () => {
                 Giá Mua ngay (VND)
               </label>
               <input
-                placeholder="0 (tuỳ chọn)"
+                placeholder="Tuỳ chọn"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 type="number"
                 name="buyNowPrice"
@@ -277,6 +284,18 @@ const CreateProductPage = () => {
               />
             </div>
           </div>
+        </div>
+        <div className="space-y-4">
+          <label className="block text-sm font-semibold text-gray-900 mb-2">
+            Thời điểm kết thúc
+          </label>
+          <input
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+            type="datetime-local"
+            name="endTime"
+            min={minDateTime}
+          />
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 mb-4">
