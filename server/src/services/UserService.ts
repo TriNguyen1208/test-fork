@@ -21,6 +21,7 @@ export class UserService extends BaseService {
   async getUsers() {
     const sql = `SELECT * FROM product.products`;
     const users = await this.safeQuery(sql);
+    // const users = await this.safeQuery(sql, params);
     
     return users;
   }

@@ -14,3 +14,4 @@ export class UserRoute extends BaseRoute {
     this.router.get("/",BaseController.handleRequest(this.userController.getUsers.bind(this.userController)));
   }
 }
+
