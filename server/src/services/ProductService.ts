@@ -184,6 +184,8 @@ export class ProductService extends BaseService {
     UPDATE product.products
     SET auto_extend = $1
     WHERE id = $2
+
+    RETURNING * 
     `
 
     const productExtend = await this.safeQuery(sql, [auto_extend, productId]);

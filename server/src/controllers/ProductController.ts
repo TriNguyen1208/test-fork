@@ -79,9 +79,9 @@ export class ProductController extends BaseController {
   }
 
   async updateProductExtend(req: Request, res: Response){
-    const autoExtend = await this.service.updateProductExtend(req);
+    const productExtend = await this.service.updateProductExtend(req);
     return {
-      autoExtend: autoExtend,
+      productExtend: productExtend,
     };
   }
 

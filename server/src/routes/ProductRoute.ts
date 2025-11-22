@@ -20,7 +20,7 @@ export class ProductRoute extends BaseRoute {
     this.router.get("/:productId/questions",BaseController.handleRequest(this.productController.getQuestions.bind(this.productController)));
     this.router.post("/:productId/questions",BaseController.handleRequest(this.productController.createQuestion.bind(this.productController)));
     this.router.post("/:productId/:questionId/answers",BaseController.handleRequest(this.productController.createAnswer.bind(this.productController)));
-    this.router.post("/:productId/extend",BaseController.handleRequest(this.productController.updateProductExtend.bind(this.productController)));
+    this.router.patch("/:productId/extend",BaseController.handleRequest(this.productController.updateProductExtend.bind(this.productController)));
   }
 }
 
