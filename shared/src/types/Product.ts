@@ -16,6 +16,7 @@ export type Product = {
   end_time: Date;
   description: string;
   auto_extend: boolean;
+  status: "available" | "sold_out"
   price_increment: number;
   created_at: Date;
   updated_at: Date | null;
