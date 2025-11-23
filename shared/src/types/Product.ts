@@ -3,7 +3,7 @@ import { User } from "./User";
 export type Product = {
   id: number;
   slug: string;
-  seller: Pick<User, 'id' | 'name' | 'profile_img'>;
+  seller: Pick<User, "id" | "name" | "profile_img">;
   category_id: number;
   main_image: string;
   extra_images?: string[];
@@ -44,23 +44,23 @@ export type ProductCategoryTree = {
   name: string;
   parent_id?: number;
   children?: ProductCategoryTree[];
-  created_at: Date;
-  updated_at: Date | null;
-}
+  created_at?: Date;
+  updated_at?: Date;
+};
 
 export type ProductAnswer = {
   id: number;
   question_id: number;
-  user: Pick<User, 'id' | 'name' | 'profile_img'>;
+  user: Pick<User, "id" | "name" | "profile_img">;
   comment: string;
   created_at: Date;
-}
+};
 
 export type ProductQuestion = {
   id: number;
   product_id: number;
-  user: Pick<User, 'id' | 'name' | 'profile_img'>;
+  user: Pick<User, "id" | "name" | "profile_img">;
   comment: string;
   answer?: ProductAnswer;
   created_at: Date;
-}
+};

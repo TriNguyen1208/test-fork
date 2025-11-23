@@ -3,171 +3,12 @@ import { SearchBar } from "@/components/SearchBar";
 import { SearchItem } from "@/components/SearchBar";
 import { ArrowRight } from "@/components/icons";
 import Link from "next/link";
-import { Product } from "../../shared/src/types";
+import { Product, ProductCategoryTree } from "../../shared/src/types";
 import ProductCard from "@/components/ProductCard";
-
-const mockProductEndTime: Product[] = [
-  {
-    id: 101,
-    slug: "macbook-pro-2022",
-    seller: {
-      id: 2,
-      name: "Trần B",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    category_id: 3,
-    main_image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    extra_images: [],
-    name: "MacBook Pro 2022 – M1 Pro 16 inch",
-    initial_price: 25000000,
-    buy_now_price: 35000000,
-    current_price: 28000000,
-    top_bidder: {
-      id: 5,
-      name: "Lê C",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    bid_count: 12,
-    end_time: new Date(Date.now() + 4 * 60 * 60 * 1000), // sau 4 giờ
-    description:
-      "MacBook Pro M1 Pro 16 inch, RAM 16GB, SSD 512GB, máy đẹp 99%.",
-    auto_extend: true,
-    price_increment: 500000,
-    created_at: new Date(),
-    updated_at: null,
-  },
-  {
-    id: 102,
-    slug: "macbook-pro-2022",
-    seller: {
-      id: 2,
-      name: "Trần B",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    category_id: 3,
-    main_image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    extra_images: [],
-    name: "MacBook Pro 2022 – M1 Pro 16 inch",
-    initial_price: 25000000,
-    buy_now_price: 35000000,
-    current_price: 28000000,
-    top_bidder: {
-      id: 5,
-      name: "Lê C",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    bid_count: 12,
-    end_time: new Date(Date.now() + 4 * 60 * 60 * 1000), // sau 4 giờ
-    description:
-      "MacBook Pro M1 Pro 16 inch, RAM 16GB, SSD 512GB, máy đẹp 99%.",
-    auto_extend: true,
-    price_increment: 500000,
-    created_at: new Date(),
-    updated_at: null,
-  },
-  {
-    id: 103,
-    slug: "macbook-pro-2022",
-    seller: {
-      id: 2,
-      name: "Trần B",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    category_id: 3,
-    main_image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    extra_images: [],
-    name: "MacBook Pro 2022 – M1 Pro 16 inch",
-    initial_price: 25000000,
-    buy_now_price: 35000000,
-    current_price: 28000000,
-    top_bidder: {
-      id: 5,
-      name: "Lê C",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    bid_count: 12,
-    end_time: new Date(Date.now() + 4 * 60 * 60 * 1000), // sau 4 giờ
-    description:
-      "MacBook Pro M1 Pro 16 inch, RAM 16GB, SSD 512GB, máy đẹp 99%.",
-    auto_extend: true,
-    price_increment: 500000,
-    created_at: new Date(),
-    updated_at: null,
-  },
-  {
-    id: 104,
-    slug: "macbook-pro-2022",
-    seller: {
-      id: 2,
-      name: "Trần B",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    category_id: 3,
-    main_image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    extra_images: [],
-    name: "MacBook Pro 2022 – M1 Pro 16 inch",
-    initial_price: 25000000,
-    buy_now_price: 35000000,
-    current_price: 28000000,
-    top_bidder: {
-      id: 5,
-      name: "Lê C",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    bid_count: 12,
-    end_time: new Date(Date.now() + 4 * 60 * 60 * 1000), // sau 4 giờ
-    description:
-      "MacBook Pro M1 Pro 16 inch, RAM 16GB, SSD 512GB, máy đẹp 99%.",
-    auto_extend: true,
-    price_increment: 500000,
-    created_at: new Date(),
-    updated_at: null,
-  },
-  {
-    id: 105,
-    slug: "macbook-pro-2022",
-    seller: {
-      id: 2,
-      name: "Trần B",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    category_id: 3,
-    main_image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    extra_images: [],
-    name: "MacBook Pro 2022 – M1 Pro 16 inch",
-    initial_price: 25000000,
-    buy_now_price: 35000000,
-    current_price: 28000000,
-    top_bidder: {
-      id: 5,
-      name: "Lê C",
-      profile_img:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s",
-    },
-    bid_count: 12,
-    end_time: new Date(Date.now() + 4 * 60 * 60 * 1000), // sau 4 giờ
-    description:
-      "MacBook Pro M1 Pro 16 inch, RAM 16GB, SSD 512GB, máy đẹp 99%.",
-    auto_extend: true,
-    price_increment: 500000,
-    created_at: new Date(),
-    updated_at: null,
-  }
-];
+import CategoryHook from "@/hooks/useCategory";
+import { Pagination } from "../../shared/src/types/Pagination";
+import AuctionHook from "@/hooks/useBid";
+import { BidLog } from "../../shared/src/types";
 
 interface PageItem {
   title: string;
@@ -179,21 +20,23 @@ const pageItems: PageItem[] = [
   {
     title: "Sản phẩm sắp kết thúc",
     href: "/category",
-    products: mockProductEndTime,
+    products: [],
   },
   {
     title: "Sản phẩm nhiều lượt đấu giá nhất",
     href: "/category",
-    products: mockProductEndTime,
+    products: [],
   },
   {
     title: "Sản phẩm giá cao nhất",
     href: "/category",
-    products: mockProductEndTime,
+    products: [],
   },
 ];
 
 function Page() {
+  const { data: category, isLoading: loa } = CategoryHook.useCategories();
+  console.log(category);
   return (
     <>
       <div>
@@ -204,7 +47,6 @@ function Page() {
           </div>
         </div>
         {pageItems.map((item, index) => {
-          console.log(item);
           return (
             <div key={index}>
               <div className="mt-15">
