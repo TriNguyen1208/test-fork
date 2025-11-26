@@ -32,7 +32,7 @@ Nói sơ về backend: Luồng request-response sẽ tuân thủ restAPI cùng m
 ## 1: USER & UPGRADES REQUEST API (Hà)
 
 --> user.routes.ts
-GET /user/profile Xem hồ sơ user (ẩn email nếu không phải chủ)
+GET /user/profile/:id Xem hồ sơ user (ẩn email nếu không phải chủ)
 PATCH /user/profile Cập nhật hồ sơ cá nhân
 PATCH /user/password Đổi mật khẩu (yêu cầu mật khẩu cũ)
 --> upgrade.routes.ts
