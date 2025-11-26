@@ -20,4 +20,13 @@ export class UserService extends BaseService {
     // const users = await this.safeQuery(sql, params);
     return users;
   }
+  async getProfile(id: number) {
+    const sql = 
+        `SELECT * FROM admin.users
+         WHERE id = $1`
+    const params = [id];
+    const profile = await this.safeQuery(sql, params);
+
+    return profile;
+  }
 }
