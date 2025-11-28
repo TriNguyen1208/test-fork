@@ -147,7 +147,7 @@ export class OrderService extends BaseService {
       if (!userId) return undefined;
 
       const sql = `
-        SELECT *  
+        SELECT *
         FROM ADMIN.USERS
         WHERE ID = $1
       `;
