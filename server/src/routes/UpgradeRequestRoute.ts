@@ -12,7 +12,32 @@ export class UpgradeRequestRoute extends BaseRoute {
     }
 
     initRoutes() {
-        this.router.post("/request", BaseController.handleRequest(this.controller.createSellerRequest.bind(this.controller)));
-        this.router.get("/status", BaseController.handleRequest(this.controller.getRequestStatus.bind(this.controller)));
+        this.router.post(
+            "/request", 
+            BaseController.handleRequest(
+                this.controller.createSellerRequest.bind(
+                    this.controller
+                )));
+
+        this.router.get(
+            "/status", 
+            BaseController.handleRequest(
+                this.controller.getRequestStatus.bind(
+                    this.controller
+                )));
+
+        this.router.get(
+            "/approve", 
+            BaseController.handleRequest(
+                this.controller.updateApproveRequest.bind(
+                    this.controller
+                )));
+
+        this.router.get(
+            "/reject", 
+            BaseController.handleRequest(
+                this.controller.updateRejectRequest.bind(
+                    this.controller
+                )));
     }
 }
