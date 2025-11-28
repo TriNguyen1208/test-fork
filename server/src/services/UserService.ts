@@ -49,9 +49,9 @@ export class UserService extends BaseService {
         const sql =
             `
             UPDATE admin.users
-            SET name = $1
-                email = $2
-                address = $3
+            SET name = $1,
+                email = $2,
+                address = $3,
                 profile_img = $4
             WHERE id = $5
             `
