@@ -106,7 +106,8 @@ export default function ProductCard({
         <hr className="border-t border-solid border-gray-300 mt-3 mb-1.5" />
         <section className="flex flex-col gap-1.5">
           <p className="text-sm text-gray-500">
-            Ngày bắt đầu: {product.created_at.toLocaleDateString("en-GB")}
+            Ngày bắt đầu:{" "}
+            {new Date(product.created_at).toLocaleDateString("en-GB")}
           </p>
           <div className="flex flex-row gap-2 items-center">
             <svg
@@ -127,7 +128,10 @@ export default function ProductCard({
               />
             </svg>
             <span>
-              {getTimeDifference(product.created_at, product.end_time)}
+              {getTimeDifference(
+                new Date(product.created_at),
+                new Date(product.end_time)
+              )}
             </span>
           </div>
         </section>
