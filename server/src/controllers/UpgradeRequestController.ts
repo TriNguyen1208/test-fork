@@ -12,7 +12,8 @@ export class UpgradeController extends BaseController {
     }
 
     async getRequestStatus(req: Request, res: Response) {
-        const result = await this.service.getRequestStatus(req.body);
+        const {id} = req.params;
+        const result = await this.service.getRequestStatus(id);
         return { result };
     }
 

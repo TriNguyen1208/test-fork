@@ -22,7 +22,7 @@ const API_ROUTES = {
   },
   upgrade: {
     createSellerRequest: `${UPGRADE_API}/request`, //POST
-    getRequestStatus: `${UPGRADE_API}/status`, //GET
+    getRequestStatus:(id: string) =>  `${UPGRADE_API}/status`, //GET
     updateApproveRequest: `${UPGRADE_API}/approve`, //PATCH
     updateRejectRequest: `${UPGRADE_API}/reject`, //PATCH
   },

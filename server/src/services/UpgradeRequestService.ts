@@ -14,7 +14,7 @@ export class UpgradeService extends BaseService {
         return UpgradeService.instance;
     }
 
-    async createSellerRequest(payload: { id: string }) {
+    async createSellerRequest(payload: { id: number }) {
         const sql =
             `
                 INSERT INTO admin.user_upgrade_requests (bidder_id)
@@ -25,19 +25,19 @@ export class UpgradeService extends BaseService {
         return this.safeQuery(sql, params);
     }
 
-    async getRequestStatus(payload: { id: string }) {
+    async getRequestStatus(id: string) {
         const sql =
             `
                 SELECT status 
                 FROM admin.user_upgrade_requests
                 WHERE id = $1;
                 `
-        const params = [payload.id];
+        const params = [id];
 
         return this.safeQuery(sql, params);
     }
 
-    async updateApproveRequest(payload: { id: string }) {
+    async updateApproveRequest(payload: { id: number }) {
         const status = 'approved'
         const sql =
             `
@@ -50,7 +50,7 @@ export class UpgradeService extends BaseService {
         return this.safeQuery(sql, params);
     }
 
-    async updateRejectRequest(payload: { id: string }) {
+    async updateRejectRequest(payload: { id: number }) {
         const status = 'rejected'
         const sql =
             `
