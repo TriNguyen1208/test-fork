@@ -26,7 +26,7 @@ const FavoriteProductPage = () => {
           {favoriteProducts.map((item) => {
             return (
               <div key={item.id} className="mt-3">
-                <ProductCard key={item.id} product={item} />
+                <ProductCard key={item.id} product={item} isFavorite={} />
               </div>
             );
           })}
