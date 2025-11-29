@@ -8,6 +8,9 @@ import Link from "next/link";
 import Image from "next/image";
 import FavoriteHook from "@/hooks/useFavorite";
 
+const defaultImage =
+  "https://img.freepik.com/premium-photo/white-colors-podium-abstract-background-minimal-geometric-shape-3d-rendering_48946-113.jpg?semt=ais_hybrid&w=740&q=80";
+
 export default function ProductCard({
   product,
   isFavorite = false,
@@ -29,7 +32,7 @@ export default function ProductCard({
     error: any;
   };
 
-  const favoriteSet = new Set(favoriteProducts.map((item) => item.id));
+  const favoriteSet = new Set((favoriteProducts || []).map((item) => item.id));
 
   const handleFavorite = (productId: number, isFavorite: boolean) => {
     try {
@@ -46,7 +49,7 @@ export default function ProductCard({
   return (
     <div className="group relative w-full h-123 rounded-lg border-2 border-gray-200 bg-white shadow-md hover:shadow-2xl hover:border-blue-500 transition-all duration-200 select-none">
       <Image
-        src={product.main_image}
+        src={product.main_image || defaultImage}
         width={50}
         height={123}
         alt={product.name}

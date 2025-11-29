@@ -22,6 +22,29 @@ export class ProductService {
     });
   }
 
+    static async getTopEndingSoonProduct(limit: number, page: number):  Promise<any> {
+    return safeRequest(async () => {
+      const res = await api.get(API_ROUTES.product.getTopEndingSoonProduct(limit, page));
+      return res.data;
+    });
+  }
+
+    static async getTopBiddingProduct():  Promise<any> {
+    return safeRequest(async () => {
+      const res = await api.get(API_ROUTES.product.getTopBiddingProduct);
+      return res.data;
+    });
+  }
+
+    static async getTopPriceProduct():  Promise<any> {
+    return safeRequest(async () => {
+      const res = await api.get(API_ROUTES.product.getTopPriceProduct);
+      return res.data;
+    });
+  }
+
+
+
   static async getProductById(id: number):  Promise<any> {
     return safeRequest(async () => {
       const res = await api.get(API_ROUTES.product.getProductById(id));
