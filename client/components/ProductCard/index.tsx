@@ -1,15 +1,15 @@
 import React from "react";
 import FavoriteButton from "../FavoriteButton";
-import { Product } from "../../../shared/src/types";
+import { Product, ProductPreview } from "../../../shared/src/types";
 import { getTimeDifference } from "@/app/utils";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function ProductCard({
   product,
-  isFavorite,
+  isFavorite=false,
 }: {
-  product: Product;
+  product: ProductPreview;
   isFavorite: boolean;
 }) {
   return (
@@ -60,10 +60,10 @@ export default function ProductCard({
           </div>
 
           <div className="mt-3 h-10">
-            {product.top_bidder?.name ? (
+            {product.top_bidder_name ? (
               <div>
                 <p className="text-sm">Người trả giá cao nhất</p>
-                <p className="font-medium">{product.top_bidder?.name}</p>
+                <p className="font-medium">{product.top_bidder_name}</p>
               </div>
             ) : (
               <div>
