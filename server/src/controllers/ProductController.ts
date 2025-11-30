@@ -111,8 +111,9 @@ export class ProductController extends BaseController {
 
   async createQuestion(req: Request, res: Response) {
     const userId = req.headers["user-id"];
+    const productId = req.params.productId;
     const createQuestion: CreateQuestion = req.body;
-    const question = await this.service.createQuestion(createQuestion, userId);
+    const question = await this.service.createQuestion(createQuestion, userId, productId);
     return {
       question: question,
     };
@@ -120,8 +121,9 @@ export class ProductController extends BaseController {
 
   async createAnswer(req: Request, res: Response) {
     const userId = req.headers["user-id"];
+    const questionId = req.params.questionId;;
     const createAnswer: CreateAnswer = req.body;
-    const answer = await this.service.createAnswer(createAnswer, userId);
+    const answer = await this.service.createAnswer(createAnswer, userId, questionId);
     return {
       answer: answer,
     };

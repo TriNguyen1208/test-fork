@@ -451,26 +451,34 @@ export class ProductService extends BaseService {
     return questions;
   }
 
-  async createQuestion(createQuestion: CreateQuestion, userId: number) {
+  async createQuestion(
+    createQuestion: CreateQuestion,
+    userId: number,
+    productId: number
+  ) {
     const sql = `
     INSERT INTO feedback.product_questions(
     product_id, 
     user_id,
     comment,
-    created_at,
+    created_at
     )
     VALUES ($1, $2, $3, NOW())
     RETURNING *
     `;
     const question = await this.safeQuery(sql, [
-      createQuestion.product_id,
+      productId,
       userId,
-      createQuestion.comment
+      createQuestion.comment,
     ]);
     return question[0];
   }
 
-  async createAnswer(createAnswer: CreateAnswer, userId: number) {
+  async createAnswer(
+    createAnswer: CreateAnswer,
+    userId: number,
+    questionId: number
+  ) {
     const sql = `
     INSERT INTO feedback.product_answers(
     question_id,
@@ -482,7 +490,7 @@ export class ProductService extends BaseService {
     RETURNING *
     `;
     const answer = await this.safeQuery(sql, [
-      createAnswer.question_id,
+      questionId,
       userId,
       createAnswer.comment,
     ]);

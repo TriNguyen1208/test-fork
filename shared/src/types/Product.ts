@@ -97,5 +97,5 @@ export type CreateProduct = Pick<
   | "auto_extend"
 >;
 
-export type CreateQuestion = Pick<ProductQuestion, "comment" | "product_id">;
-export type CreateAnswer = Pick<ProductAnswer, "comment" | "question_id">;
+export type CreateQuestion = Pick<ProductQuestion, "comment">;
+export type CreateAnswer = Pick<ProductAnswer, "comment">;
