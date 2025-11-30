@@ -198,6 +198,7 @@ export class ProductService extends BaseService {
 
     products = {
       ...products[0],
+      top_bidder: top_bidder,
       top_bidder_name: top_bidder ? top_bidder.name : null,
       current_price: current_price,
       bid_count: bid_count,
