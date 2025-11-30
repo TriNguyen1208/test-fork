@@ -1,5 +1,5 @@
 import { User } from "./User";
-
+import { Product } from "./Product";
 export type BidLog = {
   id: number;
   user: Pick<User, "id" | "name">;
@@ -13,7 +13,17 @@ export type CreateBidLog = {
   price: number;
   product_id: number;
 };
+
 export type BidHistory = {
   product_id: number;
   logs: BidLog[];
 };
+
+export type UserBid = Pick<
+  Product,
+  "id" | "name" | "current_price" | "main_image"
+> &
+  Pick<BidLog, "price"> & {
+    max_price: number | null;
+    created_at: Date
+  };

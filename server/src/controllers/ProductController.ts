@@ -1,4 +1,8 @@
-import { CreateAnswer, CreateProduct, CreateQuestion } from "../../../shared/src/types";
+import {
+  CreateAnswer,
+  CreateProduct,
+  CreateQuestion,
+} from "../../../shared/src/types";
 import { BaseController } from "./BaseController";
 import { Request, Response, NextFunction } from "express";
 
@@ -10,6 +14,24 @@ export class ProductController extends BaseController {
   async getProducts(req: Request, res: Response) {
     const products = await this.service.getProducts();
     return { products: products };
+  }
+
+  async getProductsByCategory(req: Request, res: Response) {
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
+    const slug = req.query.slug;
+    const sort = req.query.sort;
+    const products = await this.service.getProductsByCategory(
+      limit,
+      page,
+      slug,
+      sort
+    );
+    const totalProducts = await this.service.getTotalProductsByCategory(slug);
+    return {
+      products: products,
+      totalProducts: totalProducts,
+    };
   }
 
   async getTopEndingSoonProducts(req: Request, res: Response) {
@@ -28,18 +50,33 @@ export class ProductController extends BaseController {
   }
 
   async getTopBiddingProducts(req: Request, res: Response) {
-    const topBiddingProducts = await this.service.getTopBiddingProducts();
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
+    const topBiddingProducts = await this.service.getTopBiddingProducts(
+      limit,
+      page
+    );
+
+    const totalBiddingProducts = await this.service.getTotalBiddingProducts();
 
     return {
       topBiddingProducts: topBiddingProducts,
+      totalBiddingProducts: totalBiddingProducts,
     };
   }
 
   async getTopPriceProducts(req: Request, res: Response) {
-    const topPriceProducts = await this.service.getTopPriceProducts();
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
+    const topPriceProducts = await this.service.getTopPriceProducts(
+      limit,
+      page
+    );
+    const totalProducts = await this.service.getTotalProducts();
 
     return {
       topPriceProducts: topPriceProducts,
+      totalProducts: totalProducts,
     };
   }
 
@@ -113,7 +150,11 @@ export class ProductController extends BaseController {
     const userId = req.headers["user-id"];
     const productId = req.params.productId;
     const createQuestion: CreateQuestion = req.body;
-    const question = await this.service.createQuestion(createQuestion, userId, productId);
+    const question = await this.service.createQuestion(
+      createQuestion,
+      userId,
+      productId
+    );
     return {
       question: question,
     };
@@ -121,9 +162,13 @@ export class ProductController extends BaseController {
 
   async createAnswer(req: Request, res: Response) {
     const userId = req.headers["user-id"];
-    const questionId = req.params.questionId;;
+    const questionId = req.params.questionId;
     const createAnswer: CreateAnswer = req.body;
-    const answer = await this.service.createAnswer(createAnswer, userId, questionId);
+    const answer = await this.service.createAnswer(
+      createAnswer,
+      userId,
+      questionId
+    );
     return {
       answer: answer,
     };

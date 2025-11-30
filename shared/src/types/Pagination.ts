@@ -1,5 +1,5 @@
 export type Pagination = {
-  id: number;
+  slug: string;
   page: number;
   limit: number;
   sort: string;

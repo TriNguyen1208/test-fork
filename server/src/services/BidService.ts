@@ -38,4 +38,6 @@ export class BidService extends BaseService {
     await this.safeQuery(sql, [bid.user, bid.product_id]);
     return { success: true };
   }
+
+  // async getBiddingProduct(userId: number): Promise<>
 }
