@@ -1,9 +1,13 @@
 "use client";
 import React from "react";
 import { useState, useRef } from "react";
-
 import dynamic from "next/dynamic";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import ProductHook from "@/hooks/useProduct";
+
 const Editor = dynamic(
   () =>
     import("@tinymce/tinymce-react").then(
@@ -25,6 +29,25 @@ const CreateProductPage = () => {
   const minDateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
     now.getDate()
   )}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+  const { mutate: createProduct, isPending } = ProductHook.useCreateProduct();
+
+  const newProductSchema = z.object({
+    name: z.string().min(1, { message: "Vui lòng nhập tên sản phẩm" }),
+    category_id: z.number({ message: "Vui lòng chọn loại sản phẩm" }),
+    initial_price: z
+      .number({ message: "Vui lòng nhập giá khởi điểm" })
+      .min(0, { message: "Giá khởi điểm không được âm" }),
+    price_increment: z
+      .number({ message: "Vui lòng nhập bước giá" })
+      .min(0, { message: "Bước giá không được âm" }),
+    buy_now_price: z.number().min(0, { message: "Giá mua ngay không được âm" }),
+    end_time: z.date({ message: "Vui lòng chọn ngày kết thúc" }),
+    desription: z.string(),
+  });
+
+  const {} = useForm();
+
   const handleChangeMainImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
       setMainImage(null);
@@ -56,50 +79,74 @@ const CreateProductPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const form = e.target as HTMLFormElement;
-    if (!previewMain) {
+    if (!mainImage) {
       alert("Yêu cầu có ảnh chính");
       return;
     }
     if (
-      (previewExtras && previewExtras.length < 2) ||
-      (previewExtras && previewExtras.length > 4) ||
-      !previewExtras
+      (extraImages && extraImages.length < 2) ||
+      (extraImages && extraImages.length > 4) ||
+      !extraImages
     ) {
       alert("Số lượng ảnh phụ không phù hợp");
       return;
     }
-    const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-    const category = (form.elements.namedItem("category") as HTMLInputElement)
-      .value;
-    const initPrice = (form.elements.namedItem("initPrice") as HTMLInputElement)
-      .value;
-    const increPrice = (
-      form.elements.namedItem("increPrice") as HTMLInputElement
-    ).value;
-    const buyNowPrice = (
-      form.elements.namedItem("buyNowPrice") as HTMLInputElement
-    ).value;
-    const endTime = (form.elements.namedItem("endTime") as HTMLInputElement)
-      .value;
-    const isExtend = (form.elements.namedItem("isExtend") as HTMLInputElement)
-      .checked;
-    if (buyNowPrice <= initPrice) {
-      alert("Giá mua ngay phải lớn hơn giá khởi điểm");
-      return;
+
+    const formData = new FormData();
+    formData.append("main-image", mainImage);
+    formData.append("extra-images-count", String(extraImages.length));
+    {
+      Array.from({ length: extraImages.length }, (_, i) => {
+        formData.append(`extra-image-${i}`, extraImages[i]);
+      });
     }
 
-    console.log(
-      minDateTime,
-      name,
-      category,
-      initPrice,
-      increPrice,
-      buyNowPrice,
-      endTime,
-      isExtend,
-      content
-    );
+    // const form = e.target as HTMLFormElement;
+    // if (!previewMain) {
+    //   alert("Yêu cầu có ảnh chính");
+    //   return;
+    // }
+    // if (
+    //   (previewExtras && previewExtras.length < 2) ||
+    //   (previewExtras && previewExtras.length > 4) ||
+    //   !previewExtras
+    // ) {
+    //   alert("Số lượng ảnh phụ không phù hợp");
+    //   return;
+    // }
+    // const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+    // const category = (form.elements.namedItem("category") as HTMLInputElement)
+    //   .value;
+    // const initPrice = (form.elements.namedItem("initPrice") as HTMLInputElement)
+    //   .value;
+    // const increPrice = (
+    //   form.elements.namedItem("increPrice") as HTMLInputElement
+    // ).value;
+    // const buyNowPrice = (
+    //   form.elements.namedItem("buyNowPrice") as HTMLInputElement
+    // ).value;
+    // const endTime = (form.elements.namedItem("endTime") as HTMLInputElement)
+    //   .value;
+    // const isExtend = (form.elements.namedItem("isExtend") as HTMLInputElement)
+    //   .checked;
+    // if (buyNowPrice <= initPrice) {
+    //   alert("Giá mua ngay phải lớn hơn giá khởi điểm");
+    //   return;
+    // }
+
+    // console.log(
+    //   minDateTime,
+    //   name,
+    //   category,
+    //   initPrice,
+    //   increPrice,
+    //   buyNowPrice,
+    //   endTime,
+    //   isExtend,
+    //   content
+    // );
+
+    createProduct();
   };
   const handleEditorChange = (content: string, editor: any) => {
     setContent(content);
@@ -121,7 +168,7 @@ const CreateProductPage = () => {
             Hình ảnh sản phẩm
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            Tải lên 1 hình ảnh chính và ít nhất 2 ảnh phụ, tối đa 5 hình
+            Tải lên 1 hình ảnh chính và ít nhất 2 ảnh phụ, tối đa 4 hình
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
             <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition flex items-center justify-center">
@@ -202,7 +249,7 @@ const CreateProductPage = () => {
           <h3 className="text-lg font-bold text-gray-900">Thông tin cơ bản</h3>
           <div>
             <label className="block text-sm font-semibold text-gray-900 mb-2">
-              Tên sản phẩm *
+              Tên sản phẩm <span className="text-red-500">*</span>
             </label>
             <input
               placeholder="Nhập tên sản phẩm"
@@ -215,7 +262,7 @@ const CreateProductPage = () => {
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-900 mb-2">
-              Danh mục *
+              Danh mục <span className="text-red-500">*</span>
             </label>
             <select
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -247,7 +294,7 @@ const CreateProductPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Giá khởi điểm (VND) *
+                Giá khởi điểm (VND) <span className="text-red-500">*</span>
               </label>
               <input
                 placeholder={"Gía khởi điểm"}
@@ -260,7 +307,7 @@ const CreateProductPage = () => {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Bước giá (VND) *
+                Bước giá (VND) <span className="text-red-500">*</span>
               </label>
               <input
                 placeholder={"Bước giá"}
@@ -287,7 +334,7 @@ const CreateProductPage = () => {
         </div>
         <div className="space-y-4">
           <label className="block text-sm font-semibold text-gray-900 mb-2">
-            Thời điểm kết thúc
+            Thời điểm kết thúc <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
