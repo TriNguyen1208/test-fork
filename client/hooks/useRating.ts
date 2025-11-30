@@ -2,7 +2,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { RatingService } from "@/services/ratingService";
 import { STALE_10_MIN } from "@/config/query.config";
 import { UserRating } from "../../shared/src/types";
-
+import { UserRatingHistory } from "../../shared/src/types";
 interface CreateRatingPayload extends UserRating {
     rater_id: string
     ratee_id: string
@@ -10,7 +10,7 @@ interface CreateRatingPayload extends UserRating {
 
 export class RatingHook {
 
-    static async useGetRating(userId: number) {
+    static useGetRating(userId: number) {
         return useQuery({
             queryKey: ["user_rating", userId],
 
@@ -21,12 +21,12 @@ export class RatingHook {
             enabled: !!userId,
 
             select: (data) => {
-                return data.data;
+                return data.data.result;
             }
         })
     }
 
-    static async useCreateRating() {
+    static useCreateRating() {
 
         const queryClient = useQueryClient();
         
