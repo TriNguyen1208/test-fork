@@ -24,7 +24,7 @@ export const RelatedProducts = ({
   }: {
     data: ProductPreview[] | undefined;
     isLoading: boolean;
-  } = CategoryHook.useProductsByCategory(pagination);
+  } = CategoryHook.useProductsByCategoryId(pagination);
 
   console.log("this is product: ", products);
   return (

@@ -16,23 +16,24 @@ export class CategoryController extends BaseController {
     const categories = await this.service.getCategories();
     return { categories: categories };
   }
-  // async getProductsByCategory(req: Request, res: Response) {
-  //   const pagination: Pagination = {
-  //     slug: req.body.slug,
-  //     page: parseInt(req.query.page as string) || 1,
-  //     limit: parseInt(req.query.limit as string) || 10,
-  //     sort: (req.query.sort as string) || "",
-  //   };
-  //   const products = await this.service.getProductsByCategory(pagination);
-  //   return products;
-  // }
+  async getProductsByCategoryId(req: Request, res: Response) {
+    const pagination: Pagination = {
+      id: Number(req.params.id),
+      page: parseInt(req.query.page as string) || 1,
+      limit: parseInt(req.query.limit as string) || 10,
+      sort: (req.query.sort as string) || "",
+    };
+    console.log(pagination);
+    const products = await this.service.getProductsByCategoryId(pagination);
+    return products;
+  }
 
-  async getProductsByCategory(req: Request, res: Response) {
+  async getProductsByCategorySlug(req: Request, res: Response) {
     const page = Number(req.query.page) || null;
     const limit = Number(req.query.limit) || null;
     const sort = req.query.sort;
     const slug = req.params.slug;
-    const products = await this.service.getProductsByCategory(
+    const products = await this.service.getProductsByCategorySlug(
       limit,
       page,
       slug,

@@ -15,10 +15,19 @@ export class CategoryService {
       return res.data;
     });
   }
-  static async getProductsByCategory(slug: string, page: number, limit: number, sort: string): Promise<any> {
+  static async getProductsByCategorySlug(slug: string, page: number, limit: number, sort: string): Promise<any> {
     return safeRequest(async () => {
       const res = await api.get(
-        API_ROUTES.category.getProductsByCategory(slug, page, limit, sort)
+        API_ROUTES.category.getProductsByCategorySlug(slug, page, limit, sort)
+      );
+      return res.data;
+    });
+  }
+
+    static async getProductsByCategoryId(pagination: Pagination): Promise<any> {
+    return safeRequest(async () => {
+      const res = await api.get(
+        API_ROUTES.category.getProductsByCategoryId(pagination)
       );
       return res.data;
     });

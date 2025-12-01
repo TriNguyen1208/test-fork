@@ -244,10 +244,10 @@ class ProductHook {
     return useMutation({
       mutationFn: ({ id, auto_extend }: { id: number; auto_extend: boolean }) =>
         ProductService.updateProductExtend(id, auto_extend),
-      onSuccess: () => {
+      onSuccess: (_data, variables) => {
         // Invalidate cache của dữ liệu
         queryClient.invalidateQueries({
-          queryKey: ["products"],
+          queryKey: ["product_by_id", variables.id],
         });
       },
     });

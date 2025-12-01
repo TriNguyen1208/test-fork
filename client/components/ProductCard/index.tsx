@@ -2,14 +2,16 @@
 
 import React from "react";
 import FavoriteButton from "../FavoriteButton";
-import {  ProductPreview } from "../../../shared/src/types";
+import { ProductPreview } from "../../../shared/src/types";
 import { getTimeDifference } from "@/app/utils";
 import Link from "next/link";
 import Image from "next/image";
 import FavoriteHook from "@/hooks/useFavorite";
 import LoadingSpinner from "../LoadingSpinner";
+import { formatCurrency } from "@/app/product/[product_slug]/components/Question";
 
-const defaultImage = "https://img.freepik.com/premium-photo/white-colors-podium-abstract-background-minimal-geometric-shape-3d-rendering_48946-113.jpg?semt=ais_hybrid&w=740&q=80";
+const defaultImage =
+  "https://img.freepik.com/premium-photo/white-colors-podium-abstract-background-minimal-geometric-shape-3d-rendering_48946-113.jpg?semt=ais_hybrid&w=740&q=80";
 
 export default function ProductCard({
   product,
@@ -17,8 +19,7 @@ export default function ProductCard({
 }: {
   product: ProductPreview;
   isFavorite: boolean;
-}) 
-{
+}) {
   const { mutate: addFavorite, isPending: isAdding } =
     FavoriteHook.useAddFavorite();
   const { mutate: removeFavorite, isPending: isRemoving } =
@@ -69,8 +70,7 @@ export default function ProductCard({
             <p className="text-sm">Giá hiện tại</p>
             <p>
               <span className="text-2xl font-medium text-red-500">
-                {product.current_price?.toLocaleString("en-US") ||
-                  product.initial_price}
+                {formatCurrency(product.current_price)}
               </span>
             </p>
           </div>
@@ -78,7 +78,9 @@ export default function ProductCard({
             <p className="text-sm">Giá mua ngay</p>
             <p>
               <span className="text-xl font-medium text-blue-600">
-                {product.buy_now_price?.toLocaleString("en-US") || "---"}
+                {product.buy_now_price
+                  ? formatCurrency(product.buy_now_price)
+                  : "---"}
               </span>
             </p>
           </div>
@@ -121,10 +123,7 @@ export default function ProductCard({
               />
             </svg>
             <span>
-              {getTimeDifference(
-                new Date(product.created_at),
-                new Date(product.end_time)
-              )}
+              {getTimeDifference(new Date(), new Date(product.end_time))}
             </span>
           </div>
         </section>

@@ -22,20 +22,20 @@ const API_ROUTES = {
   },
   upgrade: {
     createSellerRequest: `${UPGRADE_API}/request`, //POST
-    getRequestStatus:(id: number) =>  `${UPGRADE_API}/status/${id}`, //GET
+    getRequestStatus: (id: number) => `${UPGRADE_API}/status/${id}`, //GET
     updateApproveRequest: `${UPGRADE_API}/approve`, //PATCH
     updateRejectRequest: `${UPGRADE_API}/reject`, //PATCH
   },
   category: {
     getCategories: `${CATEGORY_API}`, //GET
-    // getProductsByCategory: (pagination: Pagination) =>
-    //   `${CATEGORY_API}/${pagination.slug}/products?page${pagination.page}&limit=${pagination.limit}&sort=${pagination.sort}`, //GET
-    getProductsByCategory: (
+    getProductsByCategoryId: (pagination: Pagination) =>
+      `${CATEGORY_API}/${pagination.id}/products?page${pagination.page}&limit=${pagination.limit}&sort=${pagination.sort}`, //GET
+    getProductsByCategorySlug: (
       slug: string,
       page: number,
       limit: number,
       sort: string
-    ) => `${CATEGORY_API}/${slug}?page${page}&limit=${limit}&sort=${sort}`, //GET
+    ) => `${CATEGORY_API}/slug/${slug}?page${page}&limit=${limit}&sort=${sort}`, //GET
     createCategory: `${CATEGORY_API}`, //POST
     updateCategory: (id: number) => `${CATEGORY_API}/${id}`, //PATCH
     deleteCategory: (id: number) => ` ${CATEGORY_API}/${id}`, //DELETE

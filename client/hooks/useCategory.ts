@@ -4,7 +4,6 @@ import { CategoryService } from "@/services/categoryService";
 import { Pagination } from "../../shared/src/types/Pagination";
 import {
   CreateCategory,
-  ProductCategoryTree,
   UpdateCategory,
 } from "../../shared/src/types";
 
@@ -19,16 +18,29 @@ class CategoryHook {
       },
     });
   }
-  static useProductsByCategory(slug: string, page: number, limit: number, sort: string) {
+  static useProductsByCategorySlug(slug: string, page: number, limit: number, sort: string) {
     return useQuery({
       queryKey: ["products_by_category", slug, page, limit, sort],
-      queryFn: () => CategoryService.getProductsByCategory(slug, page, limit, sort),
+      queryFn: () => CategoryService.getProductsByCategorySlug(slug, page, limit, sort),
       staleTime: STALE_10_MIN,
       select: (data) => {
         return data.data;
       },
     });
   }
+
+   static useProductsByCategoryId(pagination: Pagination) {
+    return useQuery({
+      queryKey: ["products_by_category", pagination],
+      queryFn: () => CategoryService.getProductsByCategoryId(pagination),
+      staleTime: STALE_10_MIN,
+      select: (data) => {
+        return data.data;
+      },
+    });
+  }
+
+
   static useCreateCategory() {
     const queryClient = useQueryClient();
 

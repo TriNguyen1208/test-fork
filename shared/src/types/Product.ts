@@ -72,7 +72,7 @@ export type ProductPagination = {
   page: number;
   limit: number;
   total: number;
-  products: Product[];
+  products: ProductPreview[];
 };
 
 export type CreateCategory = {

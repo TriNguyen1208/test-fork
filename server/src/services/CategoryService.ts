@@ -50,51 +50,6 @@ export class CategoryService extends BaseService {
     return categories;
   }
 
-  // async getProductsByCategory(
-  //   pagination: Pagination
-  // ): Promise<ProductPagination> {
-  //   const offset = (pagination.page - 1) * pagination.limit;
-  //   const sortColumn = pagination.sort;
-
-  //   let sql = "";
-  //   if (sortColumn != "") {
-  //     if (sortColumn === "time") {
-  //       sql = `SELECT *
-  //             FROM product.products as p WHERE p.category_id = $1
-  //             ORDER BY  p.end_time DESC
-  //             LIMIT $2 OFFSET $3`;
-  //     } else if (sortColumn === "price") {
-  //       sql = `SELECT *
-  //             FROM product.products as p WHERE p.category_id = $1
-  //             ORDER BY  p.initial_price ASC
-  //             LIMIT $2 OFFSET $3`;
-  //     }
-  //   } else {
-  //     sql = `SELECT *
-  //           FROM product.products as p
-  //           WHERE p.category_id = $1
-  //           LIMIT $2 OFFSET $3`;
-  //   }
-
-  //   const products: Product[] = await this.safeQuery(sql, [
-  //     pagination.id,
-  //     pagination.limit,
-  //     offset,
-  //   ]);
-
-  //   sql = ` SELECT COUNT(*) AS total
-  //   FROM product.products
-  //   WHERE category_id = $1`;
-  //   const dataTotal: any = await this.safeQuery(sql, [pagination.id]);
-  //   const total = dataTotal[0].total;
-
-  //   return {
-  //     page: pagination.page,
-  //     limit: pagination.limit,
-  //     total,
-  //     products: products,
-  //   };
-  // }
   async createCategory(category: CreateCategory): Promise<MutationResult> {
     const slug = createSlugUnique(category.name);
     const sql = `INSERT INTO product.product_categories (slug, parent_id, name, created_at, updated_at)
@@ -133,7 +88,7 @@ export class CategoryService extends BaseService {
     return totalProducts[0]?.total;
   }
 
-    async getCategoryNameBySlug(slug: string): Promise<string | undefined> {
+  async getCategoryNameBySlug(slug: string): Promise<string | undefined> {
     let sql = `
     SELECT pc.name
     FROM product.product_categories pc
@@ -236,7 +191,70 @@ export class CategoryService extends BaseService {
     return products;
   }
 
-  async getProductsByCategory(
+  async getProductsByCategoryId(
+    pagination: Pagination
+  ): Promise<ProductPagination> {
+    const offset = (pagination.page - 1) * pagination.limit;
+    const sortColumn = pagination.sort;
+
+    let sql = `
+      SELECT pp.id, GREATEST(COALESCE(bl.current_price, 0), pp.initial_price) AS price, pp.end_time
+      FROM product.products pp
+      JOIN product.product_categories pc on pc.id = pp.category_id
+      LEFT JOIN (
+          SELECT 
+            bl.product_id, 
+            MAX(bl.price) AS current_price
+          FROM auction.bid_logs bl 
+          GROUP BY bl.product_id
+      ) bl ON bl.product_id = pp.id
+      WHERE pc.id = $1
+      `;
+
+    const params: any[] = [pagination.id];
+    if (pagination.sort) {
+      if (pagination.sort == "ascending-price") {
+        sql += `ORDER BY price ASC \n`;
+      } else if (pagination.sort == "descending-price") {
+        sql += `ORDER BY price DESC \n`;
+      } else if (pagination.sort == "expiring-soon") {
+        sql += "ORDER BY end_time ASC \n";
+      }
+    }
+    if (pagination.limit) {
+      sql += `LIMIT $2 \n`;
+      params.push(pagination.limit);
+    }
+    if (pagination.page && pagination.limit) {
+      const offset = (pagination.page - 1) * pagination.limit;
+      sql += "OFFSET $3 \n";
+      params.push(offset);
+    }
+
+    const products = await this.safeQuery<ProductPreview>(sql, params);
+
+    const newProducts = await Promise.all(
+      products.map(async (item: any) => {
+        const productType = this.getProductPreviewType(item.id);
+        return productType;
+      })
+    );
+
+    sql = ` SELECT COUNT(*) AS total
+    FROM product.products
+    WHERE category_id = $1`;
+    const dataTotal: any = await this.safeQuery(sql, [pagination.id]);
+    const total = dataTotal[0].total;
+
+    return {
+      page: pagination.page,
+      limit: pagination.limit,
+      total,
+      products: newProducts,
+    };
+  }
+
+  async getProductsByCategorySlug(
     limit: number,
     page: number,
     slug: string,

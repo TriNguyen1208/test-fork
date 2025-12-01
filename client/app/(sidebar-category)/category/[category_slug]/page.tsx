@@ -28,7 +28,7 @@ function CategorySlugPage({
     data,
     isLoading: isLoadingProducts,
     error: errorProducts,
-  } = CategoryHook.useProductsByCategory(
+  } = CategoryHook.useProductsByCategorySlug(
     category_slug,
     Number(page),
     per_page,
