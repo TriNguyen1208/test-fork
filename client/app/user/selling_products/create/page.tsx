@@ -7,6 +7,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import ProductHook from "@/hooks/useProduct";
+import { XIcon } from "lucide-react";
 
 import { api } from "@/config/axios.config";
 import {
@@ -194,7 +195,7 @@ const CreateProductPage = () => {
             Tải lên 1 hình ảnh chính và ít nhất 2 ảnh phụ, tối đa 4 hình
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
-            <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition flex items-center justify-center">
+            <label className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition flex items-center justify-center">
               <input
                 accept="image/*"
                 className="hidden"
@@ -203,7 +204,17 @@ const CreateProductPage = () => {
               />
               <div className="text-center">
                 {previewMain ? (
-                  <img src={previewMain || ""} alt="Main image" />
+                  <>
+                    <img src={previewMain || ""} alt="Main image" />
+                    <XIcon
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setMainImage(null);
+                        setPreviewMain(null);
+                      }}
+                      className="absolute z-20 right-1.5 top-1.5 text-red-500 hover:text-red-700 transition-colors duration-200 cursor-pointer"
+                    />
+                  </>
                 ) : (
                   <>
                     <svg
@@ -228,7 +239,7 @@ const CreateProductPage = () => {
               </div>
             </label>
 
-            <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition flex items-center justify-center">
+            <label className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition flex items-center justify-center">
               <input
                 multiple
                 accept="image/*"
@@ -238,11 +249,22 @@ const CreateProductPage = () => {
               />
               <div className="text-center">
                 {previewExtras && previewExtras.length != 0 ? (
-                  <div className="grid grid-cols-2">
-                    {(previewExtras || []).map((img, index) => (
-                      <img key={index} src={img} alt="Main image" />
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid grid-cols-2">
+                      {(previewExtras || []).map((img, index) => (
+                        <img key={index} src={img} alt="Main image" />
+                      ))}
+                    </div>
+
+                    <XIcon
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setExtraImages(null);
+                        setPreviewExtras(null);
+                      }}
+                      className="absolute right-1.5 top-1.5 text-red-500 hover:text-red-700 transition-colors duration-200 cursor-pointer"
+                    />
+                  </>
                 ) : (
                   <>
                     <svg
