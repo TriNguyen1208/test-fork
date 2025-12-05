@@ -26,11 +26,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CreateBidLog,
   Product,
+  ProductCategoryTree,
   ProductPreview,
 } from "../../../../shared/src/types";
 import BidHook from "@/hooks/useBid";
 import FavoriteHook from "@/hooks/useFavorite";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import CategoryHook from "@/hooks/useCategory";
 
 function isLessThreeDays(dateA: Date, dateB: Date): boolean {
   const diffMs = Math.abs(dateA.getTime() - dateB.getTime()); // hiệu số milliseconds
@@ -89,6 +91,11 @@ export default function ProductPage() {
     ProductHook.useGetProductBySlug(product_slug as string);
   const { data: favorite_products, isLoading: isLoadingFavoriteProducts } =
     FavoriteHook.useAllFavorite();
+  const { data: category, isLoading: isLoadingProductCategory } =
+    CategoryHook.useCategoryDetailById(product?.category_id) as {
+      data: ProductCategoryTree;
+      isLoading: boolean;
+    };
 
   const { mutate: createBid, isPending: isCreatingBid } =
     BidHook.useCreateBid();
@@ -176,7 +183,9 @@ export default function ProductPage() {
 
   return (
     <div className="bg-[#F8FAFC] w-full">
-      {isLoadingProduct || isLoadingFavoriteProducts ? (
+      {isLoadingProduct ||
+      isLoadingFavoriteProducts ||
+      isLoadingProductCategory ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -184,7 +193,7 @@ export default function ProductPage() {
             {product && (
               <BreadCrump
                 category_name={product.category_name}
-                category_slug={product.slug}
+                category_slug={category.slug}
                 product_name={product.name}
               />
             )}
@@ -362,9 +371,11 @@ export default function ProductPage() {
               Thông tin chi tiết sản phẩm
             </h3>
 
-            <p
-              dangerouslySetInnerHTML={{ __html: product.description || "" }}
-            />
+            {product && (
+              <p
+                dangerouslySetInnerHTML={{ __html: product.description || "" }}
+              />
+            )}
           </div>
           {product && <Question productId={product.id} />}
           {product && <BidHistory productId={product.id} />}

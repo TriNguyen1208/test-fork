@@ -1,11 +1,8 @@
 import Image from "next/image";
 import { WinningProduct } from "../../../shared/src/types";
+import { formatCurrency } from "@/app/product/[product_slug]/components/Question";
 
-const WinProduct = ({
-  product,
-}: {
-  product: WinningProduct;
-}) => {
+const WinProduct = ({ product }: { product: WinningProduct }) => {
   return (
     <div className="flex items-center justify-between bg-white border border-gray-100 rounded-lg shadow-xs p-4 w-full">
       <div className="flex items-center gap-3">
@@ -27,7 +24,7 @@ const WinProduct = ({
           Giá đấu của bạn:
         </span>
         <span className="text-[#0D9488] font-bold text-md">
-          {product.current_price} đ
+          {formatCurrency(product.current_price)}
         </span>
       </div>
     </div>

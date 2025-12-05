@@ -34,7 +34,7 @@ function Page() {
     [fullFavoriteProductData]
   );
 
-  if (isLoadingTopProduct && isLoadingFavoriteProduct)
+  if (isLoadingTopProduct || isLoadingFavoriteProduct)
     return (
       <>
         <LoadingSpinner />

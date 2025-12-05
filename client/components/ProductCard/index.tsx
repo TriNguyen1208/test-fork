@@ -38,7 +38,7 @@ export default function ProductCard({
   };
 
   return (
-    <div className="group relative w-full h-123 rounded-lg border-2 border-gray-200 bg-white shadow-md hover:shadow-2xl hover:border-blue-500 transition-all duration-200 select-none">
+    <div className="group relative w-full h-fit pb-3 rounded-lg border-2 border-gray-200 bg-white shadow-md hover:shadow-2xl hover:border-blue-500 transition-all duration-200 select-none">
       <Image
         src={product.main_image || defaultImage}
         width={50}

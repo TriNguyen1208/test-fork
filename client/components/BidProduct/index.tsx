@@ -1,14 +1,16 @@
 import Image from "next/image";
 import { BiddingProduct } from "../../../shared/src/types";
 import Link from "next/link";
+import { formatCurrency } from "@/app/product/[product_slug]/components/Question";
+import { defaultImage } from "@/app/const";
 
 const BidProduct = ({ product }: { product: BiddingProduct }) => {
   return (
-    <Link href = {`/product/${product.slug}`}>
+    <Link href={`/product/${product.slug}`}>
       <div className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4 w-full">
         <div className="flex items-center gap-3 ">
           <Image
-            src={product.main_image}
+            src={product.main_image || defaultImage}
             alt="Ảnh sản phẩm"
             width={90}
             height={90}
@@ -21,7 +23,7 @@ const BidProduct = ({ product }: { product: BiddingProduct }) => {
             <span className="text-slate-500 font-stretch-10% text-sm">
               Giá đấu của bạn:{" "}
               <span className="text-[#0D9488] font-bold text-md">
-                {product.user_price} đ
+                {formatCurrency(product.user_price)}
               </span>
             </span>
           </div>
@@ -31,7 +33,7 @@ const BidProduct = ({ product }: { product: BiddingProduct }) => {
             Giá hiện tại
           </span>
           <span className="text-[#0D9488] font-bold text-lg">
-            {product.current_price} đ
+            {formatCurrency(product.current_price)}
           </span>
         </div>
       </div>
