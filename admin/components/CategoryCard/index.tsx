@@ -1,0 +1,82 @@
+"use client";
+
+import React, { useState } from "react";
+import { ChevronRight, Eye, Pencil, Trash2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { ProductCategoryTree } from "../../../shared/src/types/Product";
+
+const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
+  const [openChildren, setOpenChildren] = useState<boolean>(false);
+
+  const handleView = (categoryId: number) => {
+    // TODO
+    alert("Chưa code mà đòi xem");
+  };
+
+  const handleEdit = (categoryId: number) => {
+    // TODO
+    alert("Đây là edit");
+  };
+
+  const handleDelete = (categoryId: number) => {
+    // TODO
+    alert("Nút xóa này sẽ được thay thể bởi component của Trí");
+  };
+
+  return (
+    <div>
+      <div className="h-12 bg-blue-100/50 border border-gray-300 rounded-md shadow-md flex flex-row gap-1 px-3 py-1 justify-between items-center select-none hover:border-blue-500 transition-colors duration-200">
+        <div
+          onClick={() => setOpenChildren(!openChildren)}
+          className="cursor-pointer"
+          style={{
+            transition: "transform 200ms ease-in-out",
+            transform: openChildren ? "rotate(90deg)" : "rotate(0deg)",
+          }}
+        >
+          <ChevronRight className="hover:text-blue-500 transition-colors duration-200" />
+        </div>
+        <p className="flex grow pt-0.5 font-bold">{category.name}</p>
+        <div className="flex flex-row gap-2 justify-center items-center">
+          <Eye
+            onClick={() => handleView(category.id)}
+            className="h-8 w-8 p-1 text-blue-600 hover:bg-blue-600/20 rounded-md transitions-colors duration-200"
+          />
+          <Pencil
+            onClick={() => handleEdit(category.id)}
+            className="h-8 w-8 p-1 text-orange-500 hover:bg-orange-500/20 rounded-md transitions-colors duration-200"
+          />
+          <Trash2
+            onClick={() => handleDelete(category.id)}
+            className="h-8 w-8 p-1 text-red-500 hover:bg-red-500/20 rounded-md transitions-colors duration-200"
+          />
+        </div>
+      </div>
+      {openChildren && (
+        <div className="flex flex-col gap-1 mt-1 mb-2 select-none">
+          {category.children?.map((child) => (
+            <div className="ml-10 h-10 border border-gray-300 rounded-md shadow-md flex flex-row gap-1 pl-5 pr-3 py-1 justify-between items-center hover:border-blue-500 transition-colors duration-200">
+              <p className="flex grow pt-0.5">{child.name}</p>
+              <div className="flex flex-row gap-2 justify-center items-center">
+                <Eye
+                  onClick={() => handleView(category.id)}
+                  className="h-7 w-7 p-1 text-blue-600 hover:bg-blue-600/20 rounded-md transitions-colors duration-200"
+                />
+                <Pencil
+                  onClick={() => handleEdit(category.id)}
+                  className="h-7 w-7 p-1 text-orange-500 hover:bg-orange-500/20 rounded-md transitions-colors duration-200"
+                />
+                <Trash2
+                  onClick={() => handleDelete(category.id)}
+                  className="h-7 w-7 p-1 text-red-500 hover:bg-red-500/20 rounded-md transitions-colors duration-200"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CategoryCard;
