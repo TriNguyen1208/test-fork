@@ -15,13 +15,13 @@ export type CreateBidLog = {
   user_id: number;
   price: number;
   product_id: number;
+  product_slug?: string;
 };
 
 export type BidHistory = {
   product_id: number;
   logs: BidLog[];
 };
-
 
 export type UserBid = {
   id: number;

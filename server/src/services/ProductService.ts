@@ -33,11 +33,9 @@ export class ProductService extends BaseService {
   async getTopBidder(productId: number): Promise<ShortUser | null> {
     const sql = `  
     SELECT u.id, u.name, u.profile_img
-    FROM auction.bid_logs bl 
-    JOIN admin.users u on bl.user_id = u.id 
-    WHERE bl.product_id = $1
-    ORDER BY bl.price DESC 
-    LIMIT 1 
+    FROM admin.users u
+    JOIN product.products p ON p.top_bidder_id = u.id
+    WHERE p.id = $1
     `;
     const bidder = await this.safeQuery<ShortUser>(sql, [productId]);
     return bidder[0] ? bidder[0] : null;
@@ -59,7 +57,8 @@ export class ProductService extends BaseService {
   async getCurrentPrice(productId: number): Promise<number | undefined | null> {
     const sql = `  
     SELECT MAX(bl.price) AS current_price
-    FROM auction.bid_logs bl 
+    FROM product.products p
+    JOIN auction.bid_logs bl ON bl.product_id = p.id AND bl.user_id = p.top_bidder_id 
     WHERE bl.product_id = $1
     `;
     const currentPrice: { current_price: number | null }[] =
@@ -177,9 +176,7 @@ export class ProductService extends BaseService {
     return products;
   }
 
-    async getTotalProductsBySearch(
-    query: string,
-  ): Promise<number | undefined> {
+  async getTotalProductsBySearch(query: string): Promise<number | undefined> {
     let sql = `
        SELECT COUNT(*) as total
        FROM product.products pp
@@ -188,10 +185,7 @@ export class ProductService extends BaseService {
     `;
     const params: any[] = [query];
 
-
-    let totalProducts: {total: number}[] = await this.safeQuery(sql, params);
-
-   
+    let totalProducts: { total: number }[] = await this.safeQuery(sql, params);
 
     return totalProducts[0]?.total;
   }
@@ -567,9 +561,9 @@ WHERE pc.parent_id is not null
     ) DESC
     `;
 
-    if (limit){
-      sql += 'LIMIT $2';
-      params.push(limit)
+    if (limit) {
+      sql += "LIMIT $2";
+      params.push(limit);
     }
 
     const product: SearchProduct[] = await this.safeQuery(sql, params);

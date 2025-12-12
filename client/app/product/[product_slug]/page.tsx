@@ -33,6 +33,8 @@ import BidHook from "@/hooks/useBid";
 import FavoriteHook from "@/hooks/useFavorite";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import CategoryHook from "@/hooks/useCategory";
+import { formatPrice, parseNumber } from "@/utils";
+import { X } from "lucide-react";
 
 function isLessThreeDays(dateA: Date, dateB: Date): boolean {
   const diffMs = Math.abs(dateA.getTime() - dateB.getTime()); // hiệu số milliseconds
@@ -135,6 +137,7 @@ export default function ProductPage() {
       user_id: parseInt(user?.id as string),
       price: data.price,
       product_id: product.id,
+      product_slug: product_slug as string | undefined,
     };
     createBid(bid);
     reset({
@@ -172,6 +175,7 @@ export default function ProductPage() {
     handleSubmit: handleSubmitBid,
     formState: formStateBid,
     reset,
+    setValue,
     watch,
   } = useForm<{ price: string }, any, { price: number }>({
     resolver: zodResolver(schemaBid),
@@ -179,7 +183,8 @@ export default function ProductPage() {
       price: "",
     },
   });
-  watch("price");
+
+  console.log(watch("price"));
 
   return (
     <div className="bg-[#F8FAFC] w-full">
@@ -299,49 +304,64 @@ export default function ProductPage() {
                       onClick={handleOnclickBid}
                     />
 
-                    {isBid ? (
-                      <div className="absolute z-10  inline-block w-64 text-sm text-body transition-opacity duration-300 bg-white border  rounded-2xl shadow-xs ">
-                        <div className="relative px-3 py-2 bg-[#F9FAFB] border-b border-default rounded-t-base">
-                          <h3 className="font-medium text-heading">
-                            Đặt lệnh đấu giá
-                          </h3>
+                    {isBid && (
+                      <>
+                        <div className="z-1000 fixed inset-0 w-screen h-screen bg-black opacity-50 flex justify-center items-center"></div>
+                        <div className="z-1001 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg px-4 py-4 shadow-lg">
+                          <div className="bg-white w-full">
+                            <form
+                              className="px-2 w-full"
+                              onSubmit={handleSubmitBid(handleBid)}
+                            >
+                              <label
+                                htmlFor="price"
+                                className="block font-medium text-heading text-xl"
+                              >
+                                Đặt lệnh đấu giá
+                              </label>
+                              <input
+                                type="text"
+                                id="price"
+                                value={formatPrice(Number(watch("price")))}
+                                onChange={(e) => {
+                                  const parsed = parseNumber(e.target.value);
+                                  setValue("price", String(parsed));
+                                }}
+                                className="border border-gray-300 mt-4 rounded-2xl text-heading text-3xl text-blue-500 rounded-base  w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+                                placeholder="150.000"
+                              />
+                              <span className="text-red-600 text-sm mt-1 block mb-2">
+                                {formStateBid.errors.price
+                                  ? formStateBid.errors.price.message
+                                  : ""}
+                              </span>
+                              <div className="grid grid-cols-2 gap-2 mt-5">
+                                <button
+                                  type="submit"
+                                  className="font-medium mx-auto block text-white bg-[#1447E6] box-border border border-blue-300 rounded-4xl hover:cursor-pointer  shadow-xs  leading-5  text-sm w-full py-2.5"
+                                >
+                                  Xác nhận
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleOnclickCancleBid();
+                                  }}
+                                  className="font-medium mx-auto block text-white bg-gray-500 box-border border border-gray-200 rounded-4xl hover:cursor-pointer  shadow-xs  leading-5  text-sm w-full py-2.5"
+                                >
+                                  Hủy
+                                </button>
+                              </div>
+                            </form>
+                          </div>
                           <button
-                            type="button"
-                            onClick={handleOnclickCancleBid}
-                            className=" absolute right-2 top-1 font-medium mx-auto block text-red-500 bg-white   hover:cursor-pointer  shadow-xs  leading-5 px-2 py-1 rounded-[3px] text-sm "
+                            onClick={(e) => setIsBid(false)}
+                            className="absolute top-2.5 right-3 "
                           >
-                            X
+                            <X className="text-gray-500 hover:text-red-600 cursor-pointer" />
                           </button>
                         </div>
-                        <form
-                          className="max-w-sm mx-auto px-2"
-                          onSubmit={handleSubmitBid(handleBid)}
-                        >
-                          <input
-                            type="text"
-                            id="price"
-                            {...registerBid("price")}
-                            className="border border-amber-50 my-4 rounded-2xl text-heading text-sm rounded-base  w-full px-3 py-2.5 shadow-xs placeholder:text-body"
-                            placeholder="150000"
-                          />
-                          <span className="text-red-600 text-sm mt-1 block mb-2">
-                            {formStateBid.errors.price
-                              ? formStateBid.errors.price.message
-                              : ""}
-                          </span>
-                          <div>
-                            <button
-                              type="submit"
-                              className="font-medium mx-auto block text-white bg-[#1447E6] box-border border border-blue-300 rounded-4xl hover:cursor-pointer  shadow-xs  leading-5  text-sm px-16 py-2.5 mb-2 "
-                            >
-                              Xác nhận
-                            </button>
-                          </div>
-                        </form>
-                        <div />
-                      </div>
-                    ) : (
-                      <></>
+                      </>
                     )}
                   </div>
 
