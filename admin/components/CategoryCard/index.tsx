@@ -25,7 +25,7 @@ const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
 
   return (
     <div>
-      <div className="h-12 bg-blue-100/50 border border-gray-300 rounded-md shadow-md flex flex-row gap-1 px-3 py-1 justify-between items-center select-none hover:border-blue-500 transition-colors duration-200">
+      <div className="h-16 bg-blue-100/40 border border-gray-300 rounded-md shadow-md flex flex-row gap-1 px-3 py-1 justify-between items-center select-none hover:border-blue-500 transition-colors duration-200">
         <div
           onClick={() => setOpenChildren(!openChildren)}
           className="cursor-pointer"
