@@ -165,11 +165,13 @@ export const Question = ({ productId }: ProductId) => {
                 <QuestionItem {...question} />{" "}
               </div>
             ))}
-          <Pagination
-            totalPages={totalPages}
-            currentPage={page}
-            onPageChange={handlePageChange}
-          />
+          <div className="flex justify-center items-center mt-2">
+            <Pagination
+              totalPages={totalPages}
+              currentPage={page}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
       </div>
     </div>

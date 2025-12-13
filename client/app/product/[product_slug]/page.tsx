@@ -359,7 +359,18 @@ export default function ProductPage() {
                                 }}
                                 autoComplete="off"
                                 className="border border-gray-300 mt-4 rounded-2xl text-heading text-3xl text-blue-500 rounded-base  w-full px-3 py-2.5 shadow-xs placeholder:text-body"
-                                placeholder="150.000"
+                                placeholder={
+                                  userBid.max_price &&
+                                  userBid.max_price > product.current_price
+                                    ? formatCurrency(
+                                        Number(userBid.max_price) +
+                                          Number(product.price_increment)
+                                      )
+                                    : formatCurrency(
+                                        Number(product.current_price) +
+                                          Number(product.price_increment)
+                                      )
+                                }
                               />
                               <span className="text-red-600 text-sm mt-1 block mb-2">
                                 {formStateBid.errors.price
@@ -419,7 +430,7 @@ export default function ProductPage() {
                               <div className="grid grid-cols-2 gap-2 mt-5">
                                 <button
                                   type="submit"
-                                  className="font-medium mx-auto block text-white bg-[#1447E6] box-border border border-blue-300 rounded-4xl hover:cursor-pointer  shadow-xs  leading-5  text-sm w-full py-2.5"
+                                  className="font-medium mx-auto block text-white bg-[#1447E6] box-border border border-blue-300 rounded-4xl hover:bg-[#2957e3] hover:cursor-pointer  shadow-xs  leading-5  text-sm w-full py-2.5"
                                 >
                                   Xác nhận
                                 </button>
@@ -428,7 +439,7 @@ export default function ProductPage() {
                                     e.preventDefault();
                                     handleOnclickCancleBid();
                                   }}
-                                  className="font-medium mx-auto block text-white bg-gray-500 box-border border border-gray-200 rounded-4xl hover:cursor-pointer  shadow-xs  leading-5  text-sm w-full py-2.5"
+                                  className="font-medium mx-auto block text-white bg-gray-500 box-border border border-gray-200 rounded-4xl hover:bg-gray-400 hover:cursor-pointer  shadow-xs  leading-5  text-sm w-full py-2.5"
                                 >
                                   Hủy
                                 </button>
@@ -478,8 +489,16 @@ export default function ProductPage() {
               />
             )}
           </div>
-          {product && <Question productId={product.id} />}
-          {product && <BidHistory productId={product.id} />}
+          {product && (
+            <div className="grid grid-cols-10 gap-5">
+              <div className="col-span-3">
+                <BidHistory productId={product.id} />
+              </div>
+              <div className="col-span-7">
+                <Question productId={product.id} />
+              </div>
+            </div>
+          )}
           {product && setFavorites && (
             <RelatedProducts
               categoryId={product.category_id}

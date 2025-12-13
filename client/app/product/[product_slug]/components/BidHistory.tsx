@@ -25,13 +25,13 @@ export const BidHistory = ({ productId }: ProductId) => {
       <table className="w-full">
         <thead>
           <tr>
-            <th className="text-left py-3 px-3 text-sm font-semibold text-gray-600">
+            <th className="text-left py-3 text-sm font-semibold text-gray-600">
               Thời gian
             </th>
-            <th className="text-left py-3 px-3 text-sm font-semibold text-gray-600">
+            <th className="text-left py-3 text-sm font-semibold text-gray-600">
               Người đấu giá
             </th>
-            <th className="text-right py-3 px-3 text-sm font-semibold text-gray-600">
+            <th className="text-left py-3 pl-5 text-sm font-semibold text-gray-600">
               Giá
             </th>
           </tr>
