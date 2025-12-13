@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Menu, X, User } from "lucide-react";
 
-const HeaderCopy = () => {
+const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openLogout, setOpenLogout] = useState(false);
   const logoutRef = useRef<HTMLDivElement>(null);
@@ -132,4 +132,4 @@ const HeaderCopy = () => {
   );
 };
 
-export default HeaderCopy;
+export default Header;
