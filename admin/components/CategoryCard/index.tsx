@@ -11,7 +11,13 @@ import { useRouter } from "next/navigation";
 import CategoryHook from "@/hooks/useCategory";
 import { error } from "console";
 
-const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
+export type CategoryWithProductCount =
+  Omit<ProductCategoryTree, "children"> & {
+    productNumber: number;
+    children: CategoryWithProductCount[];
+  };
+
+const CategoryCard = ({ category }: { category: CategoryWithProductCount }) => {
 
     // Define state
     const router = useRouter();
@@ -39,7 +45,11 @@ const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
         setEditModalOpen(true);
     };
 
-    const handleDelete = (categoryId: number, categoryName: string) => {
+    const handleDelete = (categoryId: number, categoryName: string, productNumber: number) => {
+        if (productNumber > 0) {
+            alert("Không thể xóa danh mục đang có sản phẩm");
+            return;
+        }
         setSelectedCategory({ id: categoryId, name: categoryName });
         setDeleteModalOpen(true);
     };
@@ -113,7 +123,7 @@ const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
                 <p className="flex grow pt-0.5 font-bold">
                     {category.name}
                     <span className="ml-2 px-2 py-1 text-xs font-semibold bg-blue-500 text-white rounded-full">
-                        {100}
+                        {category.productNumber}
                     </span>
                 </p>
                 <div className="flex flex-row gap-2 justify-center items-center">
@@ -126,7 +136,7 @@ const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
                         className="h-8 w-8 p-1 text-orange-500 hover:bg-orange-500/20 rounded-md transitions-colors duration-200 cursor-pointer"
                     />
                     <Trash2
-                        onClick={() => handleDelete(category.id, category.name)}
+                        onClick={() => handleDelete(category.id, category.name, category.productNumber)}
                         className="h-8 w-8 p-1 text-red-500 hover:bg-red-500/20 rounded-md transitions-colors duration-200 cursor-pointer"
                     />
                 </div>
@@ -142,7 +152,7 @@ const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
                             <p className="flex grow pt-0.5">
                                 {child.name}
                                 <span className="ml-2 px-2 py-1 text-xs font-semibold bg-blue-300 text-white rounded-full">
-                                    {100}
+                                    {child.productNumber}
                                 </span>
                             </p>
                             <div className="flex flex-row gap-2 justify-center items-center">
@@ -155,7 +165,7 @@ const CategoryCard = ({ category }: { category: ProductCategoryTree }) => {
                                     className="h-7 w-7 p-1 text-orange-500 hover:bg-orange-500/20 rounded-md transitions-colors duration-200 cursor-pointer"
                                 />
                                 <Trash2
-                                    onClick={() => handleDelete(child.id, child.name)}
+                                    onClick={() => handleDelete(child.id, child.name, child.productNumber)}
                                     className="h-7 w-7 p-1 text-red-500 hover:bg-red-500/20 rounded-md transitions-colors duration-200 cursor-pointer"
                                 />
                             </div>

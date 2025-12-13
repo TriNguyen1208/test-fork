@@ -7,6 +7,18 @@ import CategoryHook from "@/hooks/useCategory";
 import { ProductCategoryTree } from "../../../../shared/src/types";
 import Pagination from "@/components/Pagination";
 import Fuse from "fuse.js"
+import { CategoryWithProductCount } from "@/components/CategoryCard";
+
+const attachProductCount = (
+    category: ProductCategoryTree,
+    countMap: Map<number, number>
+): CategoryWithProductCount => ({
+    ...category,
+    productNumber: countMap.get(category.id) ?? 0,
+    children: category.children?.map(child =>
+        attachProductCount(child, countMap)
+    ) ?? []
+});
 
 const page = () => {
 
@@ -19,13 +31,34 @@ const page = () => {
 
     // Custom hook
     const {
-        data: categoriesData,
+        data: categoriesDataBeforeFilter,
         isLoading: isCategoriesLoading
     } = CategoryHook.useCategories() as {
         data: ProductCategoryTree[],
         isLoading: boolean,
     };
+    const {
+        data: countProductsData,
+        isLoading: isCountProductsLoading
+    } = CategoryHook.useCountProducts() as {
+        data: { category_id: number; total: number }[],
+        isLoading: boolean
+    }
     const { mutate: createCategory, isPending: isPendingCreateCategory } = CategoryHook.useCreateCategory();
+
+    // Memo data
+    const categoriesData = useMemo<CategoryWithProductCount[]>(() => {
+        if (!categoriesDataBeforeFilter || !countProductsData) return [];
+
+        const countMap = new Map(
+            countProductsData.map(item => [item.category_id, item.total])
+        );
+
+        return categoriesDataBeforeFilter.map(category =>
+            attachProductCount(category, countMap)
+        );
+    }, [categoriesDataBeforeFilter, countProductsData]);
+
 
     // Full text search
     const fuse = new Fuse(categoriesData, {
@@ -33,8 +66,7 @@ const page = () => {
         threshold: 0.4
     })
 
-    // Memo data
-    const pageData = useMemo(() => {
+    const pageData = useMemo<CategoryWithProductCount[]>(() => {
         if (!categoriesData) return [];
 
         const searchResult = fuse.search(searchQuery);
@@ -42,7 +74,7 @@ const page = () => {
 
         const page = Number(currentPage);
         const start = limit * (page - 1);
-        const end = Math.min(categoriesData.length, start + limit);
+        const end = Math.min(filterData.length, start + limit);
 
         return filterData.slice(start, end);
     }, [currentPage, limit, categoriesData, searchQuery])
@@ -94,7 +126,7 @@ const page = () => {
     }
 
     // Handling loading
-    if (isCategoriesLoading)
+    if (isCategoriesLoading || isCountProductsLoading)
         return <div>Loading...</div>
     return (
         <>
