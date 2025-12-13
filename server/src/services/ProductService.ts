@@ -9,6 +9,7 @@ import {
   ProductQuestion,
   SearchProduct,
   WinningProduct,
+  ProductQuestionPagination,
 } from "./../../../shared/src/types/Product";
 import { BaseService } from "./BaseService";
 import { ShortUser } from "../../../shared/src/types";
@@ -673,7 +674,7 @@ WHERE pc.parent_id is not null
             SELECT 
                 json_build_object(
                     'id', pa.id,
-                    'comment', pq.comment,
+                    'comment', pa.comment,
                     'question_id', pa.question_id,
                     'user', json_build_object(
                         'id', u2.id,
@@ -688,11 +689,64 @@ WHERE pc.parent_id is not null
       FROM feedback.product_questions pq
       JOIN admin.users u ON u.id = pq.user_id
       WHERE pq.product_id = $1;
-
+      ORDER BY pq.created_at desc
     `;
     const questions = await this.safeQuery<ProductQuestion>(sql, [productId]);
 
     return questions;
+  }
+
+  async getQuestionsByPage(
+    productId: number,
+    page: number,
+    limit: number
+  ): Promise<ProductQuestionPagination> {
+    const sql = `
+    SELECT 
+          pq.id, 
+          pq.product_id, 
+          json_build_object(
+              'id', u.id,
+              'name', u.name,
+              'profile_img', u.profile_img
+          ) AS user,
+          pq.comment,
+          pq.created_at,
+          (
+            SELECT 
+                json_build_object(
+                    'id', pa.id,
+                    'comment', pa.comment,
+                    'question_id', pa.question_id,
+                    'user', json_build_object(
+                        'id', u2.id,
+                        'name', u2.name,
+                        'profile_img', u2.profile_img
+                    )
+                )
+            FROM feedback.product_answers pa
+            JOIN admin.users u2 ON u2.id = pa.user_id
+            WHERE pa.question_id = pq.id
+          ) AS answer,
+          COUNT(*) OVER() AS total_count
+      FROM feedback.product_questions pq
+      JOIN admin.users u ON u.id = pq.user_id
+      WHERE pq.product_id = $1
+      ORDER BY pq.created_at desc
+      OFFSET $2 LIMIT $3;
+    `;
+
+    const offset = (page - 1) * limit;
+    const questions = await this.safeQuery<
+      ProductQuestion & { total_count: number }
+    >(sql, [productId, offset, limit]);
+
+    return {
+      page: page,
+      limit: limit,
+      total: questions?.[0]?.total_count || 0,
+      questions: questions,
+    };
   }
 
   async createQuestion(
