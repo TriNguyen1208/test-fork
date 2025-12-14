@@ -33,7 +33,7 @@ export const authService = {
   },
 
   refresh: async () => {
-    const res = await api.post(API_ROUTES.auth.refresh, {
+    const res = await api.post(API_ROUTES.auth.refresh, {}, {
       withCredentials: true,
     });
     return res.data.accessToken;

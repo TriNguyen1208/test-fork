@@ -27,9 +27,8 @@ import {
   CreateBidLog,
   Product,
   ProductCategoryTree,
-  ProductPreview,
   UserBidInfo,
-} from "../../../../shared/src/types";
+} from "../../../../../shared/src/types";
 import BidHook from "@/hooks/useBid";
 import FavoriteHook from "@/hooks/useFavorite";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -164,7 +163,7 @@ export default function ProductPage() {
 
   const handleBid: SubmitHandler<{ price: number }> = (data) => {
     const bid: CreateBidLog = {
-      user_id: parseInt(user?.id as string),
+      user_id: Number(user?.id),
       price: data.price,
       product_id: product.id,
       product_slug: product_slug as string | undefined,

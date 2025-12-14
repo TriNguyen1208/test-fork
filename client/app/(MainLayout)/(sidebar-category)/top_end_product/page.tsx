@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ProductPreview } from "../../../../shared/src/types";
+import { ProductPreview } from "../../../../../shared/src/types";
 import ProductCard from "@/components/ProductCard";
 import ProductHook from "@/hooks/useProduct";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -8,6 +8,7 @@ import Pagination from "@/components/Pagination";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import FavoriteHook from "@/hooks/useFavorite";
+import { useMemo } from "react";
 
 export default function Page() {
   const per_page = 15;
@@ -28,6 +29,13 @@ export default function Page() {
     error: errorFavoriteProduct,
   } = FavoriteHook.useAllFavorite();
 
+  const favoriteIds = useMemo(
+    () =>
+      new Set(favoriteProductData?.map((f: ProductPreview) => f.id)) ||
+      new Set([]),
+    [favoriteProductData]
+  );
+
   const totalProducts = data?.totalProducts ?? 0;
   const topEndingSoonProducts = data?.topEndingSoonProducts ?? [];
 
@@ -41,6 +49,7 @@ export default function Page() {
     totalPages = Math.ceil(Number(totalProducts) / per_page);
     dataResult = topEndingSoonProducts as ProductPreview[];
   }
+  console.log("gia tri: ", dataResult);
   return (
     <>
       {(isLoadingTopEndingSoonProduct || isLoadingFavoriteProduct) && (
@@ -71,10 +80,7 @@ export default function Page() {
               </div>
             </div>
             <div className="mt-2 grid grid-cols-5 gap-3">
-              {dataResult.map((item, index) => {
-                const favoriteIds = new Set(
-                  favoriteProductData.map((f: ProductPreview) => Number(f.id))
-                );
+              {(dataResult || []).map((item, index) => {
                 const isFavoriteProduct = (item: ProductPreview) =>
                   favoriteIds.has(Number(item.id));
                 return (

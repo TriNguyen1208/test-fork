@@ -7,7 +7,7 @@ import ProductHook from "@/hooks/useProduct";
 import {
   ProductQuestion,
   ProductQuestionPagination,
-} from "../../../../../shared/src/types";
+} from "../../../../../../shared/src/types";
 import { useForm, SubmitHandler } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,9 +55,7 @@ function QuestionItem({
   return (
     <>
       <div className="flex flex-row justify-between">
-        <p className="font-medium text-gray-900">
-            {user.name}
-        </p>
+        <p className="font-medium text-gray-900">{user.name}</p>
         {created_at && (
           <p className="text-xs text-gray-600"> {formatDate(date)}</p>
         )}

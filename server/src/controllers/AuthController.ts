@@ -6,7 +6,6 @@ import {
   CreateUser,
   RegisterRequest,
   SignRequest,
-  UserEntity,
 } from "../../../shared/src/types";
 import { BaseController } from "./BaseController";
 import { Request, Response, NextFunction } from "express";

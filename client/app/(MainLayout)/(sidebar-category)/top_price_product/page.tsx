@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ProductPreview } from "../../../../shared/src/types";
+import { ProductPreview } from "../../../../../shared/src/types";
 import ProductCard from "@/components/ProductCard";
 import ProductHook from "@/hooks/useProduct";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -8,6 +8,7 @@ import Pagination from "@/components/Pagination";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import FavoriteHook from "@/hooks/useFavorite";
+import { useMemo } from "react";
 
 export default function Page() {
   const per_page = 15;
@@ -28,6 +29,13 @@ export default function Page() {
     error: errorFavoriteProduct,
   } = FavoriteHook.useAllFavorite();
 
+  const favoriteIds = useMemo(
+    () =>
+      new Set(favoriteProductData?.map((f: ProductPreview) => f.id)) ||
+      new Set([]),
+    [favoriteProductData]
+  );
+
   const totalPriceProducts = data?.totalProducts ?? 0;
   const topPriceProducts = data?.topPriceProducts ?? [];
 
@@ -43,7 +51,9 @@ export default function Page() {
   }
   return (
     <>
-      {isLoadingTopPriceProducts && <LoadingSpinner />}
+      {(isLoadingTopPriceProducts || isLoadingFavoriteProduct) && (
+        <LoadingSpinner />
+      )}
       {errorTopPriceProducts && <> Error.... </>}
       {errorFavoriteProduct && <> Error.... </>}
       {dataResult && (
@@ -70,9 +80,6 @@ export default function Page() {
             </div>
             <div className="mt-2 grid grid-cols-5 gap-3">
               {dataResult.map((item, index) => {
-                const favoriteIds = new Set(
-                  favoriteProductData.map((f: ProductPreview) => Number(f.id))
-                );
                 const isFavoriteProduct = (item: ProductPreview) =>
                   favoriteIds.has(Number(item.id));
                 return (

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
-import { Product, ProductPreview } from "../../../../../shared/src/types";
+import { Product, ProductPreview } from "../../../../../../shared/src/types";
 import CategoryHook from "@/hooks/useCategory";
-import { Pagination } from "../../../../../shared/src/types/Pagination";
+import { Pagination } from "../../../../../../shared/src/types/Pagination";
 
 interface RelatedProductsProps {
   categoryId: number;

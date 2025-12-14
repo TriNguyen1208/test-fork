@@ -42,8 +42,7 @@ export class AuthService extends BaseService {
    SELECT 
       u.id,
       u.name,
-      u.user_name,
-      u.email
+      u.role
     FROM admin.users u
     WHERE id = $1
     `;
@@ -59,10 +58,11 @@ export class AuthService extends BaseService {
       email,
       password_hash,
       user_name,
+      role,
       created_at,
       updated_at
       )
-      VALUES ($1, $2, $3, $4, NOW(), NOW())
+      VALUES ($1, $2, $3, $4, 'bidder', NOW(), NOW())
       RETURNING *
       `;
     await this.safeQuery(sql, [

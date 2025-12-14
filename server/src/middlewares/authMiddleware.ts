@@ -36,7 +36,9 @@ export const protectedRoutes = (
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ message: "Không tìm thấy access token" });
+      return res
+        .status(401)
+        .json({ message: "Bạn cần đăng nhập để thực hiện tác vụ này" });
     }
 
     // Xac nhan token hop le

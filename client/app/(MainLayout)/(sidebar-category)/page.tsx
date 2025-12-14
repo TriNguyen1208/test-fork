@@ -6,7 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductHook from "@/hooks/useProduct";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import FavoriteHook from "@/hooks/useFavorite";
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 import { useAuthStore } from "@/store/auth.store";
 
 interface PageItem {
@@ -19,6 +19,7 @@ function Page() {
   // const {user} = useAuthStore(); --> Khong nen
 
   const user = useAuthStore((s) => s.user);
+  console.log(user);
   const {
     data: productTop,
     isLoading: isLoadingTopProduct,

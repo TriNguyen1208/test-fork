@@ -3,7 +3,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import BidHook from "@/hooks/useBid";
-import { BidLog } from "../../../../../shared/src/types";
+import { BidLog } from "../../../../../../shared/src/types";
 import { formatCurrency, formatDate } from "./Question";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useAuth } from "@/hooks/useAuth";

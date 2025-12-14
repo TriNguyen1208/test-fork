@@ -37,8 +37,6 @@ export type CreateUser = {
 
 export type UserEntity = {
   id: User["id"];
-  name: User["name"];
-  username: string;
   email: User["email"];
-  password_hash?: string;
+  role: User["role"]
 };

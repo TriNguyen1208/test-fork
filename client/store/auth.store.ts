@@ -7,48 +7,20 @@ import { AuthState } from "@/types/store";
 // set(): Dùng để GHI (cậ  nhật/thay đổi) state (chỉ dùng bên trong store).
 // get(): Dùng để ĐỌC (lấy) giá trị hiện tại của state (chỉ dùng bên trong store)
 export const useAuthStore = create<AuthState>((set, get) => ({
-  /**
-   * Access token (JWT) dùng cho các request cần xác thực
-   */
+ 
   accessToken: null,
-  /**
-   * Thông tin người dùng hiện tại
-   */
   user: null,
-  /**
-   * Thông tin người dùng hiện tại
-   */
   loading: false,
-
-  /**
-   * Cập nhật access token vào store
-   *
-   * @param accessToken JWT access token
-   */
   setAccessToken: (accessToken: string) => {
     set({ accessToken });
   },
 
-  /**
-   * Xoá toàn bộ trạng thái xác thực
-   *
-   * @description
-   * - Dùng khi đăng xuất
-   * - Hoặc khi refresh token thất bại
-   */
+
   clearState: () => {
     set({ accessToken: null, user: null, loading: false });
   },
 
-  /**
-   * Đăng ký tài khoản mới
-   *
-   * @param user Dữ liệu đăng ký (email, password, ...)
-   *
-   * @description
-   * - Gửi request đăng ký lên server
-   * - Không tự động đăng nhập sau khi đăng ký
-   */
+
   signUp: async (user: RegisterRequest) => {
     try {
       set({ loading: true });
@@ -62,16 +34,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  /**
-   * Đăng nhập hệ thống
-   *
-   * @param user Thông tin đăng nhập (email, password)
-   *
-   * @description
-   * - Gọi API signIn để lấy access token
-   * - Lưu access token vào store
-   * - Fetch thông tin user ngay sau khi đăng nhập
-   */
+
   signIn: async (user: SignRequest) => {
     try {
       set({ loading: true });
@@ -89,13 +52,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  /**
-   * Đăng xuất khỏi hệ thống
-   *
-   * @description
-   * - Xoá toàn bộ auth state ở client
-   * - Gọi API signOut để server xoá refresh token (nếu có)
-   */
+ 
   signOut: async () => {
     try {
       get().clearState();
@@ -105,14 +62,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  /**
-   * Lấy thông tin người dùng hiện tại
-   *
-   * @description
-   * - Gọi API GET /auth/me
-   * - Yêu cầu access token hợp lệ trong header Authorization
-   * - Lưu thông tin user vào store
-   */
+
   fetchMe: async () => {
     try {
       set({ loading: true });
@@ -127,18 +77,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  /**
-   * Refresh access token khi token hết hạn
-   *
-   * @description
-   * - Gửi request refresh token (qua httpOnly cookie)
-   * - Nhận access token mới từ server
-   * - Tự động fetch user nếu chưa có thông tin user
-   *
-   * @note
-   * - Được gọi khi reload trang (F5)
-   * - Hoặc khi access token hết hạn
-   */
+
   refresh: async () => {
     try {
       set({ loading: true });

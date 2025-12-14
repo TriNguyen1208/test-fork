@@ -7,7 +7,6 @@ import { EditIcon } from "lucide-react";
 import SecondaryButton from "@/components/SecondaryButton";
 import { LogoutIcon } from "@/components/icons";
 import EditDetail from "./EditDetail";
-import { useAuth } from "@/hooks/useAuth";
 import UserHook from "@/hooks/useUser";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRouter } from "next/navigation";
@@ -56,7 +55,7 @@ const InfoPage = () => {
         {inEditMode ? (
           <div>
             <EditDetail
-              user={userProfile}
+              user={userProfiile}
               onProfileSubmit={setSubmitProfileForm}
               setIsSaving={setIsSaving}
               onSaveSuccess={() => setInEditMode(false)}

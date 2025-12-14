@@ -4,7 +4,6 @@ import { createSlugUnique } from "../utils";
 import { BaseService } from "./BaseService";
 import { ProductService } from "./ProductService";
 import { R2Service } from "./R2Service";
-import { UserEntity } from "../../../shared/src/types";
 interface UpdateUserPayload {
   id: number;
   name: string | "";

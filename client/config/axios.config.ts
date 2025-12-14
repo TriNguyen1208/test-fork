@@ -40,6 +40,17 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    if (error.response?.status === 401) {
+      useAuthStore.getState().clearState();
+
+      // Chuyển hướng về trang đăng nhập (Hard redirect)
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+
+      return Promise.reject(error);
+    }
+
     originalRequest._retryCount = originalRequest._retryCount || 0;
     // Neu token hết hạn và số lần thử < 4
     if (error.response?.status === 403 && originalRequest._retryCount < 4) {
@@ -82,10 +93,10 @@ export async function safeRequest<T>(fn: () => Promise<T>) {
       error: null,
     };
   } catch (error: any) {
-    return {
-      success: false,
-      data: null,
-      error: error?.response?.data || error.message,
-    };
+    console.log(error);
+    const message =
+      error?.response?.data?.message || error.message || "Request failed";
+
+    throw new Error(message);
   }
 }
