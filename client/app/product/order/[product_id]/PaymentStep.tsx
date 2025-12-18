@@ -37,7 +37,7 @@ const PaymentStep = ({ setActive }: ComponentProps) => {
         </p>
         <div className="flex flex-row gap-3">
           <Image
-            src="/seller-QR.png"
+            src="/seller-QR.jpg"
             alt="QR thanh toán"
             width={200}
             height={200}
