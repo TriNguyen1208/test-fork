@@ -1,14 +1,30 @@
-import { SystemService } from "@/services/systemService";
+import { SystemService } from "@/services/SystemService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { STALE_10_MIN } from "@/config/query.config";
 class SystemHook {
-    static useUpdateProductRenewTime(time: number) {
+    static useGetProductRenewTime() {
+        return useQuery({
+            queryKey: ["system_config"],
+
+            queryFn: () => SystemService.getProductRenewTime(),
+
+            staleTime: STALE_10_MIN,
+
+            select: (data) => {
+                return data.data.result;
+            },
+        });
+    }
+    static useUpdateProductRenewTime() {
         const queryClient = useQueryClient();
 
         return useMutation({
-            mutationFn: () => SystemService.updateProductRenewTime(time),
+            mutationFn: (time: number) => SystemService.updateProductRenewTime(time),
 
             onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["system_config"],
+                });
             },
         });
     }
