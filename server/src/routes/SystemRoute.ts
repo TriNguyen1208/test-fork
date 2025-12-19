@@ -12,6 +12,12 @@ export class SystemRoute extends BaseRoute {
   }
 
   initRoutes() {
+    this.router.get(
+        "/renew-time",
+        BaseController.handleRequest(
+            this.controller.getProductRenewTime.bind(this.controller)
+        )
+    );
     this.router.post(
       "/renew-time",
       BaseController.handleRequest(
