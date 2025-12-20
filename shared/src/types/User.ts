@@ -38,5 +38,7 @@ export type CreateUser = {
 export type UserEntity = {
   id: User["id"];
   email: User["email"];
-  role: User["role"]
+  role: User["role"];
+  positive_points: User["positive_points"];
+  negative_points: User["negative_points"];
 };

@@ -99,7 +99,7 @@ export default function ProductPage() {
   const [isBid, setIsBid] = useState(false);
   const [openBuyNowModal, setOpenBuyNowModal] = useState<boolean>(false);
   const [isPopup, setIsPopup] = useState<boolean>(false);
-  const [canBid, setIsCanBid] = useState<boolean>(false);
+  const [canBid, setIsCanBid] = useState<boolean>(true);
   const schemaBid = z.object({
     price: z
       .string()
@@ -188,7 +188,7 @@ export default function ProductPage() {
     setIsBid(false);
   };
   if (favorite_products) console.log(favorite_products);
-
+  
   const handleBid: SubmitHandler<{ price: number }> = (data) => {
     const bid: CreateBidLog = {
       user_id: user?.id || 0,
@@ -375,7 +375,7 @@ export default function ProductPage() {
                       <div className="relative">
                         <div>
                           <PrimaryButton
-                            backgroundColor={canBid ? "#2563eb" : "#3376eb"}
+                            backgroundColor={canBid ? "#2563eb" : "#5d97fc"}
                             hoverBackgroundColor={
                               canBid ? "#3376eb" : "#dc2626"
                             }
