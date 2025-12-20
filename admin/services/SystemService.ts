@@ -5,8 +5,6 @@ export class SystemService {
   static async getProductRenewTime(): Promise<any> {
     return safeRequest(async () => {
       const res = await api.get(API_ROUTES.system.getProductRenewTime);
-      console.log("res1", res.data);
-
       return res.data;
     });
   }
@@ -21,7 +19,6 @@ export class SystemService {
   static async getProductMinTime(): Promise<any> {
     return safeRequest(async () => {
       const res = await api.get(API_ROUTES.system.getProductMinTime);
-      console.log("res", res.data);
       return res.data;
     });
   }

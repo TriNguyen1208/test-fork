@@ -33,11 +33,10 @@ class SystemHook {
   }
   static useGetProductMinTime() {
     return useQuery({
-      queryKey: ["system_config"],
+      queryKey: ["system_config_min_time"],
       queryFn: () => SystemService.getProductMinTime(),
       staleTime: STALE_10_MIN,
       select: (data) => {
-        console.log("contro:", data.data);
         return data.data.result;
       },
     });
@@ -51,7 +50,7 @@ class SystemHook {
       onSuccess: () => {
         toast.success("Cập nhật thời gian nhỏ nhất thành công!");
         queryClient.invalidateQueries({
-          queryKey: ["system_config"],
+          queryKey: ["system_config_min_time"],
         });
       },
       onError: (error) => {
