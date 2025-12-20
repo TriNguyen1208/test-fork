@@ -99,7 +99,7 @@ export default function ProductPage() {
   const [isBid, setIsBid] = useState(false);
   const [openBuyNowModal, setOpenBuyNowModal] = useState<boolean>(false);
   const [isPopup, setIsPopup] = useState<boolean>(false);
-  const [canBid, setIsCanBid] = useState<boolean>(true);
+  const [canBid, setIsCanBid] = useState<boolean>(false);
   const schemaBid = z.object({
     price: z
       .string()
@@ -107,7 +107,7 @@ export default function ProductPage() {
       .refine((val) => !isNaN(Number(val)), "Giá tiền phải là số")
       .transform((val) => Number(val)),
   });
-  console.log(user);
+
   const {
     register: registerBid,
     handleSubmit: handleSubmitBid,
@@ -171,6 +171,22 @@ export default function ProductPage() {
 
   useEffect(() => {
     if (!router || !user || !product) return;
+    //Check can bid
+    if (user) {
+      const pos = user.positive_points ? user.positive_points : 0;
+      const neg = user.negative_points ? user.negative_points : 0;
+
+      const total = pos + neg;
+      if (total === 0) {
+        //Todo Ha
+      } else {
+        if (pos / total >= 0.8) {
+          setIsCanBid(true);
+        } else {
+          setIsCanBid(false);
+        }
+      }
+    }
 
     if (user.id == product.seller.id) {
       router.replace(`/product/sell/${product_slug}`);
@@ -188,7 +204,7 @@ export default function ProductPage() {
     setIsBid(false);
   };
   if (favorite_products) console.log(favorite_products);
-  
+
   const handleBid: SubmitHandler<{ price: number }> = (data) => {
     const bid: CreateBidLog = {
       user_id: user?.id || 0,
