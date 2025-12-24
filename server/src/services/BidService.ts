@@ -200,7 +200,7 @@ export class BidService extends BaseService {
     //Lấy thông tin user
     const getUserInfo = async (id: number) => {
       const sql = `
-      SELECT u.email 
+      SELECT u.*
       FROM admin.users as u 
       WHERE u.id = $1 `;
       const params = [id];
@@ -274,6 +274,7 @@ export class BidService extends BaseService {
         bid.product_id
       );
       if (sellerInfo && bidderInfo && productInfo) {
+        console.log(bidderInfo);
         sendEmailToUser(
           sellerInfo.email,
           "THÔNG BÁO VỀ SẢN PHẨM ĐANG BÁN",
@@ -367,6 +368,7 @@ export class BidService extends BaseService {
           const oldBidderInfo: User | undefined = await getUserInfo(
             productBidStatus.top_bidder_id
           );
+          console.log("old:", oldBidderInfo);
           if (oldBidderInfo && sellerInfo && bidderInfo && productInfo) {
             sendEmailToUser(
               oldBidderInfo.email,
