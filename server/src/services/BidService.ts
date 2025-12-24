@@ -290,7 +290,8 @@ export class BidService extends BaseService {
               <p>Đã đấu giá sản phẩm <strong>${productInfo.name} - </strong> của bạn</p>
               <p><strong>Với mức giá:</strong> ${productBidStatus.current_price}</p>
               <p><strong>Mức giá hiện tại:</strong> [Mức giá hiện tại]</p>
-              <p><strong>Giá mua ngay:</strong> [Giá mua ngay]</p>
+              <p><strong>Giá mua ngay:</strong> [Giá mua ngay]</p> 
+              
             </td>
           </tr>
           <tr>
