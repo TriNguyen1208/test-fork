@@ -1,3 +1,4 @@
+import { error } from "console";
 import { UpgradeRequestPreview } from "../../../shared/src/types";
 import { BaseService } from "./BaseService";
 
