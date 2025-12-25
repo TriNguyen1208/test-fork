@@ -74,6 +74,8 @@ function QuestionItem({
     });
     setValue("comment", "");
   };
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
   const date = new Date(created_at ?? "");
 
   return (
@@ -87,12 +89,22 @@ function QuestionItem({
       <p className="text-gray-600 mb-3">Câu hỏi: {comment}</p>
 
       {answer &&
-        answer.map((item) => (
-          <div className="ml-4 pl-4 border-l-2 border-amber-400 my-4">
-            <p className="text-sm font-medium text-amber-600 mb-1">
-              Trả lời từ người bán:
-            </p>
-            <p className="text-sm text-gray-700">{item.comment}</p>
+        answer.map((item, index) => (
+          <div
+            key={index}
+            className="ml-4 pl-4 border-l-2 border-amber-400 my-4"
+          >
+            <button
+              onClick={() => setOpenIndex(openIndex === index ? null : index)}
+              className="text-sm font-medium text-amber-600 mb-1 flex items-center gap-2 cursor-pointer" 
+            >
+              Trả lời từ người bán
+              <span>{openIndex === index ? "▲" : "▼"}</span>
+            </button>
+
+            {openIndex === index && (
+              <p className="text-sm text-gray-700 mt-1">{item.comment}</p>
+            )}
           </div>
         ))}
       <form className=" mb-8" onSubmit={handleSubmit(handleSend)}>
