@@ -1,9 +1,7 @@
-import React, { useMemo } from "react"
-import Image from 'next/image'
+import { useMemo } from "react"
 import { CalendarIcon, MailIcon } from "lucide-react"
 import Avatar from "./Avatar"
 import { User } from "../../../../../shared/src/types"
-import { formatDate } from "../../product/[product_slug]/components/Question"
 
 export default function ViewDetail({ user }: { user: User }) {
 
@@ -54,7 +52,12 @@ export default function ViewDetail({ user }: { user: User }) {
                     </div>
                     <div className="flex flex-col text-sm font-medium gap-1">
                         <p>Tổng đánh giá</p>
-                        <p className="text-center text-xl font-bold text-gray-600">{sumRating}</p>
+                        <p className="text-center text-xl font-bold text-gray-600">
+                            {sumRating !== 0
+                                ? `${sumRating}`
+                                : `Chưa có đánh giá`
+                            }
+                        </p>
                     </div>
                 </div>
             </div>
