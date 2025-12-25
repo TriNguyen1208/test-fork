@@ -555,12 +555,29 @@ export class BidService extends BaseService {
     };
     const sellerInfo: User | undefined = await getSellerInfo();
     const emailBidder: string = await getEmailBidder(buyer_id);
-    if()
-    sendEmailToUser(
-      emailBidder,
-      "Thông báo về sản phẩm đang đấu giá",
-      "Bạn đã bị người bán chặn đấu giá"
-    ); //Old bidder
+    if (sellerInfo) {
+      sendEmailToUser(
+        emailBidder,
+        "THÔNG BÁO VỀ SẢN PHẨM ĐANG ĐẤU GIÁ",
+        `
+              <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
+          <tr>
+            <td style="background-color:#6c757d; color:white; padding:20px; text-align:center; font-size:20px; font-weight:bold;">
+              Thông báo đấu giá
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
+              <p>Seller <strong>${sellerInfo.name}</strong></p>
+              <p>Đã chặn bạn không được phép đấu giá sản phẩm: <strong>${product[0].name}</strong></p>
+            </td>
+          </tr>
+        
+        </table>
+`
+      ); //Old bidder
+    }
+
     if (product?.[0]?.top_bidder_id != buyer_id) return { success: true };
 
     // Người bị blacklist đang dẫn đầu -> phải cập nhật lại top_bidder
