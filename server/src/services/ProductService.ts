@@ -920,8 +920,8 @@ WHERE pc.parent_id is not null
       WHERE q.id = $1 
       `;
       const params = [questionId];
-      const result: Number[] = await this.safeQuery(sql, params);
-      return result[0];
+      const result: { id: number }[] = await this.safeQuery(sql, params);
+      return result[0]?.id ;
     };
     const getRelatedUsersInUserBids = async () => {
       const sql = `
@@ -995,6 +995,8 @@ WHERE pc.parent_id is not null
       await Promise.all([
         relatedUsers.forEach((user) => {
           let html: string = "";
+          console.log(questionerId);
+          console.log(user.id);
           if (user.id == questionerId) {
             html = `
        <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
@@ -1006,7 +1008,7 @@ WHERE pc.parent_id is not null
           <tr>
             <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
               <p>
-                Người bán <strong>${sellerInfo}</strong> đã trả lời câu hỏi của bạn
+                Người bán <strong>${sellerInfo.name}</strong> đã trả lời câu hỏi của bạn
                 tại sản phẩm <strong> ${productInfo.name}</strong>.
               </p>
               <p style="margin-top:15px;">
@@ -1027,7 +1029,7 @@ WHERE pc.parent_id is not null
           <tr>
             <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
               <p>
-                Người bán <strong>${sellerInfo}</strong> đã trả lời câu hỏi của người khác
+                Người bán <strong>${sellerInfo.name}</strong> đã trả lời câu hỏi của người khác
                 tại sản phẩm <strong> ${productInfo.name}</strong>.
               </p>
               <p style="margin-top:15px;">
