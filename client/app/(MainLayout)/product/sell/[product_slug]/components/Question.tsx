@@ -67,11 +67,11 @@ function QuestionItem({
   });
 
   const handleSend: SubmitHandler<{ comment: string }> = (data) => {
-    console.log(data);
-    //createAnswer({ id: productId, data: data });
+    createAnswer({ idProduct: product_id, idQuestion: id, data: data });
     setValue("comment", "");
   };
   const date = new Date(created_at ?? "");
+
   return (
     <>
       <div className="flex flex-row justify-between">
@@ -147,7 +147,7 @@ export const Question = ({ productId }: ProductId) => {
     next.set("page", value.toString());
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
-
+  console.log(questions)
   return (
     <div className="relative bg-white rounded-lg p-3 sm:p-6 mb-8 border border-slate-200">
       <h3 className="relative text-2xl font-bold text-slate-900 mb-4">

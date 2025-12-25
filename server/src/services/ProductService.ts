@@ -762,11 +762,13 @@ WHERE pc.parent_id is not null
     SELECT 
           pq.id, 
           pq.product_id, 
-          json_build_object(
-              'id', u.id,
-              'name', u.name,
-              'profile_img', u.profile_img
-          ) AS user,
+          SELECT json_agg(
+            json_build_object(
+                'id', u.id,
+                'name', u.name,
+                'profile_img', u.profile_img
+            ) AS user
+          ),
           pq.comment,
           pq.created_at,
           (
@@ -900,7 +902,7 @@ WHERE pc.parent_id is not null
     const getEmailUser = async () => {
       const sql = `
       SELECT u.email 
-      FROM product.product_questions as q
+      FROM feedback.product_questions as q
       JOIN admin.users as u ON u.id = q.user_id
       WHERE q.id = $1 `;
       const params = [questionId];
