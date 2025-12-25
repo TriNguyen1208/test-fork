@@ -350,6 +350,7 @@ export class BidService extends BaseService {
             productBidStatus.max_price,
             bid.price
           );
+          
           createBidLog(productBidStatus.top_bidder_id, opponentBidPrice);
           console.log(5);
         } else {
