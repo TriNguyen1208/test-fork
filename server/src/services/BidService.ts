@@ -339,7 +339,6 @@ export class BidService extends BaseService {
           current_price + price_increment
         );
 
-        
         await Promise.all([updateTopBidderPromise, writeBidLogPromise]);
       } else {
         // TH2: Sản phẩm đã được đấu giá trước đó
@@ -447,9 +446,25 @@ export class BidService extends BaseService {
 
       sendEmailToUser(
         emailBidder,
-        "Thông báo về sản phẩm đang đấu giá",
-        "Bạn đã bị người bán chặn đấu giá"
-      ); //Old bidder
+        "THÔNG BÁO VỀ SẢN PHẨM ĐANG ĐẤU GIÁ",
+        `
+            <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
+              <tr>
+                <td style="background-color:#6c757d; color:white; padding:20px; text-align:center; font-size:20px; font-weight:bold;">
+                  Thông báo đấu giá
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
+                  <p>Seller: <strong>[Tên seller]</strong></p>
+                  <p>Đã chặn bạn không được phép đấu giá sản phẩm:</p>
+                  <p style="font-weight:bold;">[Tên sản phẩm]</p>
+                </td>
+              </tr>
+  
+            </table>
+        `
+      );
       await poolClient.query("COMMIT");
       return { success: true };
     } catch (error) {
@@ -516,6 +531,7 @@ export class BidService extends BaseService {
       return { success: false };
 
     // Nếu người bị blacklist không phải dẫn đầu -> dừng
+    //Email của người bị chặn
     const getEmailBidder = async (id: number) => {
       const sql = `
       SELECT u.email 
@@ -526,8 +542,20 @@ export class BidService extends BaseService {
       return result[0]?.email ?? "";
     };
 
+    //Thông tin người bán
+    const getSellerInfo = async () => {
+      const sql = `
+      SELECT u.*
+      FROM admin.users as u 
+      JOIN product.products as p ON u.id = p.seller_id
+      WHERE p.id = $1 `;
+      const params = [product_id];
+      const result: User[] = await this.safeQuery(sql, params);
+      return result[0];
+    };
+    const sellerInfo: User | undefined = await getSellerInfo();
     const emailBidder: string = await getEmailBidder(buyer_id);
-
+    if()
     sendEmailToUser(
       emailBidder,
       "Thông báo về sản phẩm đang đấu giá",
