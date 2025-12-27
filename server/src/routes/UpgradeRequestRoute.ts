@@ -2,6 +2,7 @@ import { BaseRoute } from "./BaseRoute";
 import { UpgradeService } from "../services/UpgradeRequestService";
 import { BaseController } from "../controllers/BaseController";
 import { UpgradeController } from "../controllers/UpgradeRequestController";
+import { protectedRoutes } from "../middlewares/authMiddleware";
 
 export class UpgradeRequestRoute extends BaseRoute {
   private controller: UpgradeController;
@@ -12,6 +13,7 @@ export class UpgradeRequestRoute extends BaseRoute {
   }
 
   initRoutes() {
+    this.router.use(protectedRoutes);
     this.router.get(
       "/request",
       BaseController.handleRequest(

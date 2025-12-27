@@ -1,8 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
-import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -11,7 +10,6 @@ import { XIcon } from "lucide-react";
 
 import { api } from "@/config/axios.config";
 import {
-  CreateProduct,
   ProductCategoryTree,
 } from "../../../../../../shared/src/types";
 import ErrorMessage from "./ErrorMessage";
@@ -85,6 +83,7 @@ const CreateProductPage = () => {
     end_time: z.date({ message: "Vui lòng chọn ngày kết thúc" }),
     description: z.string(),
     auto_extend: z.boolean(),
+    is_all_can_bid: z.boolean(),
   });
 
   type NewProductType = z.infer<typeof newProductSchema>;
@@ -410,6 +409,16 @@ const CreateProductPage = () => {
           {errors.end_time && (
             <ErrorMessage message={errors.end_time.message} />
           )}
+        </div>
+        <div className="space-y-4">
+          <label className="block text-sm font-semibold text-gray-900 mb-2 line-clamp-1">
+            Những người được đấu giá <span className="text-[12px] text-red-400 mb-2">(Cho phép những bidder chưa từng được đánh giá được phép đấu giá!)</span>
+          </label>
+          <input
+            className="p-4 border border-gray-400 cursor-pointer rounded-md"
+            type="checkbox"
+            {...register("is_all_can_bid")}
+          />
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 mb-4">
