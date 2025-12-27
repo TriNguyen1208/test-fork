@@ -63,10 +63,11 @@ export class RatingHook {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: (data: CreateRating) => RatingService.createRating(data),
+      mutationFn: ({ silent, ...data }: CreateRating & { silent?: boolean }) =>
+        RatingService.createRating(data),
 
-      onSuccess: () => {
-        toast.success("Tạo đánh giá thành công");
+      onSuccess: (_, params) => {
+        if (!params.silent) toast.success("Tạo đánh giá thành công");
         queryClient.invalidateQueries({
           queryKey: ["user_rating", "total_user_rating"],
         });
@@ -82,10 +83,11 @@ export class RatingHook {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: (data: CreateRating) => RatingService.updateRating(data),
+      mutationFn: ({ silent, ...data }: CreateRating & { silent?: boolean }) =>
+        RatingService.updateRating(data),
 
-      onSuccess: () => {
-        toast.success("Sửa đánh giá thành công");
+      onSuccess: (_, params) => {
+        if (!params.silent) toast.success("Sửa đánh giá thành công");
         queryClient.invalidateQueries({
           queryKey: ["user_rating", "total_user_rating"],
         });

@@ -229,11 +229,15 @@ export class OrderService extends BaseService {
         O.PRODUCT_ID = $1 AND
         O.BUYER_ID = $2 AND
         P.SELLER_ID = $3
-      RETURNING O.PRODUCT_ID
+      RETURNING P.SLUG
     `;
 
     const promises = [
-      this.safeQuery(cancelOrderSql, [product_id, buyer_id, seller_id]),
+      this.safeQuery<{ slug: string }>(cancelOrderSql, [
+        product_id,
+        buyer_id,
+        seller_id,
+      ]),
       BidService.getInstance().blacklistABuyer(product_id, seller_id, buyer_id),
     ];
 
@@ -243,6 +247,7 @@ export class OrderService extends BaseService {
 
     return {
       success: true,
+      slug: (cancelOrderResult as { slug: string }[])?.[0]?.slug || "",
     };
   }
 
