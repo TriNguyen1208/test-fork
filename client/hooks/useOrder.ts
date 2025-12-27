@@ -148,11 +148,15 @@ class OrderHook {
       mutationFn: (params: { productId: number; buyerId: number }) =>
         OrderService.sellerRejectOrder(params.productId, params.buyerId),
 
-      onSuccess: (_, params) => {
+      onSuccess: (data, params) => {
         toast.success("Hùy đơn hàng thành công");
 
         queryClient.invalidateQueries({
           queryKey: ["order_by_id", params.productId],
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ["product_by_slug", data.data.slug],
         });
       },
 

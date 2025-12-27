@@ -44,19 +44,20 @@ const PaymentStep = ({ order, product }: ComponentProps) => {
     if (!order || !order.product_id || !order.buyer?.id) return;
     sellerRejectOrder(
       {
-        productId: order.product_id,
+        productId: Number(order.product_id),
         buyerId: order.buyer.id,
       },
       {
-        onSuccess: () => router.replace(`/product/sell/${product.slug}`),
+        onSuccess: () => router.push(`/product/sell/${product.slug}`),
       }
     );
 
     if (!order.buyer.id || !order.seller.id) return;
-    const newRating: CreateRating = {
+    const newRating: CreateRating & { silent: boolean } = {
       ratee: order.buyer,
       rating: -1,
       comment: "Người thắng không thanh toán",
+      silent: true,
     };
 
     if (!rating) createRating(newRating);
