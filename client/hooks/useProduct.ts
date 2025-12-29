@@ -241,7 +241,7 @@ class ProductHook {
       onSuccess: () => {
         toast.success("Cập nhật mô tả thành công");
         queryClient.invalidateQueries({
-          queryKey: ["products"],
+          queryKey: ["product_by_slug"],
         });
       },
 

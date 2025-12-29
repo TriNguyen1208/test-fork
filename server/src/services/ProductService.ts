@@ -688,6 +688,30 @@ WHERE pc.parent_id is not null
   }
 
   async updateProductDescription(productId: number, description: string) {
+    const now: Date = new Date();
+
+    const pad = (n: number): string => n.toString().padStart(2, "0");
+
+    const dateTime: string =
+      `${pad(now.getDate())}/` +
+      `${pad(now.getMonth() + 1)}/` +
+      `${now.getFullYear()} ` +
+      `${pad(now.getHours())}:` +
+      `${pad(now.getMinutes())}`;
+
+    const dateHtml = `
+    <p style="
+      font-weight: 600;
+      color: #2563eb;
+      background: #eff6ff;
+      padding: 6px 10px;
+      border-left: 4px solid #2563eb;
+      margin-bottom: 12px;
+    ">
+      ✏️ ${dateTime}
+    </p>
+  `;
+    const afterAddDate = dateHtml + description;
     const sql = `
     UPDATE product.products
     SET description = 
@@ -699,7 +723,7 @@ WHERE pc.parent_id is not null
     WHERE id = $2
     RETURNING *;
     `;
-    const updateProduct = await this.safeQuery(sql, [description, productId]);
+    const updateProduct = await this.safeQuery(sql, [afterAddDate, productId]);
     return updateProduct;
   }
   async deleteProductById(productId: number) {
@@ -924,7 +948,7 @@ WHERE pc.parent_id is not null
       `;
       const params = [questionId];
       const result: { id: number }[] = await this.safeQuery(sql, params);
-      return result[0]?.id ;
+      return result[0]?.id;
     };
     const getRelatedUsersInUserBids = async () => {
       const sql = `
