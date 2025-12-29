@@ -273,12 +273,19 @@ export class BidService extends BaseService {
       const productInfo: Product | undefined = await getProductInfo(
         bid.product_id
       );
-      if (sellerInfo && bidderInfo && productInfo) {
-        console.log(bidderInfo);
-        sendEmailToUser(
-          sellerInfo.email,
-          "THÔNG BÁO VỀ SẢN PHẨM ĐANG BÁN",
-          `
+
+      let nowPrice = 0;
+      // 5. Thực hiện so sánh và lưu kết quả đấu giá
+      if (productBidStatus.top_bidder_id == bid.user_id) {
+        console.log("Bidder vẫn đang thắng đấu giá");
+        await poolClient.query("COMMIT");
+        console.log("Commit thành công");
+        if (sellerInfo && bidderInfo && productInfo) {
+          console.log(bidderInfo);
+          sendEmailToUser(
+            sellerInfo.email,
+            "THÔNG BÁO VỀ SẢN PHẨM ĐANG BÁN",
+            `
         <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
           <tr>
             <td style="background-color:#173E8C; color:white; padding:20px; text-align:center; font-size:20px; font-weight:bold;">
@@ -288,29 +295,20 @@ export class BidService extends BaseService {
           <tr>
             <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
               <p>Người đấu giá <strong> ${bidderInfo.name}</strong> </p>
-              <p>Đã đấu giá sản phẩm <strong>${
-                productInfo.name
-              }</strong> của bạn</p>
+              <p>Đã đấu giá sản phẩm <strong>${productInfo.name}</strong> của bạn</p>
               <p>Với mức giá:<strong> ${bid.price}</strong> </p>
-              <p>Mức giá hiện tại:<strong> ${
-                productBidStatus.current_price +
-                productBidStatus.price_increment
-              }</strong> </p>
-              <p>Giá mua ngay:<strong> ${
-                productInfo.buy_now_price
-              }</strong> </p> 
-
+              <p>Mức giá hiện tại:<strong> ${productBidStatus.current_price}</strong> </p>
+              <p>Giá mua ngay:<strong> ${productInfo.buy_now_price}</strong> </p> 
             </td>
           </tr>
-        
         </table>
            `
-        ); //Seller
+          ); //Seller
 
-        sendEmailToUser(
-          bidderInfo.email,
-          "THÔNG BÁO VỀ SẢN PHẨM ĐÃ ĐẤU GIÁ",
-          `
+          sendEmailToUser(
+            bidderInfo.email,
+            "THÔNG BÁO VỀ SẢN PHẨM ĐÃ ĐẤU GIÁ",
+            `
           <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
             <tr>
               <td style="background-color:#28a745; color:white; padding:20px; text-align:center; font-size:20px; font-weight:bold;">
@@ -319,28 +317,17 @@ export class BidService extends BaseService {
             </tr>
             <tr>
               <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
-                <p>Bạn đã đấu giá thành công sản phẩm: <strong>${
-                  productInfo.name
-                }</strong></p>
+                <p>Bạn đã đấu giá thành công sản phẩm: <strong>${productInfo.name}</strong></p>
                 <p>Của người bán: <strong>${sellerInfo.name}</strong></p>
                 <p>Với mức giá:<strong> ${bid.price}</strong></p>
-                <p>Giá hiện tại của sản phẩm: <strong>${
-                  productBidStatus.current_price +
-                  productBidStatus.price_increment
-                }</strong></p>
+                <p>Giá hiện tại của sản phẩm: <strong>${productBidStatus.current_price}</strong></p>
               </td>
             </tr>
   
           </table>
          `
-        ); //Bidder
-      }
-
-      // 5. Thực hiện so sánh và lưu kết quả đấu giá
-      if (productBidStatus.top_bidder_id == bid.user_id) {
-        console.log("Bidder vẫn đang thắng đấu giá");
-        await poolClient.query("COMMIT");
-        console.log("Commit thành công");
+          ); //Bidder
+        }
         return { success: true };
       }
       if (!productBidStatus.top_bidder_id) {
@@ -350,7 +337,7 @@ export class BidService extends BaseService {
           bid.user_id,
           current_price + price_increment
         );
-
+        nowPrice = current_price + price_increment;
         await Promise.all([updateTopBidderPromise, writeBidLogPromise]);
       } else {
         // TH2: Sản phẩm đã được đấu giá trước đó
@@ -364,6 +351,7 @@ export class BidService extends BaseService {
           );
 
           createBidLog(productBidStatus.top_bidder_id, opponentBidPrice);
+          nowPrice = opponentBidPrice;
           console.log(5);
         } else {
           console.log(6);
@@ -383,7 +371,8 @@ export class BidService extends BaseService {
           const oldBidderInfo: User | undefined = await getUserInfo(
             productBidStatus.top_bidder_id
           );
-          console.log("old:", oldBidderInfo);
+
+          nowPrice = myBidPrice;
           if (oldBidderInfo && sellerInfo && bidderInfo && productInfo) {
             sendEmailToUser(
               oldBidderInfo.email,
@@ -412,7 +401,54 @@ export class BidService extends BaseService {
       await poolClient.query("COMMIT");
 
       console.log("Commit thành công 2");
+      if (sellerInfo && bidderInfo && productInfo) {
+        console.log(bidderInfo);
+        sendEmailToUser(
+          sellerInfo.email,
+          "THÔNG BÁO VỀ SẢN PHẨM ĐANG BÁN",
+          `
+        <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
+          <tr>
+            <td style="background-color:#173E8C; color:white; padding:20px; text-align:center; font-size:20px; font-weight:bold;">
+              Thông báo đấu giá
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
+              <p>Người đấu giá <strong> ${bidderInfo.name}</strong> </p>
+              <p>Đã đấu giá sản phẩm <strong>${productInfo.name}</strong> của bạn</p>
+              <p>Với mức giá:<strong> ${bid.price}</strong> </p>
+              <p>Mức giá hiện tại:<strong> ${nowPrice}</strong> </p>
+              <p>Giá mua ngay:<strong> ${productInfo.buy_now_price}</strong> </p>
+            </td>
+          </tr>
+        </table>
+           `
+        ); //Seller
 
+        sendEmailToUser(
+          bidderInfo.email,
+          "THÔNG BÁO VỀ SẢN PHẨM ĐÃ ĐẤU GIÁ",
+          `
+          <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
+            <tr>
+              <td style="background-color:#28a745; color:white; padding:20px; text-align:center; font-size:20px; font-weight:bold;">
+                Thông báo đấu giá thành công
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
+                <p>Bạn đã đấu giá thành công sản phẩm: <strong>${productInfo.name}</strong></p>
+                <p>Của người bán: <strong>${sellerInfo.name}</strong></p>
+                <p>Với mức giá:<strong> ${bid.price}</strong></p>
+                <p>Giá hiện tại của sản phẩm: <strong>${nowPrice}</strong></p>
+              </td>
+            </tr>
+
+          </table>
+         `
+        ); //Bidder
+      }
       return { success: true };
     } catch (e) {
       await poolClient.query("ROLLBACK");
