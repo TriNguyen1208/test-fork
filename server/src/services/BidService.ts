@@ -6,7 +6,7 @@ import {
 import { BaseService } from "./BaseService";
 import { MutationResult } from "../../../shared/src/types/Mutation";
 import { sendEmailToUser } from "../utils/mailer";
-import { Product, User } from "../../../shared/src/types";
+import { NewOrderRequest, Product, User } from "../../../shared/src/types";
 
 type BidStatusType = {
   top_bidder_id: number;
@@ -14,18 +14,19 @@ type BidStatusType = {
   current_price: number;
   max_price: number;
   price_increment: number;
+  buy_now_price: number | null;
 };
 
 export class BidService extends BaseService {
   private static instance: BidService;
 
-  private constructor() {
+  private constructor(private orderService: any) {
     super();
   }
 
-  static getInstance() {
+  static getInstance(orderService?: any) {
     if (!BidService.instance) {
-      BidService.instance = new BidService();
+      BidService.instance = new BidService(orderService || null);
     }
     return BidService.instance;
   }
@@ -132,7 +133,8 @@ export class BidService extends BaseService {
             P.initial_price::INT
           ) AS current_price,
           BID.max_price::INT,
-          P.price_increment::INT
+          P.price_increment::INT,
+          P.buy_now_price::INT
         FROM PRODUCT.PRODUCTS P
         LEFT JOIN AUCTION.USER_BIDS BID ON BID.user_id = P.top_bidder_id AND BID.product_id = P.id
         WHERE P.id = $1
@@ -251,7 +253,8 @@ export class BidService extends BaseService {
       console.log(3);
       // 3. Lấy thông tin đấu giá hiện tại của sản phẩm
       const productBidStatus: BidStatusType = productBidStatusResult[0]!;
-      const { seller_id, current_price, price_increment } = productBidStatus;
+      const { seller_id, current_price, price_increment, buy_now_price } =
+        productBidStatus;
 
       console.log(4);
       // 4. Kiểm tra giá bid có hợp lệ điều kiện cần không
@@ -343,42 +346,71 @@ export class BidService extends BaseService {
         console.log("Commit thành công");
         return { success: true };
       }
+
+      const order: NewOrderRequest = {
+        product_id: bid.product_id,
+        price: buy_now_price || 0,
+        shipping_address: "",
+      };
       if (!productBidStatus.top_bidder_id) {
         //TH1: Sản phẩm chưa có lượt đấu giá -> user là top_bidder
         const updateTopBidderPromise = updateTopBidderId(bid.user_id);
+
+        let bidPrice = current_price + price_increment;
+        if (buy_now_price)
+          bidPrice = Math.min(buy_now_price, current_price + price_increment);
+
         const writeBidLogPromise = createBidLog(
           bid.user_id,
           current_price + price_increment
         );
 
         await Promise.all([updateTopBidderPromise, writeBidLogPromise]);
+
+        if (buy_now_price && bidPrice == buy_now_price) {
+          this.orderService.createOrder(bid.user_id, order);
+        }
       } else {
         // TH2: Sản phẩm đã được đấu giá trước đó
         if (bid.price <= productBidStatus.max_price) {
           // Đấu giá thua
-          const opponentBidPrice = getBidPrice(
+          let opponentBidPrice = getBidPrice(
             current_price,
             price_increment,
             productBidStatus.max_price,
             bid.price
           );
+          if (buy_now_price)
+            opponentBidPrice = Math.min(buy_now_price, opponentBidPrice);
 
-          createBidLog(productBidStatus.top_bidder_id, opponentBidPrice);
+          await createBidLog(productBidStatus.top_bidder_id, opponentBidPrice);
+
+          if (buy_now_price && opponentBidPrice == buy_now_price) {
+            this.orderService.createOrder(
+              productBidStatus.top_bidder_id,
+              order
+            );
+          }
           console.log(5);
         } else {
           console.log(6);
           // Đấu giá thắng
-          const myBidPrice = getBidPrice(
+          let myBidPrice = getBidPrice(
             current_price,
             price_increment,
             bid.price,
             productBidStatus.max_price
           );
+          if (buy_now_price) myBidPrice = Math.min(buy_now_price, myBidPrice);
 
           const writeBidLogPromise = createBidLog(bid.user_id, myBidPrice);
           const updateTopBidderPromise = updateTopBidderId(bid.user_id);
 
           await Promise.all([writeBidLogPromise, updateTopBidderPromise]);
+
+          if (buy_now_price && myBidPrice == buy_now_price) {
+            this.orderService.createOrder(bid.user_id, order);
+          }
 
           const oldBidderInfo: User | undefined = await getUserInfo(
             productBidStatus.top_bidder_id
