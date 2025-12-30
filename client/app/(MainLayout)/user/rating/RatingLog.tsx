@@ -48,7 +48,7 @@ export default function RatingLog({ ratingLog }: { ratingLog: UserRating }) {
             <div className="flex items-center gap-1.5 mt-1 text-slate-400">
               <Calendar className="w-3.5 h-3.5" />
               <span className="text-xs font-medium">
-                {new Date(date).toLocaleDateString("vi-VN")}
+                {new Date(date || "").toLocaleDateString("vi-VN")}
               </span>
             </div>
           </div>
