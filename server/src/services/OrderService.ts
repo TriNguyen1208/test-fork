@@ -23,6 +23,8 @@ export class OrderService extends BaseService {
   static getInstance(bidService?: any) {
     if (!OrderService.instance) {
       OrderService.instance = new OrderService(bidService || null);
+    } else if (bidService) {
+      OrderService.instance.bidService = bidService;
     }
     return OrderService.instance;
   }
@@ -237,7 +239,7 @@ export class OrderService extends BaseService {
         buyer_id,
         seller_id,
       ]),
-      this.bidService.getInstance().blacklistABuyer(product_id, seller_id, buyer_id),
+      this.bidService.blacklistABuyer(product_id, seller_id, buyer_id),
     ];
 
     const [cancelOrderResult, insertToBlacklistResult] = await Promise.all(

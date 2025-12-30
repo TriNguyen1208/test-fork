@@ -31,6 +31,8 @@ export class BidService extends BaseService {
   static getInstance(orderService?: any) {
     if (!BidService.instance) {
       BidService.instance = new BidService(orderService || null);
+    } else if (orderService) {
+      BidService.instance.orderService = orderService;
     }
     return BidService.instance;
   }
