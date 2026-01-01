@@ -147,6 +147,7 @@ export class RatingService extends BaseService {
         JOIN admin.users aurt ON fur.rater_id = aurt.id
         JOIN admin.users aurtt ON fur.ratee_id = aurtt.id
         WHERE fur.ratee_id = $1
+        ORDER BY fur.updated_at DESC
     `;
     const params = [userId];
     const rows = await this.safeQuery(sql, params);
@@ -188,6 +189,7 @@ export class RatingService extends BaseService {
         JOIN admin.users aurt ON fur.rater_id = aurt.id
         JOIN admin.users aurtt ON fur.ratee_id = aurtt.id
         WHERE fur.ratee_id = $1
+        ORDER BY fur.updated_at DESC
         LIMIT 4 OFFSET $2
     `;
     const params = [data.userId, data.offset];
