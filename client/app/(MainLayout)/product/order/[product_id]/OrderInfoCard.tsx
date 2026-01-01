@@ -40,7 +40,7 @@ const OrderInfoCard = ({ product, order }: ComponentProps) => {
           </h3>
           <div className="flex items-center gap-1">
             <span className="text-sm font-medium text-blue-600">
-              {`⭐ ${sellerRating}%`}
+              {`⭐ ${sellerRating ? `${sellerRating}%` : `Chưa có đánh giá`}`}
             </span>
           </div>
         </div>
