@@ -42,7 +42,7 @@ const FavoriteProductPage = () => {
 
   return (
     <div className="background-user">
-      <div className="text-2xl font-medium">Sản phẩm yêu thích</div>
+      <div className="text-xl md:text-2xl font-medium">Sản phẩm yêu thích</div>
       {isLoading && (
         <div className="relative w-full h-50">
           <LoadingSpinner />
@@ -51,7 +51,12 @@ const FavoriteProductPage = () => {
       {error && <div>{error.message}</div>}
       {!isLoading && !error && (
         <div className="flex flex-col gap-10">
-          <div className="mt-2 grid grid-cols-5 gap-3">
+            <div className="
+                        grid
+                        [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]
+                        gap-3
+                        w-full
+            ">
             {favoriteProducts.map((item) => {
               return (
                 <div key={item.id} className="mt-3">
