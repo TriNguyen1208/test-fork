@@ -11,12 +11,12 @@ type ComponentProps = {
 const OrderInfoCard = ({ product, order }: ComponentProps) => {
   const sellerRating = Math.ceil(
     (100.0 * product.seller.positive_points) /
-      (product.seller.positive_points + product.seller.negative_points)
+      (product.seller.positive_points + product.seller.negative_points) || 0
   );
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm w-full">
-      {/* Phần thân trên: Thông tin Người bán */}
+    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm w-full transition-all hover:border-blue-500">
+      {/* Phần thân trên: Đã thêm min-w-0 để tiêu đề không đẩy avatar */}
       <div className="p-5 flex items-center gap-4">
         <div className="relative shrink-0">
           {product.seller.profile_img ? (
@@ -34,35 +34,38 @@ const OrderInfoCard = ({ product, order }: ComponentProps) => {
           )}
         </div>
 
-        <div className="flex flex-col">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-bold text-slate-900 text-lg leading-tight">
+        <div className="flex flex-col min-w-0">
+          {" "}
+          {/* Cực kỳ quan trọng để truncate hoạt động */}
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <h3 className="font-bold text-slate-900 text-lg leading-tight truncate">
               {product.seller.name}
             </h3>
-            {/* Thẻ định danh Người bán */}
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 border border-blue-100 text-[10px] font-bold text-blue-600 uppercase tracking-wider shadow-sm">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 border border-blue-100 text-[10px] font-bold text-blue-600 uppercase tracking-wider shrink-0">
               <ShieldCheck className="w-3 h-3 fill-blue-600/10" />
               Người bán
             </span>
           </div>
           <div className="flex items-center">
             <span className="text-sm font-semibold text-blue-600">
-              {`⭐ ${sellerRating ? `${sellerRating}%` : `Chưa có đánh giá`}`}
+              {`⭐ ${
+                sellerRating > 0 ? `${sellerRating}%` : `Chưa có đánh giá`
+              }`}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Phần thân dưới: Thời gian (Dàn hàng ngang) */}
-      <div className="grid grid-cols-2 bg-slate-50/50 border-t border-slate-100">
+      {/* Phần thân dưới: Thay grid bằng flex-wrap để tự nhảy dòng thông minh */}
+      <div className="flex flex-wrap bg-slate-50/50 border-t border-slate-100">
         {/* Cột 1: Đơn tạo lúc */}
-        <div className="flex items-center gap-3 p-4 border-r border-slate-100">
-          <Clock className="w-4 h-4 text-slate-400" />
+        <div className="flex-1 min-w-[200px] flex items-center gap-3 p-4 border-r border-slate-100">
+          <Clock className="w-4 h-4 text-slate-400 shrink-0" />
           <div className="flex flex-col">
             <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
               Đơn tạo lúc
             </span>
-            <span className="text-sm text-slate-700 font-medium">
+            <span className="text-sm text-slate-700 font-medium whitespace-nowrap">
               {new Date(order.created_at).toLocaleString("vi-VN", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -75,18 +78,20 @@ const OrderInfoCard = ({ product, order }: ComponentProps) => {
         </div>
 
         {/* Cột 2: Đơn hoàn thành lúc */}
-        <div className="flex items-center gap-3 p-4">
+        <div className="flex-1 min-w-[200px] flex items-center gap-3 p-4">
           <CheckCircle2
-            className={`w-4 h-4 ${
-              order.status === "shipped" ? "text-green-500" : "text-slate-300"
+            className={`w-4 h-4 shrink-0 ${
+              order.status === "shipped" || order.status === "completed"
+                ? "text-green-500"
+                : "text-slate-300"
             }`}
           />
           <div className="flex flex-col">
             <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
               Đơn hoàn thành
             </span>
-            <span className="text-sm text-slate-700 font-medium">
-              {order.status === "shipped"
+            <span className="text-sm text-slate-700 font-medium whitespace-nowrap">
+              {order.status === "shipped" || order.status === "completed"
                 ? new Date(order.updated_at || "").toLocaleString("vi-VN", {
                     hour: "2-digit",
                     minute: "2-digit",
