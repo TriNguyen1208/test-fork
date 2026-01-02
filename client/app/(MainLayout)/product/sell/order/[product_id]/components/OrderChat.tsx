@@ -10,9 +10,9 @@ import Image from "next/image";
 
 type Props = {
   productId: number;
+  isSeller?: boolean; // Prop mới
 };
 
-// Hàm định dạng thời gian: Dưới 24h hiện Giờ, trên 24h hiện Ngày
 const formatChatTime = (dateStr: string) => {
   const date = new Date(dateStr);
   const now = new Date();
@@ -28,7 +28,15 @@ const formatChatTime = (dateStr: string) => {
   return date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
 };
 
-const Avatar = ({ name, img }: { name: string; img?: string | null }) => {
+const Avatar = ({
+  name,
+  img,
+  isSeller,
+}: {
+  name: string;
+  img?: string | null;
+  isSeller?: boolean;
+}) => {
   if (img) {
     return (
       <Image
@@ -44,7 +52,8 @@ const Avatar = ({ name, img }: { name: string; img?: string | null }) => {
   return (
     <div
       className={clsx(
-        "w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold shadow-md bg-blue-600"
+        "w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold shadow-md",
+        isSeller ? "bg-teal-600" : "bg-blue-600"
       )}
     >
       {name?.charAt(0).toUpperCase()}
@@ -52,7 +61,7 @@ const Avatar = ({ name, img }: { name: string; img?: string | null }) => {
   );
 };
 
-const OrderChat = ({ productId }: Props) => {
+const OrderChat = ({ productId, isSeller = false }: Props) => {
   const user = useAuthStore((s) => s.user);
   const [message, setMessage] = useState("");
   const { data: conversation, isLoading } = OrderHook.useOrderChat(productId);
@@ -77,7 +86,15 @@ const OrderChat = ({ productId }: Props) => {
 
   return (
     <div className="flex flex-col h-full bg-white rounded-2xl shadow-md overflow-hidden">
-      <div className="relative px-6 py-4 bg-gradient-to-r from-blue-800 via-cyan-500 to-indigo-300 shrink-0">
+      {/* HEADER: Thay đổi gradient theo isSeller */}
+      <div
+        className={clsx(
+          "relative px-6 py-4 shrink-0 transition-colors duration-500",
+          isSeller
+            ? "bg-gradient-to-r from-teal-700 via-teal-500 to-emerald-400"
+            : "bg-gradient-to-r from-blue-800 via-cyan-500 to-indigo-300"
+        )}
+      >
         <div className="relative flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
             <ShoppingBag className="w-5 h-5 text-white" />
@@ -86,7 +103,9 @@ const OrderChat = ({ productId }: Props) => {
             <h3 className="font-semibold text-white text-base">
               Trao đổi đơn hàng
             </h3>
-            <p className="text-xs text-white/80">Luôn sẵn sàng hỗ trợ bạn</p>
+            <p className="text-xs text-white/80">
+              {isSeller ? "Hỗ trợ khách hàng ngay" : "Luôn sẵn sàng hỗ trợ bạn"}
+            </p>
           </div>
         </div>
       </div>
@@ -106,13 +125,17 @@ const OrderChat = ({ productId }: Props) => {
               className={clsx(
                 "flex gap-2 animate-in slide-in-from-bottom-1 duration-300",
                 isMe ? "justify-end" : "justify-start",
-                showAvatar ? "mt-3" : "mt-0" // Chỉ cách xa khi đổi người gửi
+                showAvatar ? "mt-3" : "mt-0"
               )}
             >
               {!isMe && (
                 <div className="w-8 shrink-0">
                   {showAvatar ? (
-                    <Avatar name={msg.user.name} img={msg.user.profile_img} />
+                    <Avatar
+                      name={msg.user.name}
+                      img={msg.user.profile_img}
+                      isSeller={isSeller}
+                    />
                   ) : (
                     <div className="w-8" />
                   )}
@@ -127,9 +150,11 @@ const OrderChat = ({ productId }: Props) => {
               >
                 <div
                   className={clsx(
-                    "inline-block px-4 py-2 rounded-[18px] text-[14px] shadow-sm break-words",
+                    "inline-block px-4 py-2 rounded-[18px] text-[14px] shadow-sm break-words transition-colors",
                     isMe
-                      ? "bg-sky-500 text-white rounded-tr-none"
+                      ? isSeller
+                        ? "bg-teal-600 text-white rounded-tr-none"
+                        : "bg-sky-500 text-white rounded-tr-none"
                       : "bg-slate-100 text-slate-900 rounded-tl-none"
                   )}
                 >
@@ -148,7 +173,11 @@ const OrderChat = ({ productId }: Props) => {
               {isMe && (
                 <div className="w-8 shrink-0">
                   {showAvatar ? (
-                    <Avatar name={msg.user.name} img={msg.user.profile_img} />
+                    <Avatar
+                      name={msg.user.name}
+                      img={msg.user.profile_img}
+                      isSeller={isSeller}
+                    />
                   ) : (
                     <div className="w-8" />
                   )}
@@ -165,7 +194,10 @@ const OrderChat = ({ productId }: Props) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Nhập tin nhắn..."
-            className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className={clsx(
+              "flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 transition-all",
+              isSeller ? "focus:ring-teal-400" : "focus:ring-blue-400"
+            )}
             onKeyDown={(e) => {
               if (e.key === "Enter" && message.trim() && !isPending) {
                 sendMessage({ productId, payload: { message } });
@@ -180,10 +212,12 @@ const OrderChat = ({ productId }: Props) => {
               setMessage("");
             }}
             className={clsx(
-              "w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-lg",
+              "w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-slate-200 active:scale-90",
               message.trim() && !isPending
-                ? "bg-gradient-to-r from-blue-500 to-cyan-400"
-                : "bg-slate-300"
+                ? isSeller
+                  ? "bg-linear-to-r from-teal-600 to-emerald-400"
+                  : "bg-gradient-to-r from-blue-500 to-cyan-400"
+                : "bg-slate-300 shadow-none"
             )}
           >
             <Send className={clsx("w-5 h-5 text-white")} />
