@@ -39,7 +39,7 @@ const ProductOrderPage = () => {
   const [active, setActive] = useState<number>(0);
 
   // Hook kiểm tra màn hình mobile để xoay Stepper
-  const isMobile = useMediaQuery("(max-width: 640px)"); // md
+  const isMobile = useMediaQuery("(max-width: 640px)"); // sm
 
   const user = useAuthStore((state) => state.user);
 
