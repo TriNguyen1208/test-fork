@@ -3,7 +3,7 @@
 import OrderHook from "@/hooks/useOrder";
 import { useAuthStore } from "@/store/auth.store";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Order,
   OrderStatus,
@@ -12,7 +12,7 @@ import {
 import LoadingSpinner from "@/components/LoadingSpinner";
 import UnauthorizedAccess from "@/components/UnauthorizedAccess";
 import { Stepper } from "@mantine/core";
-import { Info } from "lucide-react";
+import { ClipboardList, Info } from "lucide-react";
 import PaymentStep from "./PaymentStep";
 import BuyingProductCard from "./BuyingProductCard";
 import ProductHook from "@/hooks/useProduct";
@@ -37,6 +37,7 @@ const ProductOrderPage = () => {
   const router = useRouter();
   const { product_id } = useParams();
   const [active, setActive] = useState<number>(0);
+  const stepperRef = useRef<HTMLDivElement>(null);
 
   // Hook kiểm tra màn hình mobile để xoay Stepper
   const isMobile = useMediaQuery("(max-width: 640px)"); // sm
@@ -61,6 +62,17 @@ const ProductOrderPage = () => {
   }, [order]);
 
   useEffect(() => {
+    if (active !== undefined && stepperRef.current) {
+      const yOffset = -100; // Khoảng cách offset để không bị dính sát mép trên (ví dụ trừ đi chiều cao header)
+      const element = stepperRef.current;
+      const y =
+        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }, [active]);
+
+  useEffect(() => {
     if (!router || !user || !order || !product) return;
     if (user.id === order.seller?.id)
       router.replace(`/product/sell/order/${product.id}`);
@@ -69,15 +81,19 @@ const ProductOrderPage = () => {
   return (
     <div className="w-full flex flex-col gap-4 md:gap-6 pb-10 px-4 md:px-0">
       {isLoadingOrder || isLoadingProduct ? (
-        <div className="w-full h-[60vh] flex items-center justify-center">
+        <div className="w-screen h-screen flex items-center justify-center">
           <LoadingSpinner />
         </div>
       ) : user && order && user.id === order.buyer?.id ? (
         <>
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <div className="flex flex-col gap-1 mt-4 md:mt-0">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+              <ClipboardList className="text-blue-600 w-8 h-8" />
               Chi tiết đơn hàng
             </h1>
+            <p className="text-slate-500 text-sm font-medium">
+              Xem thông tin chi tiết và lịch sử trao đổi của đơn hàng này
+            </p>
           </div>
 
           <div className="w-full grid grid-cols-12 gap-6 items-start">
@@ -100,7 +116,10 @@ const ProductOrderPage = () => {
                 {order.status === "cancelled" ? (
                   <CancelledCard order={order} />
                 ) : (
-                  <div className="mt-6 md:mt-10 py-6 px-3 md:px-4 bg-slate-50/50 rounded-xl border border-slate-100">
+                  <div
+                    ref={stepperRef}
+                    className="mt-6 md:mt-10 py-6 px-3 md:px-4 bg-slate-50/50 rounded-xl border border-slate-100"
+                  >
                     <Stepper
                       active={active}
                       color="blue"
