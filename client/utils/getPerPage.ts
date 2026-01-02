@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-export  const usePerPage= () => {
+export const usePerPage = () => {
   // Mặc định là số lượng cho mobile (để tối ưu tốc độ load đầu) hoặc desktop tùy bạn
   const [perPage, setPerPage] = useState(15);
 
@@ -8,7 +8,7 @@ export  const usePerPage= () => {
       // Logic giống breakpoint của Tailwind
       // sm: 640px, md: 768px, lg: 1024px, xl: 1280px
       if (window.innerWidth >= 1280) {
-        setPerPage(12);
+        setPerPage(15);
       } else if (window.innerWidth >= 1024) {
         setPerPage(12);
       } else if (window.innerWidth >= 768) {
@@ -31,4 +31,4 @@ export  const usePerPage= () => {
   }, []);
 
   return perPage;
-}
+};
