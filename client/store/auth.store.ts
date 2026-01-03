@@ -89,20 +89,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  // changePassword: async (user: ChangePasswordRequest) => {
-  //   try {
-  //     set({ loading: true });
-  //     const data = await authService.changePassword(user);
-  //     console.log(data);
-  //     toast.success(data.message);
-  //   } catch (error: any) {
-  //     console.log(error);
-  //     toast.error(error.message);
-  //     throw error;
-  //   }finally {
-  //     set({ loading: false });
-  //   }
-  // },
+
   forgetPassword: async (user: ForgetPasswordRequest) => {
     try {
       set({ loading: true });
