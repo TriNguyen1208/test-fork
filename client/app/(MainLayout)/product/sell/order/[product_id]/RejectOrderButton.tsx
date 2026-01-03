@@ -10,7 +10,7 @@ import {
 import { RatingHook } from "@/hooks/useRating";
 import OrderHook from "@/hooks/useOrder";
 import { useRouter } from "next/navigation";
-import { CircleMinus } from "lucide-react";
+import { CircleMinus, AlertTriangle } from "lucide-react"; // Thêm AlertTriangle cho popup
 import { ConfirmPopup } from "@/components/ConfirmPopup";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -25,21 +25,22 @@ const RejectOrderButton = ({
   const [rejectConfirmModal, setRejectConfirmModal] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
-  const { data: rating, isLoading: isLoadingRating } =
-    RatingHook.useGetOneRating(order?.seller?.id, order?.buyer?.id) as {
-      data: UserRating;
-      isLoading: boolean;
-    };
-  const { mutate: sellerRejectOrder, isPending: isRejectingOrder } =
-    OrderHook.useSellerRejectOrder();
-  const { mutate: createRating, isPending: isCreatingRating } =
-    RatingHook.useCreateRating();
+  const { data: rating } = RatingHook.useGetOneRating(
+    order?.seller?.id,
+    order?.buyer?.id
+  ) as {
+    data: UserRating;
+    isLoading: boolean;
+  };
 
-  const { mutate: updateRating, isPending: isUpdatingRating } =
-    RatingHook.useUpdateRating();
-  const handleRejectOrder = (id: number) => {
+  const { mutate: sellerRejectOrder } = OrderHook.useSellerRejectOrder();
+  const { mutate: createRating } = RatingHook.useCreateRating();
+  const { mutate: updateRating } = RatingHook.useUpdateRating();
+
+  const handleRejectOrder = () => {
     if (!order || !order.product_id || !order.buyer?.id) return;
     setRejectConfirmModal(false);
+
     sellerRejectOrder(
       {
         productId: Number(order.product_id),
@@ -65,22 +66,23 @@ const RejectOrderButton = ({
 
   if (isPending)
     return (
-      <div className="fixed w-screen h-screen inset-0 z-500">
+      <div className="fixed inset-0 z-[999] bg-white/80 backdrop-blur-sm flex items-center justify-center">
         <LoadingSpinner />
       </div>
     );
+
   return (
-    <div>
-      <div className="flex flex-row gap-2 justify-center">
-        <div className="relative w-50">
-          <button
-            onClick={() => setRejectConfirmModal(true)}
-            className="flex flex-rows gap-2 items-center border border-red-500 py-2 px-7 rounded-lg bg-white-500 text-red-500 hover:bg-red-400 hover:border-red-400 hover:text-white cursor-pointer disabled:bg-gray-400 disabled:border-gray-400"
-          >
-            <CircleMinus height={20} width={20} />
-            <span className="text-md font-medium">Hủy đơn hàng</span>
-          </button>
-        </div>
+    <div className="w-full">
+      <div className="flex justify-center md:justify-end w-full">
+        <button
+          onClick={() => setRejectConfirmModal(true)}
+          className="w-full md:w-auto flex items-center justify-center gap-2 border border-red-200 py-2.5 md:py-2 px-6 rounded-xl md:rounded-lg bg-white text-red-600 hover:bg-red-50 hover:border-red-500 transition-all cursor-pointer shadow-sm active:scale-95"
+        >
+          <CircleMinus className="w-4 h-4 md:w-5 md:h-5" />
+          <span className="text-sm md:text-md font-bold uppercase tracking-tight md:tracking-normal">
+            Hủy đơn hàng
+          </span>
+        </button>
       </div>
 
       <ConfirmPopup
@@ -89,19 +91,30 @@ const RejectOrderButton = ({
         selected={{
           id: 0,
           contentHtml: (
-            <div className="flex flex-col gap-2">
-              <p>
-                Bạn có chắc chắn muốn hủy đơn hàng với <b>{order.buyer.name}</b>{" "}
-                và người dùng này thực hiện mọi thao tác trên sản phẩm.
-              </p>
-              <p>
-                Một đánh giá tự động với nội dung{" "}
-                <i>"Người mua không thanh toán"</i> sẽ được gửi trực tiếp tới
-                người mua sau khi hủy đơn hàng.
-              </p>
-              <p className="text-red-600">
-                Lưu ý: Hành động này không thể hoàn tác
-              </p>
+            <div className="flex flex-col gap-3 md:gap-4 py-2">
+              <div className="flex items-center gap-2 text-red-600 mb-1">
+                <AlertTriangle className="w-5 h-5 shrink-0" />
+                <h4 className="font-bold text-base md:text-lg">
+                  Xác nhận hủy đơn
+                </h4>
+              </div>
+
+              <div className="space-y-3 text-slate-600 text-sm md:text-base leading-relaxed">
+                <p>
+                  Bạn có chắc chắn muốn hủy đơn hàng với{" "}
+                  <b>{order.buyer.name}</b>?
+                </p>
+                <div className="bg-red-50 p-3 rounded-lg border border-red-100">
+                  <p className="text-red-800 text-xs md:text-sm font-medium">
+                    Hệ thống sẽ tự động gửi đánh giá tiêu cực:
+                    <i className="block mt-1">"Người mua không thanh toán"</i>
+                  </p>
+                </div>
+                <p className="text-[11px] md:text-xs text-slate-400 italic">
+                  * Lưu ý: Hành động này sẽ giải phóng sản phẩm và không thể
+                  hoàn tác.
+                </p>
+              </div>
             </div>
           ),
         }}

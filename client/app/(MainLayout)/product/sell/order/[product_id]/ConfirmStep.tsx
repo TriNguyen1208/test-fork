@@ -13,7 +13,6 @@ import {
   MapPin,
   ShieldAlert,
   Phone,
-  Box,
   CheckCircle2,
 } from "lucide-react";
 import PrimaryButton from "@/components/PrimaryButton";
@@ -48,11 +47,11 @@ const ConfirmStep = ({ setActive, order, product }: ComponentProps) => {
 
   if (isConfirmingOrder) {
     return (
-      <div className="relative flex flex-col items-center justify-center h-64 gap-4">
-        <div className="w-full h-50">
+      <div className="flex flex-col items-center justify-center py-12 md:py-20 gap-4 md:gap-6">
+        <div className="scale-75 md:scale-100">
           <LoadingSpinner />
         </div>
-        <p className="text-teal-600 font-medium animate-pulse">
+        <p className="text-teal-600 text-xs md:text-sm font-medium animate-pulse">
           Đang kết nối với đơn vị vận chuyển...
         </p>
       </div>
@@ -60,30 +59,30 @@ const ConfirmStep = ({ setActive, order, product }: ComponentProps) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-8 py-2">
+    <div className="max-w-[600px] mx-auto flex flex-col gap-6 md:gap-8 py-4 md:py-8 px-2 md:px-0">
       {/* BƯỚC 1: XÁC NHẬN & ĐÓNG GÓI */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 min-w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-sm">
+      <div className="bg-white border border-slate-200 rounded-xl md:rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-slate-50 px-4 md:px-6 py-3 md:py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
+          <div className="flex items-center gap-2.5 md:gap-3">
+            <div className="w-6 min-w-6 h-6 md:w-8 md:h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs md:text-sm">
               1
             </div>
-            <h3 className="font-bold text-slate-800 text-lg">
-              Xác nhận thông tin & Đóng gói
+            <h3 className="font-bold text-slate-800 text-sm md:text-lg">
+              Xác nhận & Đóng gói
             </h3>
           </div>
 
           <div className="flex justify-start sm:justify-end">
             {isPackaged ? (
-              <div className="flex items-center gap-2 px-4 py-2 bg-teal-50 text-teal-600 rounded-xl border border-teal-200 font-bold animate-in zoom-in duration-300">
-                <CircleCheckBig size={20} />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-teal-50 text-teal-600 rounded-lg md:rounded-xl border border-teal-200 font-bold text-[10px] md:text-sm animate-in zoom-in duration-300">
+                <CircleCheckBig className="w-4 h-4 md:w-5 md:h-5" />
                 <span>Đã đóng gói hàng</span>
               </div>
             ) : (
-              <div className="w-[105%] sm:w-48">
+              <div className="w-full sm:w-44 h-9 md:h-11">
                 <PrimaryButton
-                  backgroundColor={"#0d9488"} // teal-600
-                  hoverBackgroundColor={"#0f766e"} // teal-700
+                  backgroundColor={"#0d9488"}
+                  hoverBackgroundColor={"#0f766e"}
                   onClick={() => setIsPackaged(true)}
                   text="Xác nhận đóng gói"
                 />
@@ -92,63 +91,57 @@ const ConfirmStep = ({ setActive, order, product }: ComponentProps) => {
           </div>
         </div>
 
-        {/* Bố cục thông tin thẳng hàng (giống Buyer) */}
         <div className="divide-y divide-slate-100">
-          <div className="px-6 py-4 flex items-center gap-4">
-            <User className="w-5 h-5 text-slate-400 shrink-0" />
-            <div className="flex-1">
-              <p className="text-[11px] text-slate-400 font-bold uppercase mb-0.5">
-                Người nhận
-              </p>
-              <p className="font-semibold text-slate-800">{order.buyer.name}</p>
+          {[
+            { icon: User, label: "Người nhận", value: order.buyer.name },
+            {
+              icon: Phone,
+              label: "Số điện thoại",
+              value: order.phone_number || "Chưa cung cấp",
+            },
+            { icon: Mail, label: "Email liên hệ", value: order.buyer.email },
+            {
+              icon: MapPin,
+              label: "Địa chỉ giao hàng",
+              value: order.shipping_address,
+              isAddress: true,
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="px-4 md:px-6 py-3 md:py-4 flex items-start gap-3 md:gap-4"
+            >
+              <item.icon
+                className={clsx(
+                  "w-4 h-4 md:w-5 md:h-5 text-slate-400 shrink-0",
+                  !item.isAddress && "mt-0.5"
+                )}
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-[9px] md:text-[11px] text-slate-400 font-bold uppercase mb-0.5 tracking-tight">
+                  {item.label}
+                </p>
+                <p
+                  className={clsx(
+                    "text-sm md:text-base font-semibold text-slate-800 leading-snug",
+                    !item.isAddress && "truncate"
+                  )}
+                >
+                  {item.value}
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
 
-          <div className="px-6 py-4 flex items-center gap-4">
-            <Phone className="w-5 h-5 text-slate-400 shrink-0" />
-            <div className="flex-1">
-              <p className="text-[11px] text-slate-400 font-bold uppercase mb-0.5">
-                Số điện thoại
-              </p>
-              <p className="font-semibold text-slate-800">
-                {order.phone_number || "Chưa cung cấp"}
-              </p>
-            </div>
-          </div>
-
-          <div className="px-6 py-4 flex items-center gap-4">
-            <Mail className="w-5 h-5 text-slate-400 shrink-0" />
-            <div className="flex-1">
-              <p className="text-[11px] text-slate-400 font-bold uppercase mb-0.5">
-                Email liên hệ
-              </p>
-              <p className="font-semibold text-slate-800">
-                {order.buyer.email}
-              </p>
-            </div>
-          </div>
-
-          <div className="px-6 py-4 flex items-center gap-4">
-            <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
-            <div className="flex-1">
-              <p className="text-[11px] text-slate-400 font-bold uppercase mb-0.5">
-                Địa chỉ giao hàng
-              </p>
-              <p className="font-semibold text-slate-800 leading-snug">
-                {order.shipping_address}
-              </p>
-            </div>
-          </div>
-
-          {/* Banner trạng thái thanh toán cuối Card */}
-          <div className="p-5 bg-teal-600 flex items-center justify-between text-white">
+          {/* Banner thanh toán */}
+          <div className="px-4 md:px-5 py-3 md:py-5 bg-teal-600 flex items-center justify-between text-white">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-white" />
-              <span className="text-xs font-bold uppercase tracking-widest">
+              <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-white/90" />
+              <span className="text-[10px] md:text-xs font-medium uppercase tracking-wider">
                 Đã nhận thanh toán
               </span>
             </div>
-            <span className="text-xl font-bold text-white">
+            <span className="text-lg md:text-xl font-black text-white">
               {formatCurrency(order.price)}
             </span>
           </div>
@@ -158,77 +151,80 @@ const ConfirmStep = ({ setActive, order, product }: ComponentProps) => {
       {/* BƯỚC 2: VẬN CHUYỂN */}
       <div
         className={clsx(
-          "bg-white border rounded-2xl overflow-hidden shadow-sm transition-all duration-500",
+          "bg-white border rounded-xl md:rounded-2xl overflow-hidden shadow-sm transition-all duration-500",
           isPackaged
             ? "border-teal-200 opacity-100"
             : "border-slate-200 opacity-60 grayscale-[0.5]"
         )}
       >
-        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center gap-3">
+        <div className="bg-slate-50 px-4 md:px-6 py-3 md:py-4 border-b border-slate-200 flex items-center gap-2.5 md:gap-3">
           <div
             className={clsx(
-              "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors",
+              "w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center font-bold text-xs md:text-sm transition-colors",
               isPackaged ? "bg-teal-600 text-white" : "bg-slate-300 text-white"
             )}
           >
             2
           </div>
-          <h3 className="font-bold text-slate-800 text-lg">
-            Tìm tài xế & Giao hàng
+          <h3 className="font-bold text-slate-800 text-sm md:text-lg">
+            Giao hàng
           </h3>
         </div>
 
-        <div className="p-8 flex flex-col items-center text-center">
+        <div className="p-6 md:p-8 flex flex-col items-center text-center">
           <div
             className={clsx(
-              "w-20 h-20 rounded-full flex items-center justify-center mb-4 transition-all",
+              "w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-3 md:mb-4 transition-all",
               isPackaged
-                ? "bg-teal-50 text-teal-600 scale-110 shadow-lg shadow-teal-100"
+                ? "bg-teal-50 text-teal-600 scale-105 md:scale-110 shadow-lg shadow-teal-100"
                 : "bg-slate-100 text-slate-400"
             )}
           >
-            <Truck size={40} className={isPackaged ? "animate-bounce" : ""} />
+            <Truck
+              className={clsx(
+                "w-7 h-7 md:w-10 md:h-10",
+                isPackaged ? "animate-bounce" : ""
+              )}
+            />
           </div>
 
-          <h4 className="text-xl font-bold text-slate-800 mb-2">
+          <h4 className="text-base md:text-xl font-bold text-slate-800 mb-1 md:mb-2">
             Sẵn sàng vận chuyển
           </h4>
-          <p className="text-slate-500 text-sm max-w-sm mb-8 leading-relaxed">
-            Hệ thống sẽ tìm tài xế gần nhất để đến lấy hàng tại địa chỉ của bạn
-            và giao đến người mua.
+          <p className="text-slate-500 text-[11px] md:text-sm max-w-[280px] md:max-w-sm mb-6 md:mb-8 leading-relaxed">
+            Hệ thống sẽ tìm tài xế gần nhất đến lấy hàng và giao đến người mua.
           </p>
 
           <button
             onClick={handleConfirm}
             disabled={!isPackaged}
             className={clsx(
-              "flex items-center gap-3 px-12 py-4 rounded-2xl font-bold text-lg transition-all shadow-lg active:scale-95",
+              "flex items-center gap-2 md:gap-3 px-8 md:px-12 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold text-sm md:text-lg transition-all shadow-md active:scale-95 w-full md:w-auto justify-center",
               !isPackaged
-                ? "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
-                : "bg-teal-600 text-white hover:bg-teal-700 hover:shadow-teal-900/20"
+                ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                : "bg-teal-600 text-white hover:bg-teal-700 shadow-teal-900/10"
             )}
           >
-            <Truck className="w-6 h-6" />
+            <Truck className="w-4 h-4 md:w-6 md:h-6" />
             Tìm tài xế ngay
           </button>
         </div>
       </div>
 
       {/* FOOTER: HỦY ĐƠN */}
-      <div className="p-5 bg-red-50 rounded-2xl border border-red-100 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 md:p-5 bg-red-50 rounded-xl md:rounded-2xl border border-red-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
-          <ShieldAlert className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
+          <ShieldAlert className="w-5 h-5 md:w-6 md:h-6 text-red-500 shrink-0 mt-0.5" />
           <div className="text-left">
-            <p className="text-sm font-bold text-red-800">
+            <p className="text-xs md:text-sm font-bold text-red-800">
               Cần hủy đơn hàng này?
             </p>
-            <p className="text-xs text-red-600">
-              Nếu phát hiện thanh toán giả mạo hoặc người mua có dấu hiệu bất
-              thường.
+            <p className="text-[10px] md:text-xs text-red-600 leading-tight">
+              Nếu phát hiện thanh toán giả mạo hoặc người mua bất thường.
             </p>
           </div>
         </div>
-        <div className="shrink-0 w-full md:w-auto">
+        <div className="shrink-0 w-full md:w-auto h-9 md:h-10">
           <RejectOrderButton order={order} product={product} />
         </div>
       </div>
