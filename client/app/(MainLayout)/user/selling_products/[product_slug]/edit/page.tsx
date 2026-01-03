@@ -3,12 +3,12 @@ import BreadCrump from "@/components/Breadcrump";
 import { CalendarOutlineIcon, UserOutlineIcon } from "@/components/icons";
 import { ImageCarousel } from "@/components/ImageCarousel";
 import Image from "next/image";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import ProductHook from "@/hooks/useProduct";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   Product,
   ProductCategoryTree,
@@ -16,6 +16,8 @@ import {
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { formatPrice, getTimeDifference } from "@/utils";
 import CategoryHook from "@/hooks/useCategory";
+import { useAuthStore } from "@/store/auth.store";
+import UnauthorizedAccess from "@/components/UnauthorizedAccess";
 
 const Editor = dynamic(
   () =>
@@ -25,6 +27,7 @@ const Editor = dynamic(
   { ssr: false }
 );
 const EditProductPage = () => {
+  const user = useAuthStore((s) => s.user);
   const [content, setContent] = useState("");
   const {
     mutate: updateProductDescription,
@@ -65,9 +68,13 @@ const EditProductPage = () => {
     updateProductDescription({ id: productId, description: description });
   };
 
+  if (user && product?.seller && user.id != product.seller.id)
+    return <UnauthorizedAccess />;
+
   return (
     <div className=" w-full">
-      {(isLoadingProduct ||
+      {(!user ||
+        isLoadingProduct ||
         isUpdatingProductDescription ||
         isLoadingCategory) && (
         <div className="fixed inset-0 z-100">
