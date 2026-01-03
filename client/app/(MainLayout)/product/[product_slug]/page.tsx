@@ -100,7 +100,7 @@ export default function ProductPage() {
   const { user } = useAuth();
   const isPrivate = user ? true : false;
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [setFavorites, setSetFavorites] = useState<Set<number>>();
+  const [setFavorites, setSetFavorites] = useState<Set<number>>(new Set([]));
   const [isBid, setIsBid] = useState(false);
   const [openBuyNowModal, setOpenBuyNowModal] = useState<boolean>(false);
   const [warningAutoBuyNowModal, setWarningAutoBuyNowModal] =
@@ -937,11 +937,11 @@ export default function ProductPage() {
               </div>
             </div>
           )}
-          {user && product && setFavorites && (
+          {product && (
             <div className="w-full">
               <RelatedProducts
                 categoryId={product.category_id}
-                favorite_products={setFavorites}
+                favorite_products={user ? setFavorites : new Set([])}
               />
             </div>
           )}
