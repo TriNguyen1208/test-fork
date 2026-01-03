@@ -2,6 +2,7 @@ import { api, safeRequest } from "../config/axios.config";
 import API_ROUTES from "../../shared/src/api";
 import { CreateAnswer, CreateQuestion } from "../../shared/src/types";
 import { publicApi } from "@/config/publicApi.config";
+import { Pagination } from "../../shared/src/types/Pagination";
 
 // Một hàm để tạo kết nối tới endpoint bên backend
 // Không được biết gì về frontend cả
@@ -98,9 +99,9 @@ export class ProductService {
       return res.data;
     });
   }
-  static async getSellingProduct(): Promise<any> {
+  static async getSellingProduct(pagination: Pagination): Promise<any> {
     return safeRequest(async () => {
-      const res = await api.get(API_ROUTES.product.getSellingProduct);
+      const res = await api.get(API_ROUTES.product.getSellingProduct(pagination));
       return res.data;
     });
   }

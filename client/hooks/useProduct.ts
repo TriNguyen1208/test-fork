@@ -7,6 +7,7 @@ import {
   CreateQuestion,
 } from "../../shared/src/types";
 import { toast } from "react-toastify";
+import { Pagination } from "../../shared/src/types/Pagination";
 
 // Một hàm xử lý logic REACT, và chỉ được biết tới REACT(FRONT END) thôi
 // Nó không được biết về api
@@ -92,10 +93,10 @@ class ProductHook {
       },
     });
   }
-  static useGetSellingProduct() {
+  static useGetSellingProduct(pagination: Pagination) {
     return useQuery({
       queryKey: ["product_selling"],
-      queryFn: () => ProductService.getSellingProduct(),
+      queryFn: () => ProductService.getSellingProduct(pagination),
 
       staleTime: STALE_10_MIN,
 
