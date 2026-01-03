@@ -1307,7 +1307,7 @@ RETURNING *;
     return productPreview;
   }
 
-  async getProducts(pagination: Pagination): Promise<Product[]> {
+  async getProducts(pagination: Pagination): Promise<ProductPreview[]> {
     const sql = `
                 SELECT p.id 
                 FROM product.products p
@@ -1321,7 +1321,7 @@ RETURNING *;
 
     const productPreview = await Promise.all(
       product.map(async (item: any) => {
-        const productType = this.getProductType(item.id);
+        const productType = this.getProductPreviewType(item.id);
         return productType;
       })
     );
