@@ -29,7 +29,7 @@ const FavoriteProductPage = () => {
 
   return (
     <div className="background-user">
-      <div className="text-2xl font-medium">Sản phẩm đang bán</div>
+      <div className="text-xl sm:text-2xl font-medium">Sản phẩm đang bán</div>
       {(isLoading || isLoadingSellingProducts) && <LoadingSpinner />}
       {error && <div>{error.message}</div>}
       {!isLoading &&
@@ -38,7 +38,7 @@ const FavoriteProductPage = () => {
         (sellingProducts.length === 0 ? (
           <>Chưa có sản phẩm</>
         ) : (
-          <div className="mt-2 grid grid-cols-5 gap-3">
+          <div className="mt-2 grid min-[390px]:grid-cols-2 min-[500px]:grid-cols-3 min-[700px]:grid-cols-4 min-[900px]:grid-cols-5 gap-3">
             {sellingProducts.map((item) => {
               return (
                 <div key={item.id} className="mt-3">
