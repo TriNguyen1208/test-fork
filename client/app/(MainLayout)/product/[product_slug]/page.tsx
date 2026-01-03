@@ -196,8 +196,8 @@ export default function ProductPage() {
       const newSetFavorites: Set<number> = new Set(
         favorite_products.map((p: Product) => Number(p.id))
       );
-
-      if (newSetFavorites.has(product.id)) {
+      setSetFavorites(newSetFavorites);
+      if (newSetFavorites.has(Number(product.id))) {
         setIsFavorite(true);
       } else {
         setIsFavorite(false);
@@ -364,8 +364,10 @@ export default function ProductPage() {
       isLoadingIsCanBid ||
       isCreatingBid ||
       isCreatingOrder ? (
-        <div className="fixed inset-0 z-100">
-          <LoadingSpinner />
+        <div className="h-screen">
+          <div className="fixed inset-0 z-100">
+            <LoadingSpinner />
+          </div>
         </div>
       ) : (
         <>

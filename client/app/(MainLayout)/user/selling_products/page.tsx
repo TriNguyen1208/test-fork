@@ -31,7 +31,11 @@ const FavoriteProductPage = () => {
   return (
     <div className="background-user">
       <div className="text-xl sm:text-2xl font-medium">Sản phẩm đang bán</div>
-      {(isLoading || isLoadingSellingProducts) && <LoadingSpinner />}
+      {(isLoading || isLoadingSellingProducts) && (
+        <div className="w-screen h-screen inset-0 z-100">
+          <LoadingSpinner />
+        </div>
+      )}
       {error && <div>{error.message}</div>}
       {!isLoading &&
         !isLoadingSellingProducts &&

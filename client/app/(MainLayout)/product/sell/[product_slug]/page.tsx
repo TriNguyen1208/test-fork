@@ -150,7 +150,7 @@ export default function ProductPage() {
       );
 
       setSetFavorites(newSetFavorites);
-      if (newSetFavorites.has(product.id)) {
+      if (newSetFavorites.has(Number(product.id))) {
         setIsFavorite(true);
       } else {
         setIsFavorite(false);
@@ -221,7 +221,9 @@ export default function ProductPage() {
       isLoadingProductCategory ||
       isLoadingOrder ||
       isLoadingUserBid ? (
-        <LoadingSpinner />
+        <div className="w-screen h-screen inset-0 z-100">
+          <LoadingSpinner />
+        </div>
       ) : (
         <>
           <div className="mb-4">
