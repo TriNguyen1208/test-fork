@@ -1,7 +1,7 @@
 "use client";
 import ProductCard from "../../../../../components/ProductCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ProductPreview } from "../../../../../../shared/src/types";
 import Pagination from "@/components/Pagination";
 import ProductHook from "@/hooks/useProduct";
