@@ -615,7 +615,9 @@ WHERE pp.end_time >= NOW() and not exists (
     return soldProduct;
   }
   async getSellingProducts(
-    userId: number
+    userId: number,
+    page: number,
+    limit: number
   ): Promise<ProductPreview[] | undefined> {
     const sql = `
   SELECT pp.id
@@ -625,8 +627,10 @@ WHERE pp.end_time >= NOW() and not exists (
    from auction.orders o 
    where o.product_id = pp.id and o.status <> 'cancelled' 
    )
+  LIMIT $2 OFFSET $3
     `;
-    const params = [userId];
+    const offset = (page - 1) * limit;
+    const params = [userId, limit, offset];
 
     const product = await this.safeQuery<ProductPreview>(sql, params);
 
