@@ -82,6 +82,7 @@ const FavoriteProductPage = () => {
           </div>
         </div>
       ) : (
+        !isLoading &&
         favoriteProducts &&
         favoriteProducts.length == 0 && (
           <EmptyList

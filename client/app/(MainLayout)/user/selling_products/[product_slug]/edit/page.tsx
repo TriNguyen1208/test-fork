@@ -77,7 +77,7 @@ const EditProductPage = () => {
         isLoadingProduct ||
         isUpdatingProductDescription ||
         isLoadingCategory) && (
-        <div className="fixed inset-0 z-100">
+        <div className="inset-0 h-screen z-100">
           <LoadingSpinner />
         </div>
       )}

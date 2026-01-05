@@ -41,7 +41,7 @@ function Page() {
 
   if (isLoadingTopProduct || isLoadingFavoriteProduct)
     return (
-      <div className="fixed inset-0">
+      <div className="inset-0 h-screen">
         <LoadingSpinner />
       </div>
     );

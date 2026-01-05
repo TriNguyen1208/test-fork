@@ -22,6 +22,8 @@ const Header = () => {
                 alt="Logo AuctionHub"
                 width={180}
                 height={180}
+                className="object-contain"
+                priority
               />
             </Link>
           </div>

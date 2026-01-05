@@ -42,7 +42,7 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
   // Nếu chưa mount (đang load lại trang) hoặc không có token -> Hiện loading hoặc null
   if (starting || loading) {
     return (
-      <div className="fixed inset-0">
+      <div className="inset-0 h-screen">
         <LoadingSpinner />
       </div>
     ); // Hoặc <LoadingScreen /> rất quan trọng để tránh nháy

@@ -57,6 +57,8 @@ const Header = () => {
               alt="ActionHub Logo"
               width={190}
               height={190}
+              className="object-contain"
+              priority
             />
           </div>
 
