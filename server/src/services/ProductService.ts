@@ -856,7 +856,79 @@ SET description =
 WHERE id = $2
 RETURNING *;
     `;
-    const updateProduct = await this.safeQuery(sql, [afterAddDate, productId]);
+
+    const updateProduct: Product[] = await this.safeQuery(sql, [
+      afterAddDate,
+      productId,
+    ]);
+    const sqlBidders = `
+      SELECT u.*
+      FROM auction.user_bids as l 
+      JOIN admin.users as u ON l.user_id = u.id
+      WHERE l.product_id = $1
+    `;
+    const bidders: User[] = await this.safeQuery(sqlBidders, [productId]);
+    console.log(bidders);
+    const getSellerInfo = async () => {
+      const sql = `
+          SELECT u.*
+          FROM admin.users as u 
+          JOIN product.products as p ON u.id = p.seller_id
+          WHERE p.id = $1 `;
+      const params = [productId];
+      const result: User[] = await this.safeQuery(sql, params);
+      return result[0];
+    };
+    const sellerInfo: User | undefined = await getSellerInfo();
+    if (updateProduct && bidders) {
+      const productInfo: Product | undefined = updateProduct[0];
+
+      if (productInfo && sellerInfo) {
+        await Promise.all([
+          bidders.map((item) =>
+            sendEmailToUser(
+              item.email,
+              "THÔNG BÁO VỀ SẢN PHẨM ĐANG ĐẤU GIÁ",
+              `       
+                <table style="width:100%; max-width:600px; margin:auto; font-family:Arial,sans-serif; border-collapse:collapse; border:1px solid #ddd;">
+                  <tr>
+                    <td style="background-color:#0d6efd; color:white; padding:20px; text-align:center; font-size:20px; font-weight:bold;">
+                      Cập nhật thông tin sản phẩm
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:20px; font-size:16px; line-height:1.5; color:#333;">
+                      <p>
+                        Người bán <strong>${sellerInfo.name}</strong> đã chỉnh sửa chi tiết sản phẩm 
+                        <strong>
+                          <a 
+                            href="http://localhost:3000/product/${productInfo.slug}" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            style="color: #0d6efd; text-decoration: underline;"
+                          >
+                            ${productInfo.name}
+                          </a>
+                        </strong>.
+                      </p>
+                      <p style="margin-top:15px;">
+                        Hãy truy cập vào trang chi tiết để cập nhật thông tin mới nhất về sản phẩm và tiếp tục phiên đấu giá của bạn!
+                      </p>
+                      <div style="text-align: center; margin-top: 25px;">
+                        <a href="http://localhost:3000/product/${productInfo.slug}" 
+                          style="background-color: #0d6efd; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                          Xem chi tiết sản phẩm
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+            `
+            )
+          ),
+        ]);
+      }
+    }
     return updateProduct;
   }
   async deleteProductById(productId: number) {

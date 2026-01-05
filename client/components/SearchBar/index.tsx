@@ -42,7 +42,7 @@ export const SearchBar = () => {
   const handleSuggestionClick = (item: SearchProduct) => {
     router.push(`/product/${item.slug}`);
     setShowSuggestions(false);
-    // setQuery("");
+    setQuery("");
   };
 
   const handleSearchClick = () => {

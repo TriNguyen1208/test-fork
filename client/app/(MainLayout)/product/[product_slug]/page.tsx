@@ -394,7 +394,34 @@ export default function ProductPage() {
                   images={[product.main_image, ...(product.extra_images || [])]}
                 />
               </div>
-              <div className="bg-white border  border-gray-200 rounded-lg p-4 sm:p-8 w-full shadow-sm">
+              <div
+                className={`
+                 relative rounded-lg p-4 sm:p-8 w-full transition-all duration-300
+                  ${
+                    product.top_bidder?.id === user?.id
+                      ? "bg-green-50/30 relative border-2 border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.2)]"
+                      : "bg-white border border-gray-200 shadow-sm"
+                  }
+                `}
+              >
+                {product.top_bidder?.id === user?.id && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                    <span
+                      className="
+                            flex items-center gap-1.5
+                            bg-green-600 text-white 
+                            px-4 py-1.5 
+                            rounded-full 
+                            text-sm font-bold uppercase tracking-wide
+                            shadow-lg shadow-green-600/30
+                            whitespace-nowrap
+                            border-2 border-white
+                          "
+                    >
+                      🏆 Bạn đang dẫn đầu
+                    </span>
+                  </div>
+                )}
                 <div className="pb-4 md:pb-6 border-b mb-4 md:mb-6  border-slate-200">
                   <h1 className="text-2xl font-bold mb-4 text-slate-900">
                     {product.name}
@@ -447,7 +474,7 @@ export default function ProductPage() {
                       <>
                         <p className="font-semibold text-slate-900 mb-1">
                           {product.top_bidder.id === user?.id ? (
-                            <span className="font-bold text-blue-500">
+                            <span className="text-green-600 font-semibold flex items-center gap-1 animate-pulse drop-shadow-[0_0_5px_rgba(220,38,38,0.5)]">
                               {product.top_bidder.name} (bạn)
                             </span>
                           ) : (
@@ -919,7 +946,7 @@ export default function ProductPage() {
               </div>
             </div>
           )}
-          <div className="bg-white rounded-xl shadow-sm   mb-4 sm:mb-8 border border-slate-200">
+          <div className="bg-white rounded-xl shadow-sm   mb-4 sm:mb-8 border border-slate-200 ">
             <div className="border-b border-slate-100 bg-slate-50/50 p-4">
               {" "}
               <h3 className="text-2xl font-bold text-slate-900 mb-1 sm:mb-4">
@@ -927,7 +954,7 @@ export default function ProductPage() {
               </h3>
             </div>
 
-            <div className="p-4">
+            <div className="p-4 max-h-[500px] overflow-y-scroll">
               {product && (
                 <p
                   dangerouslySetInnerHTML={{
