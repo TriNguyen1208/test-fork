@@ -82,7 +82,7 @@ export function SigninForm({
               <Input
                 id="username"
                 type="text"
-                placeholder="mtri123"
+                placeholder="user123"
                 disabled={isSubmitting}
                 {...register("username")}
                 className={cn(

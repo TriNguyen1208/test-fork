@@ -76,7 +76,7 @@ export function ForgetPasswordForm({
               <Label htmlFor="username">Tên đăng nhập</Label>
               <Input
                 id="username"
-                placeholder="mtri123"
+                placeholder="user123"
                 disabled={isSubmitting}
                 {...register("username")}
                 className={cn(
