@@ -95,7 +95,7 @@ class ProductHook {
   }
   static useGetSellingProduct(pagination: Pagination) {
     return useQuery({
-      queryKey: ["product_selling"],
+      queryKey: ["product_selling", pagination.page, pagination.limit],
       queryFn: () => ProductService.getSellingProduct(pagination),
 
       staleTime: STALE_10_MIN,
