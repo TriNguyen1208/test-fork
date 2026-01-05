@@ -36,6 +36,7 @@ import Link from "next/link";
 import { defaultImage } from "@/app/const";
 import { SimpleConfirmPopup } from "@/components/SimpleConfirmPopup";
 import { useMemo } from "react";
+import ViewRatingPopup from "@/components/ViewRatingPopup";
 
 function isLessThreeDays(dateA: Date, dateB: Date): boolean {
   const diffMs = Math.abs(dateA.getTime() - dateB.getTime()); // hiệu số milliseconds
@@ -93,6 +94,7 @@ export default function ProductPage() {
   const [isFavorite, setIsFavorite] = useState<boolean>();
   const [setFavorites, setSetFavorites] = useState<Set<number>>();
   const [navToOrderConfirm, setNavToOrderConfirm] = useState<boolean>(false);
+  const [sellerRatingPopup, setSellerRatingPopup] = useState<boolean>(false);
 
   const { data: product, isLoading: isLoadingProduct } =
     ProductHook.useGetProductBySlug(product_slug as string) as {
@@ -316,7 +318,10 @@ export default function ProductPage() {
                       Người bán
                     </p>
                   </div>
-                  <div className="flex flex-row gap-4">
+                  <div
+                    className="flex flex-row gap-4 cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setSellerRatingPopup(true)}
+                  >
                     <div className="rounded-[6px] overflow-hidden">
                       <Image
                         src={product.seller.profile_img || defaultImage}
@@ -465,6 +470,13 @@ export default function ProductPage() {
           />
         </>
       )}
+
+      <ViewRatingPopup
+        isOpen={sellerRatingPopup}
+        ratee_id={product.seller.id}
+        ratee_name={product.seller.name}
+        onClose={() => setSellerRatingPopup(false)}
+      />
     </div>
   );
 }

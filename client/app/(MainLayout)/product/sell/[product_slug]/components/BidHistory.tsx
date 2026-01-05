@@ -16,6 +16,7 @@ import { UserMinus } from "lucide-react";
 import { ConfirmPopup } from "@/components/ConfirmPopup";
 import ProductHook from "@/hooks/useProduct";
 import { useAuthStore } from "@/store/auth.store";
+import ViewRatingPopup from "@/components/ViewRatingPopup";
 
 interface ProductId {
   productId: number;
@@ -26,9 +27,13 @@ export const BidHistory = ({ productId }: ProductId) => {
   const [blacklistUser, setBlacklistUser] = useState<Pick<User, "id" | "name">>(
     { id: -1, name: "" }
   );
+  const [viewedRateeId, setViewedRateeId] = useState<number>(0);
+  const [viewedRateeName, setViewedRateeName] = useState<string>("");
+  const [viewRatingPopup, setViewRatingPopup] = useState<boolean>(false);
 
   const { data: bidLogs, isLoading: isLoadingBigLogs } = BidHook.useBidLogs(
-    productId, user ? true : false
+    productId,
+    user ? true : false
   ) as { data: BidLog[]; isLoading: boolean };
 
   const { mutate: createBlacklist, isPending: isCreatingBlacklist } =
@@ -43,6 +48,12 @@ export const BidHistory = ({ productId }: ProductId) => {
       buyer_id: blacklistUser.id,
     };
     createBlacklist(blacklistPayload);
+  };
+
+  const handleViewBidderRating = (ratee_id: number, ratee_name: string) => {
+    setViewedRateeId(ratee_id);
+    setViewedRateeName(ratee_name);
+    setViewRatingPopup(true);
   };
 
   return (
@@ -64,7 +75,7 @@ export const BidHistory = ({ productId }: ProductId) => {
               <th className="text-left py-3 text-sm font-semibold text-gray-600">
                 Người đấu giá
               </th>
-              <th className="text-right py-3 pl-5 text-sm font-semibold text-gray-600">
+              <th className="text-right py-3 text-sm font-semibold text-gray-600">
                 Giá đấu
               </th>
               <th className="text-right py-3 pl-5 text-sm font-semibold text-gray-600">
@@ -79,15 +90,20 @@ export const BidHistory = ({ productId }: ProductId) => {
                   key={index}
                   className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition"
                 >
-                  <td className="py-3 px-1 sm:px-3 truncate text-[12px] sm:text-sm text-gray-700">
+                  <td className="py-3 truncate text-[12px] sm:text-sm text-gray-700">
                     {new Date(String(his.created_at)).toLocaleString("vi-VN")}
                   </td>
-                  <td className="py-3 px-1 sm:px-3 truncate max-w-[90px] text-[12px] sm:text-sm font-medium text-gray-700">
+                  <td
+                    onClick={() =>
+                      handleViewBidderRating(his.user.id, his.user.name)
+                    }
+                    className="py-3 truncate max-w-[90px] text-[12px] sm:text-sm font-medium text-gray-700 cursor-pointer"
+                  >
                     {user?.id === his.user.id
                       ? `${his.user.name} (Bạn)`
                       : `${his.user.name}`}
                   </td>
-                  <td className="py-3 px-1 sm:px-3 truncate text-[12px] sm:text-sm font-bold text-blue-600 text-right">
+                  <td className="py-3 truncate text-[12px] sm:text-sm font-bold text-blue-600 text-right">
                     {formatCurrency(his.price)}
                   </td>
                   <td className="py-3 px-1 sm:px-3 truncate text-[12px] sm:text-sm font-bold text-red-400 text-right">
@@ -120,6 +136,13 @@ export const BidHistory = ({ productId }: ProductId) => {
           onConfirm={handleBlacklist}
         />
       )}
+
+      <ViewRatingPopup
+        isOpen={viewRatingPopup}
+        ratee_id={viewedRateeId}
+        ratee_name={viewedRateeName}
+        onClose={() => setViewRatingPopup(false)}
+      />
     </div>
   );
 };
