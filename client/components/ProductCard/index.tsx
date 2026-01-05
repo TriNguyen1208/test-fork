@@ -79,13 +79,7 @@ export default function ProductCard({
     return diffMinutes <= minTimeConfig;
   }, [serverMinTime, product.created_at]);
 
-  const handleFavorite = (
-    e: React.MouseEvent,
-    productId: number,
-    currentStatus: boolean
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleFavorite = (productId: number, currentStatus: boolean) => {
     if (currentStatus) {
       removeFavorite({ productId });
     } else {
@@ -285,11 +279,11 @@ export default function ProductCard({
             ${isLoadingFavorite ? "opacity-50 cursor-wait" : "cursor-pointer"}
             ${isFavorite ? "opacity-100" : "opacity-0 group-hover:opacity-100"} 
           `}
-          onClick={(e) =>
-            !isLoadingFavorite && handleFavorite(e, product.id, isFavorite)
-          }
         >
-          <FavoriteButton isFavorite={isFavorite} onClick={() => {}} />
+          <FavoriteButton
+            isFavorite={isFavorite}
+            onClick={() => handleFavorite(product.id, isFavorite)}
+          />
         </div>
       </div>
     </div>

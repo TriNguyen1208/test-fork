@@ -29,7 +29,7 @@ const FavoriteProductPage = () => {
   const limit = 10;
 
   const { data: sellingProducts, isLoading: isLoadingSellingProducts } =
-    ProductHook.useGetSellingProduct({page, limit}) as {
+    ProductHook.useGetSellingProduct({ page, limit }) as {
       data: ProductPreview[];
       isLoading: boolean;
     };
