@@ -95,7 +95,7 @@ class ProductHook {
   }
   static useGetSellingProduct(pagination: Pagination) {
     return useQuery({
-      queryKey: ["product_selling"],
+      queryKey: ["product_selling", pagination.page, pagination.limit],
       queryFn: () => ProductService.getSellingProduct(pagination),
 
       staleTime: STALE_10_MIN,
@@ -103,7 +103,7 @@ class ProductHook {
       // Transform data tại Hook (select)
       select: (data) => {
         // Cần BE trả dạng gì ví dụ { data: { ... } } → thì sửa ở đây
-        return data.data.sellingProducts;
+        return data.data;
       },
     });
   }
