@@ -1,29 +1,52 @@
-import { Order } from "./Order";
+import { Order, OrderStatus } from "./Order";
 import { User } from "./User";
 
 export type Product = {
   id: number;
   slug: string;
-  seller: Pick<User, "id" | "name" | "profile_img">;
+  seller: Pick<
+    User,
+    "id" | "name" | "profile_img" | "positive_points" | "negative_points"
+  >;
   category_id: number;
+  category_name?: string;
   main_image: string;
   extra_images?: string[];
   name: string;
   initial_price: number | null;
   buy_now_price: number | null;
   current_price: number | null;
-  top_bidder: Pick<User, "id" | "name" | "profile_img"> | null;
+  top_bidder: Pick<
+    User,
+    "id" | "name" | "profile_img" | "positive_points" | "negative_points"
+  > | null;
   bid_count: number;
   end_time: Date;
   description: string | null;
   auto_extend: boolean | null;
-  status: Pick<Order, "status"> | "available";
+  status: Order["status"] | "available";
   price_increment: number | null;
   created_at: Date;
   updated_at: Date | null;
+  is_all_can_bid: Boolean;
+};
+export type SoldProduct = Pick<
+  Product,
+  "id" | "name" | "current_price" | "initial_price" | "main_image"
+> & { top_bidder: Pick<User, "id" | "name" | "profile_img"> };
+
+export type FullSoldProduct = Product & {
+  buyer: Pick<
+    User,
+    "id" | "name" | "profile_img" | "positive_points" | "negative_points"
+  >;
 };
 
-
+export type Category = {
+  id: number;
+  slug: string;
+  name: string;
+};
 export type ProductPreview = Pick<
   Product,
   | "id"
@@ -38,12 +61,20 @@ export type ProductPreview = Pick<
   | "auto_extend"
   | "created_at"
   | "initial_price"
-  | 'status'
+  | "status"
+  | "top_bidder"
 > & {
+  seller_id?: number;
+  top_bidder_id?: number;
   top_bidder_name: string | null;
+  category: Pick<Category, "name">;
+  seller: Pick<User, "email">;
 };
 
-export type SearchProduct = Pick<Product, 'id'| 'slug' | 'name' | 'main_image'| 'current_price'>;
+export type SearchProduct = Pick<
+  Product,
+  "id" | "slug" | "name" | "main_image" | "current_price" | "category_name"
+>;
 
 export type ProductCategoryTree = {
   id: number;
@@ -55,15 +86,12 @@ export type ProductCategoryTree = {
   updated_at?: Date | null;
 };
 
-
 export type CategoryProduct = {
-  category_id: ProductCategoryTree['id'];
-  category_slug: ProductCategoryTree['slug'];
-  category_name: ProductCategoryTree['name'];
+  category_id: ProductCategoryTree["id"];
+  category_slug: ProductCategoryTree["slug"];
+  category_name: ProductCategoryTree["name"];
   products: ProductPreview[] | null;
-}
-
-
+};
 
 export type ProductAnswer = {
   id: number;
@@ -78,8 +106,15 @@ export type ProductQuestion = {
   product_id: number;
   user: Pick<User, "id" | "name" | "profile_img">;
   comment: string;
-  answer?: ProductAnswer;
+  answer?: ProductAnswer[];
   created_at?: Date;
+};
+
+export type ProductQuestionPagination = {
+  page: number;
+  limit: number;
+  total: number;
+  questions: ProductQuestion[];
 };
 
 export type ProductPagination = {
@@ -109,13 +144,20 @@ export type CreateProduct = Pick<
   | "end_time"
   | "description"
   | "auto_extend"
+  | "is_all_can_bid"
 >;
 export type WinningProduct = Pick<
   Product,
   "id" | "name" | "slug" | "current_price" | "main_image"
->;
-export type BiddingProduct = WinningProduct & {
+> & {
+  seller: Pick<User, "id" | "name" | "positive_points" | "negative_points">;
+  winning_date: Date;
+  status: OrderStatus;
+};
+export type BiddingProduct = Product & {
   user_price: number;
 };
 export type CreateQuestion = Pick<ProductQuestion, "comment">;
-export type CreateAnswer = Pick<ProductAnswer, "comment">;
+export type CreateAnswer = Pick<ProductAnswer, "comment"> & {
+  productId: number;
+};

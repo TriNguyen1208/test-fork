@@ -3,6 +3,7 @@ import {
   CreateProduct,
   CreateQuestion,
 } from "../../../shared/src/types";
+import { Pagination } from "../../../shared/src/types/Pagination";
 import { BaseController } from "./BaseController";
 import { Request, Response, NextFunction } from "express";
 
@@ -20,10 +21,11 @@ export class ProductController extends BaseController {
 
   async getProductsBySearch(req: Request, res: Response) {
     const page = Number(req.query.page) || null;
-    const limit = Number(req.query.limit) || null;
+    const limit = Number(req.query.limit) || 5;
     const query = req.query.query;
+    const sort = req.query.sort;
     const [products, totalProducts] = await Promise.all([
-      this.service.getProductsBySearch(query, limit, page),
+      this.service.getProductsBySearch(query, limit, page, sort),
       this.service.getTotalProductsBySearch(query),
     ]);
 
@@ -138,14 +140,29 @@ export class ProductController extends BaseController {
     };
   }
   async getSoldProducts(req: Request, res: Response) {
-    const soldProducts = await this.service.getSoldProducts();
+    const userId = Number(req.user?.id);
+    const soldProducts = await this.service.getSoldProducts(userId);
     return {
       soldProducts: soldProducts,
     };
   }
-
+  async getSellingProducts(req: Request, res: Response) {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const userId = Number(req.user?.id);
+    const sellingProducts = await this.service.getSellingProducts(
+      userId,
+      page,
+      limit
+    );
+    const totalSellingProducts = (await this.service.getSellingProducts(userId)).length
+    return {
+      sellingProducts: sellingProducts,
+      totalSellingProducts,
+    };
+  }
   async createProduct(req: Request, res: Response) {
-    const userId = req.headers["user-id"];
+    const userId = Number(req.user?.id);
 
     const files = req.files as Express.Multer.File[];
     if (!files) {
@@ -202,8 +219,22 @@ export class ProductController extends BaseController {
     };
   }
 
+  async getQuestionsByPage(req: Request, res: Response) {
+    const productId = req.params.productId;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const questionPagination = await this.service.getQuestionsByPage(
+      productId,
+      page,
+      limit
+    );
+    return {
+      questionPagination,
+    };
+  }
+
   async createQuestion(req: Request, res: Response) {
-    const userId = req.headers["user-id"];
+    const userId = Number(req.user?.id);
     const productId = req.params.productId;
     const createQuestion: CreateQuestion = req.body;
     const question = await this.service.createQuestion(
@@ -217,7 +248,7 @@ export class ProductController extends BaseController {
   }
 
   async createAnswer(req: Request, res: Response) {
-    const userId = req.headers["user-id"];
+    const userId = Number(req.user?.id);
     const questionId = req.params.questionId;
     const createAnswer: CreateAnswer = req.body;
     const answer = await this.service.createAnswer(
@@ -242,7 +273,7 @@ export class ProductController extends BaseController {
     };
   }
   async getWinningProducts(req: Request, res: Response) {
-    const userId = req.headers["user-id"];
+    const userId = Number(req.user?.id);
     const page = Number(req.query.page) || null;
     const limit = Number(req.query.limit) || null;
 
@@ -256,7 +287,7 @@ export class ProductController extends BaseController {
     };
   }
   async getBiddingProducts(req: Request, res: Response) {
-    const userId = req.headers["user-id"];
+    const userId = Number(req.user?.id);
     const limit = Number(req.query.limit) || null;
     const page = Number(req.query.page) || null;
     const products = await this.service.getBiddingProducts(userId, limit, page);
@@ -266,6 +297,23 @@ export class ProductController extends BaseController {
     return {
       products: products,
       totalProducts: totalProducts,
+    };
+  }
+  async getProducts(req: Request, res: Response) {
+    const userId = Number(req.user?.id);
+
+    const pagination: Pagination = {
+      limit: Number(req.query.limit || "5"),
+      page: Number(req.query.page || "1"),
+    };
+
+    const products = await this.service.getProducts(pagination);
+    const totalProducts = await this.service.getTotalProducts();
+    return {
+      products: products,
+      totalProducts: totalProducts,
+      limit: pagination.limit,
+      page: pagination.page,
     };
   }
 }

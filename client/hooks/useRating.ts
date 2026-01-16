@@ -5,55 +5,103 @@ import { CreateRating, UserRating } from "../../shared/src/types";
 import { UserRatingHistory } from "../../shared/src/types";
 import { off } from "process";
 interface CreateRatingPayload extends UserRating {
-    rater_id: string;
-    ratee_id: string;
+  rater_id: string;
+  ratee_id: string;
 }
+import { toast } from "react-toastify";
 
 export class RatingHook {
-    static useGetRating(userId: number, offset: number) {
-        return useQuery({
-            queryKey: ["user_rating", userId, offset],
+  static useGetRating(userId: number, offset: number, isPrivate: boolean = true) {
+    return useQuery({
+      queryKey: ["user_rating", userId, offset],
 
-            queryFn: () => RatingService.getRating(userId, offset),
+      queryFn: () => RatingService.getRating(userId, offset, isPrivate),
 
-            staleTime: STALE_10_MIN,
+      staleTime: STALE_10_MIN,
 
-            enabled: !!userId,
+      enabled: !!userId,
 
-            select: (data) => {
-                return data.data.result;
-            },
+      select: (data) => {
+        return data.data.result;
+      },
+    });
+  }
+
+  static useGetOneRating(raterId: number, targetId: number) {
+    return useQuery({
+      queryKey: ["user_rating", targetId],
+
+      queryFn: () => RatingService.getOneRating(raterId, targetId),
+
+      staleTime: STALE_10_MIN,
+
+      enabled: !!raterId || !!targetId,
+
+      select: (data) => {
+        return data.data.result;
+      },
+    });
+  }
+
+  static useGetTotalRating(userId: number, isPrivate: boolean = true) {
+    return useQuery({
+      queryKey: ["total_user_rating", userId],
+
+      queryFn: () => RatingService.getTotalRating(userId, isPrivate),
+
+      staleTime: STALE_10_MIN,
+
+      enabled: !!userId,
+
+      select: (data) => {
+        return data.data.result;
+      },
+    });
+  }
+
+  static useCreateRating() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+      mutationFn: ({ silent, ...data }: CreateRating & { silent?: boolean }) =>
+        RatingService.createRating(data),
+
+      onSuccess: (_, params) => {
+        if (!params.silent) toast.success("Tạo đánh giá thành công");
+        queryClient.invalidateQueries({
+          queryKey: ["user_rating", "total_user_rating"],
         });
-    }
-
-    static useGetTotalRating(userId: number) {
-        return useQuery({
-            queryKey: ["total_user_rating", userId],
-
-            queryFn: () => RatingService.getTotalRating(userId),
-
-            staleTime: STALE_10_MIN,
-
-            enabled: !!userId,
-
-            select: (data) => {
-                return data.data.result;
-            },
+        queryClient.invalidateQueries({
+          queryKey: ["user_rating", params.ratee.id],
         });
-    }
+      },
 
+      onError: (error) => {
+        toast.error("Tạo đánh giá thất bại");
+      },
+    });
+  }
 
-    static useCreateRating() {
-        const queryClient = useQueryClient();
+  static useUpdateRating() {
+    const queryClient = useQueryClient();
 
-        return useMutation({
-            mutationFn: (data: CreateRating) => RatingService.createRating(data),
+    return useMutation({
+      mutationFn: ({ silent, ...data }: CreateRating & { silent?: boolean }) =>
+        RatingService.updateRating(data),
 
-            onSuccess: () => {
-                queryClient.invalidateQueries({
-                    queryKey: ["user_rating", "total_user_rating"],
-                });
-            },
+      onSuccess: (_, params) => {
+        if (!params.silent) toast.success("Sửa đánh giá thành công");
+        queryClient.invalidateQueries({
+          queryKey: ["user_rating", "total_user_rating"],
         });
-    }
+        queryClient.invalidateQueries({
+          queryKey: ["user_rating", params.ratee.id],
+        });
+      },
+
+      onError: (error) => {
+        toast.error("Sửa đánh giá thất bại");
+      },
+    });
+  }
 }

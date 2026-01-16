@@ -3,6 +3,7 @@ import { STALE_10_MIN } from "@/config/query.config";
 import { CategoryService } from "@/services/categoryService";
 import { Pagination } from "../../shared/src/types/Pagination";
 import { CreateCategory, UpdateCategory } from "../../shared/src/types";
+import { toast } from "react-toastify";
 
 class CategoryHook {
   static useCategories() {
@@ -16,11 +17,11 @@ class CategoryHook {
     });
   }
 
-  static useCategoryDetailById(id: number) {
+  static useCategoryDetailById(id: number, isPrivate: boolean = true) {
     return useQuery({
       queryKey: ["category_by_id", id],
       enabled: !!id,
-      queryFn: () => CategoryService.getCategoryDetailById(id),
+      queryFn: () => CategoryService.getCategoryDetailById(id, isPrivate),
       staleTime: STALE_10_MIN,
       select: (data) => {
         return data.data.category;
@@ -45,10 +46,10 @@ class CategoryHook {
     });
   }
 
-  static useProductsByCategoryId(pagination: Pagination) {
+  static useProductsByCategoryId(pagination: Pagination, isPrivate: boolean = true) {
     return useQuery({
       queryKey: ["products_by_category", pagination],
-      queryFn: () => CategoryService.getProductsByCategoryId(pagination),
+      queryFn: () => CategoryService.getProductsByCategoryId(pagination, isPrivate),
       staleTime: STALE_10_MIN,
       select: (data) => {
         return data.data.products;
@@ -63,9 +64,14 @@ class CategoryHook {
       mutationFn: (category: CreateCategory) =>
         CategoryService.createCategory(category),
       onSuccess: (_, params) => {
+        toast.success("Tạo loại sản phẩm thành công");
         queryClient.invalidateQueries({
           queryKey: ["categories"],
         });
+      },
+
+      onError: (error) => {
+        toast.error("Tạo loại sản phẩm thất bại");
       },
     });
   }

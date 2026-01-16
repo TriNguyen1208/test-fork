@@ -1,46 +1,65 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "flowbite";
 
 @plugin "tailwind-scrollbar";
 
 @custom-variant dark (&:is(.dark *));
 
+@layer base {
+  @import "flowbite";
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-color: #f9fafb81;
+    color: #1f2937;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+  }
+}
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.13 0.028 261.692);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.13 0.028 261.692);
+  --primary: oklch(0.21 0.034 264.665);
+  --primary-foreground: oklch(0.985 0.002 247.839);
+  --secondary: oklch(0.967 0.003 264.542);
+  --secondary-foreground: oklch(0.21 0.034 264.665);
+  --muted: oklch(0.967 0.003 264.542);
+  --muted-foreground: oklch(0.551 0.027 264.364);
+  --accent: oklch(0.967 0.003 264.542);
+  --accent-foreground: oklch(0.21 0.034 264.665);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.928 0.006 264.531);
+  --input: oklch(0.928 0.006 264.531);
+  --ring: oklch(0.707 0.022 261.325);
   --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(70.488% 0.10705 184.202);
+  --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --chart-6: oklch(60.488% 0.10705 184.202);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.985 0.002 247.839);
+  --sidebar-foreground: oklch(0.13 0.028 261.692);
+  --sidebar-primary: oklch(0.21 0.034 264.665);
+  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-accent: oklch(0.967 0.003 264.542);
+  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
+  --sidebar-border: oklch(0.928 0.006 264.531);
+  --sidebar-ring: oklch(0.707 0.022 261.325);
 
   /* Modern color palette */
   --color-primary: #2563eb;
@@ -53,45 +72,52 @@
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
   --color-surface: #e5e7eb;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.13 0.028 261.692);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
+  --background: oklch(0.13 0.028 261.692);
+  --foreground: oklch(0.985 0.002 247.839);
+  --card: oklch(0.21 0.034 264.665);
+  --card-foreground: oklch(0.985 0.002 247.839);
+  --popover: oklch(0.21 0.034 264.665);
+  --popover-foreground: oklch(0.985 0.002 247.839);
+  --primary: oklch(0.928 0.006 264.531);
+  --primary-foreground: oklch(0.21 0.034 264.665);
+  --secondary: oklch(0.278 0.033 256.848);
+  --secondary-foreground: oklch(0.985 0.002 247.839);
+  --muted: oklch(0.278 0.033 256.848);
+  --muted-foreground: oklch(0.707 0.022 261.325);
+  --accent: oklch(0.278 0.033 256.848);
+  --accent-foreground: oklch(0.985 0.002 247.839);
+  --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar: oklch(0.21 0.034 264.665);
+  --sidebar-foreground: oklch(0.985 0.002 247.839);
   --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-accent: oklch(0.278 0.033 256.848);
+  --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
 @theme inline {
   /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  --color-blue-500: #3b82f6;
+  --color-blue-800: #1e40af;
+  --color-sky-500: #0ea5e9;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -141,88 +167,66 @@
   --color-warning: #f59e0b;
   --color-surface: #e5e7eb;
 }
-/* Added missing closing brace for @theme inline block */
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+@layer components {
+  .badge-new {
+    @apply inline-block px-2 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded border border-green-200;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  .card-shadow {
+    @apply shadow-sm hover:shadow-md transition-shadow;
   }
-}
 
-body {
-  background-color: #f9fafb81;
-  color: #1f2937;
-}
+  /* Auction countdown timer */
+  .countdown-timer {
+    @apply font-mono text-sm font-semibold;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 600;
-}
+  .countdown-critical {
+    @apply text-red-600;
+  }
 
-.badge-new {
-  @apply inline-block px-2 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded border border-green-200;
-}
+  /* Added hover/focus state utilities for modern interactions */
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all;
+  }
 
-.card-shadow {
-  @apply shadow-sm hover:shadow-md transition-shadow;
-}
+  .btn-accent {
+    @apply bg-amber-400 text-slate-900 hover:bg-amber-500 focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 transition-all font-semibold;
+  }
 
-/* Auction countdown timer */
-.countdown-timer {
-  @apply font-mono text-sm font-semibold;
-}
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all;
+  }
 
-.countdown-critical {
-  @apply text-red-600;
-}
+  .input-focus {
+    @apply border-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 transition-all;
+  }
 
-/* Added hover/focus state utilities for modern interactions */
-.btn-primary {
-  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all;
-}
+  .minimal-scrollbar {
+    /* Sử dụng scrollbar-thin để thanh cuộn mỏng */
+    @apply scrollbar-thin;
 
-.btn-accent {
-  @apply bg-amber-400 text-slate-900 hover:bg-amber-500 focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 transition-all font-semibold;
-}
+    /* Đặt màu nút cuộn (thumb) là màu xám đậm (ví dụ: gray-700) và track trong suốt */
+    @apply scrollbar-thumb-gray-700 scrollbar-track-transparent;
+  }
 
-.btn-secondary {
-  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all;
-}
+  /* Ẩn các nút mũi tên (arrows) cho WebKit browsers (Chrome, Edge, Safari) */
+  .minimal-scrollbar::-webkit-scrollbar-button {
+    display: none;
+    height: 0;
+    width: 0;
+  }
 
-.input-focus {
-  @apply border-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 transition-all;
-}
+  .container-layout {
+    @apply px-2 sm:px-6 md:px-10 lg:px-14;
+  }
 
-.minimal-scrollbar {
-  /* Sử dụng scrollbar-thin để thanh cuộn mỏng */
-  @apply scrollbar-thin;
+  .background-user {
+    @apply bg-white shadow-sm px-6 rounded-lg pt-8 pb-4 border border-gray-200;
+  }
 
-  /* Đặt màu nút cuộn (thumb) là màu xám đậm (ví dụ: gray-700) và track trong suốt */
-  @apply scrollbar-thumb-gray-700 scrollbar-track-transparent;
-}
-
-/* Ẩn các nút mũi tên (arrows) cho WebKit browsers (Chrome, Edge, Safari) */
-.minimal-scrollbar::-webkit-scrollbar-button {
-  display: none;
-  height: 0;
-  width: 0;
-}
-
-.container {
-  @apply mx-auto px-10 sm:px-12 lg:px-14;
-}
-
-.background-user {
-  @apply bg-white shadow-sm px-6 rounded-lg pt-8 pb-4 border border-gray-200;
-}
-
-.checkbox-primary {
-  @apply rounded-xs border border-black cursor-pointer focus:ring-0 focus:ring-offset-0;
+  .checkbox-primary {
+    @apply rounded-xs border border-black cursor-pointer focus:ring-0 focus:ring-offset-0;
+  }
 }

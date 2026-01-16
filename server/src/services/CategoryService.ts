@@ -45,7 +45,8 @@ export class CategoryService extends BaseService {
     LEFT JOIN product.product_categories as pc 
     ON  pc.parent_id = pp.id
       WHERE pp.parent_id IS NULL 
-      GROUP BY pp.id`;
+      GROUP BY pp.id
+    ORDER BY pp.name`;
     const categories: ProductCategoryTree[] = await this.safeQuery(sql);
     return categories;
   }
@@ -108,10 +109,46 @@ export class CategoryService extends BaseService {
     SELECT COUNT(*) AS total
     FROM product.products pp 
     JOIN product.product_categories pc on pc.id = pp.category_id
-    WHERE pc.slug = $1;
+    WHERE pc.slug = $1  and pp.end_time >= NOW() and not exists (
+   select 1
+   from auction.orders o 
+   where o.product_id = pp.id and o.status <> 'cancelled')
     `;
     let totalProducts: { total: number }[] = await this.safeQuery(sql, [slug]);
     return totalProducts[0]?.total;
+  }
+
+  async getCountProductsByCategory(): Promise<
+    { category_id: number; total: number }[]
+  > {
+    const sql = `
+      WITH RECURSIVE category_tree AS (
+      SELECT id AS root_id, id AS category_id
+      FROM product.product_categories
+
+      UNION ALL
+
+      SELECT ct.root_id, pc.id
+      FROM category_tree ct
+      JOIN product.product_categories pc
+        ON pc.parent_id = ct.category_id
+    )
+    SELECT
+      ct.root_id AS category_id,
+      COALESCE(COUNT(p.id), 0) AS total
+    FROM category_tree ct
+    LEFT JOIN product.products p
+      ON p.category_id = ct.category_id
+    WHERE p.end_time > NOW() AND NOT EXISTS (
+      SELECT 1
+      FROM auction.orders o
+      WHERE o.product_id = p.id AND o.status != 'cancelled'
+    )
+    GROUP BY ct.root_id
+    ORDER BY ct.root_id;
+  `;
+
+    return this.safeQuery<{ category_id: number; total: number }>(sql);
   }
 
   async getCategoryNameBySlug(slug: string): Promise<string | undefined> {
@@ -182,13 +219,20 @@ export class CategoryService extends BaseService {
       p.main_image,
       p.name,
       p.buy_now_price,
-      p.end_time,
+      COALESCE((
+        SELECT created_at
+        FROM auction.orders o
+        WHERE o.product_id = p.id AND o.status != 'cancelled'
+      ), p.end_time) as end_time,
       p.auto_extend,
       p.created_at,
-      p.initial_price
-
+      p.initial_price,
+      p.seller_id,
+      u.email as seller_email,
+      c.name as category_name
     FROM product.products p 
     JOIN admin.users u on u.id = p.seller_id 
+    JOIN product.product_categories c on c.id = p.category_id
     WHERE p.id = $1
     `;
 
@@ -206,12 +250,20 @@ export class CategoryService extends BaseService {
     if (current_price == null) {
       current_price = products[0].initial_price;
     }
+    const { seller_email, category_name, ...rest } = products[0];
 
     products = {
-      ...products[0],
+      ...rest,
+      top_bidder_id: top_bidder ? top_bidder.id : null,
       top_bidder_name: top_bidder ? top_bidder.name : null,
       current_price: current_price,
       bid_count: bid_count,
+      seller: {
+        email: seller_email,
+      },
+      category: {
+        name: category_name,
+      },
     };
 
     return products;
@@ -297,7 +349,10 @@ export class CategoryService extends BaseService {
           FROM auction.bid_logs bl 
           GROUP BY bl.product_id
       ) bl ON bl.product_id = pp.id
-      WHERE pc.slug = $1
+      WHERE pc.slug = $1 and pp.end_time >= NOW() and not exists (
+   select 1
+   from auction.orders o 
+   where o.product_id = pp.id and o.status <> 'cancelled' )
       `;
 
     const params: any[] = [slug];
@@ -328,6 +383,7 @@ export class CategoryService extends BaseService {
         return productType;
       })
     );
+
     return newProducts;
   }
 }

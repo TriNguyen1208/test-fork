@@ -6,6 +6,8 @@ import {
   CreateProduct,
   CreateQuestion,
 } from "../../shared/src/types";
+import { toast } from "react-toastify";
+import { Pagination } from "../../shared/src/types/Pagination";
 
 // Một hàm xử lý logic REACT, và chỉ được biết tới REACT(FRONT END) thôi
 // Nó không được biết về api
@@ -59,11 +61,11 @@ class ProductHook {
       },
     });
   }
-  static useGetProductBySlug(slug: string) {
+  static useGetProductBySlug(slug: string, isPrivate: boolean = true) {
     return useQuery({
       queryKey: ["product_by_slug", slug],
 
-      queryFn: () => ProductService.getProductBySlug(slug),
+      queryFn: () => ProductService.getProductBySlug(slug, isPrivate),
 
       staleTime: STALE_10_MIN,
 
@@ -91,6 +93,20 @@ class ProductHook {
       },
     });
   }
+  static useGetSellingProduct(pagination: Pagination) {
+    return useQuery({
+      queryKey: ["product_selling", pagination.page, pagination.limit],
+      queryFn: () => ProductService.getSellingProduct(pagination),
+
+      staleTime: STALE_10_MIN,
+
+      // Transform data tại Hook (select)
+      select: (data) => {
+        // Cần BE trả dạng gì ví dụ { data: { ... } } → thì sửa ở đây
+        return data.data;
+      },
+    });
+  }
   static useGetBiddingProduct(limit: number, page: number) {
     return useQuery({
       queryKey: ["product_bidding", limit, page],
@@ -106,11 +122,11 @@ class ProductHook {
       },
     });
   }
-    static useGetProductsBySearch(query: string, limit: number, page: number) {
+  static useGetProductsBySearch(query: string, limit: number, page: number, sort: string) {
     return useQuery({
-      queryKey: ["product_by_search", query, limit, page],
+      queryKey: ["product_by_search", query, limit, page, sort],
 
-      queryFn: () => ProductService.getProductsBySearch(query, limit, page),
+      queryFn: () => ProductService.getProductsBySearch(query, limit, page, sort),
 
       staleTime: STALE_10_MIN,
 
@@ -122,13 +138,15 @@ class ProductHook {
     });
   }
 
-    static useGetProductsBySearchSuggestion(query: string, limit: number) {
+  static useGetProductsBySearchSuggestion(query: string, limit: number) {
     return useQuery({
       queryKey: ["product_by_search_suggestion", query, limit],
 
       queryFn: () => ProductService.getProductsBySearchSuggestion(query, limit),
 
       staleTime: STALE_10_MIN,
+
+      enabled: !!query,
 
       // Transform data tại Hook (select)
       select: (data) => {
@@ -206,13 +224,13 @@ class ProductHook {
       mutationFn: (formData: FormData) =>
         ProductService.createProduct(formData),
       onSuccess: () => {
-        // Invalidate cache của dữ liệu
+        toast.success("Tạo sản phẩm thành công");
         queryClient.invalidateQueries({
           queryKey: ["products"],
         });
-
-        alert("Đăng sản phẩm thành công!");
-        window.location.reload();
+      },
+      onError: (error) => {
+        toast.error("Tạo sản phẩm thất bại");
       },
     });
   }
@@ -223,12 +241,14 @@ class ProductHook {
       mutationFn: ({ id, description }: { id: number; description: string }) =>
         ProductService.updateProductDescription(id, description),
       onSuccess: () => {
-        // Invalidate cache của dữ liệu
+        toast.success("Cập nhật mô tả thành công");
         queryClient.invalidateQueries({
-          queryKey: ["products"],
+          queryKey: ["product_by_slug"],
         });
+      },
 
-        alert("Cập nhật sản phẩm thành công!");
+      onError: (error) => {
+        toast.error("Cập nhật mô tả thất bại");
       },
     });
   }
@@ -238,10 +258,14 @@ class ProductHook {
     return useMutation({
       mutationFn: (id: number) => ProductService.deleteProductById(id),
       onSuccess: () => {
-        // Invalidate cache của dữ liệu
+        toast.success("Xóa sản phẩm thành công");
         queryClient.invalidateQueries({
           queryKey: ["products"],
         });
+      },
+
+      onError: (error) => {
+        toast.error("Xóa sản phẩm thất bại");
       },
     });
   }
@@ -264,16 +288,38 @@ class ProductHook {
     });
   }
 
+  static useGetProductQuestionsByPage(id: number, page: number, limit: number, isPrivate: boolean = true) {
+    return useQuery({
+      queryKey: ["product_question", id, page, limit],
+
+      queryFn: () => ProductService.getProductQuestionsByPage(id, page, limit, isPrivate),
+
+      staleTime: STALE_10_MIN,
+
+      enabled: !!id,
+
+      // Transform data tại Hook (select)
+      select: (data) => {
+        // Cần BE trả dạng gì ví dụ { data: { ... } } → thì sửa ở đây
+        return data.data.questionPagination;
+      },
+    });
+  }
+
   static useCreateProductQuestion() {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: ({ id, data }: { id: number; data: CreateQuestion }) =>
         ProductService.createProductQuestion(id, data),
       onSuccess: (_data, variables) => {
-        // Invalidate cache của dữ liệu
+        toast.success("Đăng câu hỏi thành công");
         queryClient.invalidateQueries({
           queryKey: ["product_question", variables.id],
         });
+      },
+
+      onError: (error) => {
+        toast.error("Đăng câu hỏi thất bại");
       },
     });
   }
@@ -291,10 +337,14 @@ class ProductHook {
         data: CreateAnswer;
       }) => ProductService.createProductAnswer(idProduct, idQuestion, data),
       onSuccess: (_data, variables) => {
-        // Invalidate cache của dữ liệu
+        toast.success("Trả lời câu hỏi thành công");
         queryClient.invalidateQueries({
-          queryKey: ["product_question", variables.idProduct],
+          queryKey: ["product_question"],
         });
+      },
+
+      onError: (error) => {
+        toast.error("Trả lời câu hỏi thất bại");
       },
     });
   }
@@ -305,10 +355,14 @@ class ProductHook {
       mutationFn: ({ id, auto_extend }: { id: number; auto_extend: boolean }) =>
         ProductService.updateProductExtend(id, auto_extend),
       onSuccess: (_data, variables) => {
-        // Invalidate cache của dữ liệu
+        toast.success("Cập nhật gia hạng thời gian thành công");
         queryClient.invalidateQueries({
           queryKey: ["product_by_id", variables.id],
         });
+      },
+
+      onError: (error) => {
+        toast.error("Cập nhật gia hạng thời gian thất bại");
       },
     });
   }

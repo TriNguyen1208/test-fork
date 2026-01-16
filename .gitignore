@@ -26,4 +26,5 @@ logs
 /shared/dist
 
 # package
-package-lock.jsons
+package-lock.json
+**/package-lock.json

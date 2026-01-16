@@ -6,7 +6,11 @@ import {
 import Database from "../config/db";
 import { nanoid } from "nanoid";
 import slugify from "slugify";
+import { Request, Response } from "express";
 const uniquePart = nanoid(3);
+
+
+
 
 export const getProductColumns = async () => {
   const pool = Database.getInstance();
@@ -114,3 +118,4 @@ export const createSlugUnique = (name: string) => {
     uniquePart
   );
 };
+

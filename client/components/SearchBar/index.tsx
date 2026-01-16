@@ -6,6 +6,7 @@ import { SearchIcon } from "../icons";
 import ProductHook from "@/hooks/useProduct";
 import { SearchProduct } from "../../../shared/src/types";
 import { useRouter } from "next/navigation";
+import { formatCurrency } from "@/app/(MainLayout)/product/[product_slug]/components/Question";
 
 const defaultImage =
   "https://img.freepik.com/premium-photo/white-colors-podium-abstract-background-minimal-geometric-shape-3d-rendering_48946-113.jpg?semt=ais_hybrid&w=740&q=80";
@@ -34,7 +35,7 @@ export const SearchBar = () => {
     if (e.key === "Enter" && query.length > 0) {
       router.push(`/search?query=${query}`);
       setShowSuggestions(false);
-      setQuery("");
+      // setQuery("");
     }
   };
 
@@ -47,7 +48,7 @@ export const SearchBar = () => {
   const handleSearchClick = () => {
     router.push(`/search?query=${query}`);
     setShowSuggestions(false);
-    setQuery("");
+    // setQuery("");
   };
 
   return (
@@ -85,7 +86,7 @@ export const SearchBar = () => {
                 onClick={() => handleSuggestionClick(item)}
                 className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer"
               >
-                <div className="w-12 h-12 relative">
+                <div className="w-12 h-12 relative flex-shrink-0">
                   <Image
                     src={item.main_image || defaultImage}
                     alt={item.name}
@@ -94,11 +95,19 @@ export const SearchBar = () => {
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   />
                 </div>
+
                 <div className="flex flex-col">
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium text-sm">{item.name}</span>
+
+                  {/* --- PHẦN BỔ SUNG CATEGORY --- */}
+                  <span className="text-gray-500 text-xs">
+                    {item.category_name}
+                  </span>
+                  {/* ----------------------------- */}
+
                   {item.current_price && (
                     <span className="text-blue-600 text-sm font-medium">
-                      {item.current_price} đ
+                      {formatCurrency(item.current_price)}
                     </span>
                   )}
                 </div>
@@ -110,36 +119,3 @@ export const SearchBar = () => {
     </>
   );
 };
-
-/*
-flex-1: làm cho phần tử chiếm toàn bộ không gian còn lại trong container flex. (flex-1 = flex-grow: 1; flex-shrink: 1; flex-basis: 0%;)
-*/
-
-/*
-"use client";
-import { PrimaryButton, SecondaryButton } from "@/components/Button";
-import { LoveIcon } from "@/components/icons";
-import { SearchBar } from "@/components/SearchBar";
-import { SearchProduct } from "@/components/SearchBar";
-const sampleData: SearchProduct[] = [
-  { id: 1, title: "Apple", image: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&fm=jpg&q=60&w=3000", price: "Fresh fruit" },
-  { id: 2, title: "Banana", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s" },
-  { id: 3, title: "Orange", image: "https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/14235/production/_100058428_mediaitem100058424.jpg", price: "Vitamin C" },
-  { id: 4, title: "Apple", image: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&fm=jpg&q=60&w=3000", price: "Fresh fruit" },
-  { id: 5, title: "Banana", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s" },
-  { id: 6, title: "Orange", image: "https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/14235/production/_100058428_mediaitem100058424.jpg", price: "Vitamin C" },
-];
-
-function Page() {
-  return (
-    <>
-      <SearchBar
-        data={sampleData}
-        handleClick={(item) => console.log("Clicked item:", item)}
-        handleEnter={(query) => console.log("Enter search:", query)}
-      />
-    </>
-  );
-}
-export default Page;
-*/

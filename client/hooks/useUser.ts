@@ -1,42 +1,63 @@
+import { ChangePasswordRequest } from "./../../shared/src/types/User";
 import { STALE_10_MIN } from "@/config/query.config";
 import { UserService } from "@/services/userService";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface UpdateUserPayload {
-    name: string | '';
-    email: string | '';
-    address: string | '';
-    profile_img: File | null;
+  name: string | "";
+  email: string | "";
+  address: string | "";
+  profile_img: File | null;
 }
 
 class UserHook {
-    static useGetProfile() {
-        return useQuery({
-            queryKey: ["user_profile"],
+  static useGetProfile() {
+    return useQuery({
+      queryKey: ["user_profile"],
 
-            queryFn: () => UserService.getProfile(),
+      queryFn: () => UserService.getProfile(),
 
-            staleTime: STALE_10_MIN,
+      staleTime: STALE_10_MIN,
 
-            select: (data) => {
-                return data.data.profile;
-            }
+      select: (data) => {
+        return data.data.profile;
+      },
+    });
+  }
+
+  static useUpdateProfile() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+      mutationFn: (data: FormData) => UserService.updateProfile(data),
+
+      onSuccess: () => {
+        toast.success("Cập nhật thông tin thành công");
+        queryClient.invalidateQueries({
+          queryKey: ["user_profile"],
         });
-    }
+      },
 
-    static useUpdateProfile() {
-        const queryClient = useQueryClient();
+      onError: (error) => {
+        toast.error("Cập nhật thông tin thất bại");
+      },
+    });
+  }
 
-        return useMutation({
-            mutationFn: (data: FormData) =>
-                UserService.updateProfile(data),
+  static useChangePassword() {
+    return useMutation({
+      mutationFn: (user: ChangePasswordRequest) =>
+        UserService.changePassword(user),
 
-            onSuccess: () => {
-                queryClient.invalidateQueries({
-                    queryKey: ["user_profile"]
-                })
-            }
-        })
-    }
+      onSuccess: () => {
+        toast.success("Thay đổi mật khẩu thành công");
+      },
+
+      onError: (error) => {
+        toast.error("Cập nhật thông tin thất bại");
+      },
+    });
+  }
 }
-export default UserHook
+export default UserHook;
