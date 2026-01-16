@@ -118,7 +118,7 @@ const ViewRatingPopup = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-600"
+            className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-600 cursor-pointer"
           >
             <X className="w-6 h-6" />
           </button>
@@ -201,7 +201,7 @@ const ViewRatingPopup = ({
         <div className="p-4 border-t border-slate-50 bg-slate-50/30 text-center">
           <button
             onClick={onClose}
-            className="text-sm font-semibold text-slate-600 hover:text-slate-800"
+            className="text-sm font-semibold text-slate-600 hover:text-slate-800 cursor-pointer"
           >
             Đóng
           </button>

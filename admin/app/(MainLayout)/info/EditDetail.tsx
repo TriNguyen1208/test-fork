@@ -322,7 +322,7 @@ export default function EditDetail({
                     router.replace("/forget-password");
                   }}
                   disabled={!isEditingPassword}
-                  className="text-xs text-blue-500 hover:text-blue-700 hover:underline disabled:text-gray-400"
+                  className="mt-2 cursor-pointer text-xs text-blue-500 hover:text-blue-700 hover:underline disabled:text-gray-400"
                 >
                   Quên mật khẩu?
                 </button>

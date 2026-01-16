@@ -270,7 +270,7 @@ export default function EditDetail({
                 type="checkbox"
                 checked={isEditingPassword}
                 onChange={(e) => setIsEditingPassword(e.target.checked)}
-                className="toggle toggle-primary toggle-sm border border-slate-400"
+                className="toggle toggle-primary toggle-sm border border-slate-400c"
               />
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function EditDetail({
                   type="button"
                   onClick={() => router.replace("/forget-password")}
                   disabled={!isEditingPassword}
-                  className="text-xs text-blue-500 hover:text-blue-700 hover:underline disabled:text-gray-400 disabled:no-underline"
+                  className="mt-2 cursor-pointer text-xs text-blue-500 hover:text-blue-700 hover:underline disabled:text-gray-400 disabled:no-underline"
                 >
                   Quên mật khẩu?
                 </button>

@@ -8,7 +8,7 @@ import { OrderService } from "../services/OrderService";
 
 export class BidRoute extends BaseRoute {
   private controller: BidController;
-  
+
   constructor() {
     super();
     this.controller = new BidController(

@@ -41,7 +41,7 @@ export default function PrimaryButton({
             ? hoverBackgroundColor || "var(--chart-6)"
             : backgroundColor || "var(--chart-2)",
         }}
-        className={`w-full flex items-center gap-2 justify-center py-2 font-medium rounded-lg `}
+        className={`w-full flex items-center gap-2 justify-center py-2 font-medium rounded-lg cursor-pointer `}
       >
         {Icon && <Icon />} {text}
       </button>

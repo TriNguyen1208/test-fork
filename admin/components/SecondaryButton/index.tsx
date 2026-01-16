@@ -33,7 +33,7 @@ export default function SecondaryButton({
           ? hoverBackgroundColor || "#9CA3AF"
           : backgroundColor || "#FFFFFF",
       }}
-      className={`w-full flex items-center gap-2 justify-center border border-gray-400  py-2 font-medium rounded-lg `}
+      className={`w-full flex items-center gap-2 justify-center border border-gray-400  py-2 font-medium rounded-lg cursor-pointer`}
     >
       {Icon && <Icon />} {text}
     </button>

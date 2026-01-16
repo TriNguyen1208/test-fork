@@ -455,7 +455,7 @@ export default function ProductPage() {
                       <CalendarOutlineIcon />
                       Thời điểm đăng
                     </p>
-                    <p className="text-sm lg:ml-4 md:text-[16px] font-semibold text-slate-900">
+                    <p className="text-sm md:text-[16px] font-semibold text-slate-900">
                       {formatDate(product.created_at)}
                     </p>
                   </div>
@@ -466,7 +466,7 @@ export default function ProductPage() {
                     </p>
                     {product.top_bidder ? (
                       <>
-                        <p className="font-semibold text-slate-900 mb-1">
+                        <p className="font-semibold text-slate-900 mb-1 ">
                           {product.top_bidder.id === user?.id ? (
                             <span className="text-green-600 font-semibold flex items-center gap-1 animate-pulse drop-shadow-[0_0_5px_rgba(220,38,38,0.5)]">
                               {product.top_bidder.name} (bạn)

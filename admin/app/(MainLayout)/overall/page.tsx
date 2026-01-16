@@ -211,7 +211,7 @@ export default function SystemSettingsPage() {
                       <button
                         onClick={handleReset}
                         disabled={isSaving}
-                        className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="cursor-pointer flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                       >
                         <RotateCcw className="w-4 h-4" />
                         Hoàn tác
@@ -224,7 +224,7 @@ export default function SystemSettingsPage() {
                       // Chỉ cho bấm khi: Không đang save VÀ (Dữ liệu khác server HOẶC chưa load xong)
                       disabled={isSaving || !isDirty}
                       className={`
-                        flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white transition-all shadow-sm
+                        cursor-pointer flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white transition-all shadow-sm
                         ${
                           isSaving || !isDirty
                             ? "bg-gray-300 cursor-not-allowed opacity-70 shadow-none"
@@ -306,7 +306,7 @@ export default function SystemSettingsPage() {
                       <button
                         onClick={handleResetMinTime}
                         disabled={isSavingMinTime}
-                        className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="cursor-pointer flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                       >
                         <RotateCcw className="w-4 h-4" />
                         Hoàn tác
@@ -319,7 +319,7 @@ export default function SystemSettingsPage() {
                       // Chỉ cho bấm khi: Không đang save VÀ (Dữ liệu khác server HOẶC chưa load xong)
                       disabled={isSavingMinTime || !isDirtyMinTime}
                       className={`
-                        flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white transition-all shadow-sm
+                        cursor-pointer flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white transition-all shadow-sm
                         ${
                           isSavingMinTime || !isDirtyMinTime
                             ? "bg-gray-300 cursor-not-allowed opacity-70 shadow-none"
@@ -401,7 +401,7 @@ export default function SystemSettingsPage() {
                       <button
                         onClick={handleResetThresholdTime}
                         disabled={isSavingThresholdTime}
-                        className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="cursor-pointer flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                       >
                         <RotateCcw className="w-4 h-4" />
                         Hoàn tác
@@ -414,7 +414,7 @@ export default function SystemSettingsPage() {
                       // Chỉ cho bấm khi: Không đang save VÀ (Dữ liệu khác server HOẶC chưa load xong)
                       disabled={isSavingThresholdTime || !isDirtyThresholdTime}
                       className={`
-                        flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white transition-all shadow-sm
+                        cursor-pointer flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white transition-all shadow-sm
                         ${
                           isSavingThresholdTime || !isDirtyThresholdTime
                             ? "bg-gray-300 cursor-not-allowed opacity-70 shadow-none"

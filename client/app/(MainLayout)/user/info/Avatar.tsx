@@ -137,7 +137,7 @@ export default function Avatar({
 
           <button
             type="button"
-            className="absolute inset-0 w-full h-full bg-transparent"
+            className="absolute inset-0 w-full h-full bg-transparent cursor-pointer"
             onClick={() => setIsAvatarClicked(true)}
           />
         </div>

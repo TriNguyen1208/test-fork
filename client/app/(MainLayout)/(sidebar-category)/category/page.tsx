@@ -37,6 +37,7 @@ function Page() {
   return (
     <>
       {(isLoadingCategoryProduct || isLoadingFavoriteProduct) && (
+
         <div className="inset-0 h-[80vh]">
           <LoadingSpinner />
         </div>
@@ -44,7 +45,7 @@ function Page() {
       {errorCategoryProduct && <>Error...</>}
       {errorFavoriteProduct && <>Error...</>}
       {categoryProductData && (
-        <div>
+        <div>nb
           <div className="text-center w-full">
             <h1 className="text-4xl">Chào mừng đến AuctionHub</h1>
             <div className="mt-2 text-gray-500">

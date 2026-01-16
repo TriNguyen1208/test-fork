@@ -97,7 +97,7 @@ export default function Avatar({
       {/* Main Avatar - FIX: Thêm aspect-square và đảm bảo tròn */}
       <div
         className={cn(
-          "relative overflow-hidden rounded-full border-2 border-gray-200 shadow-sm cursor-pointer",
+          "cursor-pointer relative overflow-hidden rounded-full border-2 border-gray-200 shadow-sm cursor-pointer",
           imageProps.className
         )}
         style={{ width: size, height: size }}
@@ -139,7 +139,7 @@ export default function Avatar({
 
           <button
             type="button"
-            className="absolute inset-0 w-full h-full bg-transparent"
+            className="absolute inset-0 w-full h-full bg-transparent cursor-pointer"
             onClick={() => setIsAvatarClicked(true)}
           />
         </div>
@@ -156,7 +156,7 @@ export default function Avatar({
           </button>
           <div className="border-t border-gray-100" />
           <button
-            className="px-4 py-3 hover:bg-gray-50 cursor-pointer text-left transition-colors text-sm font-medium"
+            className="cursor-pointer px-4 py-3 hover:bg-gray-50 cursor-pointer text-left transition-colors text-sm font-medium"
             onClick={handleClickUpdateImage}
           >
             Chỉnh sửa ảnh

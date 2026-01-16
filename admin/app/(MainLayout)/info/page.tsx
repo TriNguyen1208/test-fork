@@ -65,7 +65,7 @@ const InfoPage = () => {
     if (submitProfileForm) submitProfileForm();
   }, [submitProfileForm]);
 
-  if (isLoading)
+ if (isLoading)
     return (
       <div className="inset-0 h-screen">
         <LoadingSpinner />

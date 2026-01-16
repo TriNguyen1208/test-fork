@@ -28,7 +28,7 @@ export const CreateCategoryModal = ({
           <h2 className="text-xl font-semibold">Thêm danh mục con</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+            className="p-1 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
@@ -53,13 +53,13 @@ export const CreateCategoryModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              className="cursor-pointer px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               Hủy
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
             >
               Lưu
             </button>

@@ -202,7 +202,7 @@ const CategoryCard = ({ category }: { category: CategoryWithProductCount }) => {
           {/* ADD SUB CATEGORY BUTTON */}
           <button
             onClick={() => handleCreate(category.id, category.name)}
-            className="ml-4 sm:ml-8 md:ml-10 h-10 border-2 border-dashed border-gray-300 rounded-md flex flex-row gap-2 pl-2 sm:pl-5 pr-3 py-1 justify-center items-center hover:border-blue-500 hover:bg-blue-50/50 transition-all duration-200 group"
+            className="cursor-pointer ml-4 sm:ml-8 md:ml-10 h-10 border-2 border-dashed border-gray-300 rounded-md flex flex-row gap-2 pl-2 sm:pl-5 pr-3 py-1 justify-center items-center hover:border-blue-500 hover:bg-blue-50/50 transition-all duration-200 group"
           >
             <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-200" />
             <span className="text-xs sm:text-sm text-gray-500 group-hover:text-blue-500 transition-colors duration-200 font-medium">

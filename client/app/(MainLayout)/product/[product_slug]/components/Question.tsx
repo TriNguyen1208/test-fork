@@ -206,6 +206,7 @@ export const Question = ({ productId }: ProductId) => {
                 hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5
                 active:translate-y-0 active:scale-95
                 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none
+                cursor-pointer
               "
                 >
                   {isCreateQuestion ? (

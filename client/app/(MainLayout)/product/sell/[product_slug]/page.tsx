@@ -282,7 +282,7 @@ export default function ProductPage() {
                       <CalendarOutlineIcon />
                       Thời điểm đăng
                     </p>
-                    <p className="text-sm lg:ml-4 md:text-[16px] font-semibold text-slate-900">
+                    <p className="text-sm md:text-[16px] font-semibold text-slate-900">
                       {formatDate(product.created_at)}
                     </p>
                   </div>

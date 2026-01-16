@@ -97,7 +97,7 @@ const InfoPage = () => {
 
           {inEditMode ? (
             <div>
-              <section className="flex flex-row gap-5 mt-10 max-w-80">
+              <section className="flex flex-row gap-5 mt-10 max-w-80 cursor-pointer">
                 <PrimaryButton
                   text={isSaving ? "Đang lưu..." : "Lưu thay đổi"}
                   onClick={handleSaveButton}

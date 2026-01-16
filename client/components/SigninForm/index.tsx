@@ -131,7 +131,7 @@ export function SigninForm({
               <div className="flex justify-end">
                 <Link
                   href="/forget-password"
-                  className="text-xs text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+                  className="cursor-pointer text-xs text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
                   tabIndex={-1}
                 >
                   Quên mật khẩu?
