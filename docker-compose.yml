@@ -1,0 +1,43 @@
+services:
+  server-aution:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    env_file:
+      - ./server/.env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/app/server
+      - ./shared:/app/shared
+      - /app/server/node_modules
+  
+  client-aution:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    env_file:
+      - ./client/.env.local
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app/client
+      - ./shared:/app/shared
+      - /app/client/node_modules
+    depends_on:
+      - server-aution
+
+  admin-aution:
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+    env_file:
+      - ./admin/.env.local
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./admin:/app/admin
+      - ./shared:/app/shared
+      - /app/admin/node_modules
+    depends_on:
+      - server-aution
